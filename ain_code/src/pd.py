@@ -12,3 +12,9 @@ class PDWindow(Ui_MainWindow, QMainWindow):
         self.setupUi(self)
 
         self.show()
+
+    def set_attributes(self):
+        pass
+
+    def run(self):
+        pass

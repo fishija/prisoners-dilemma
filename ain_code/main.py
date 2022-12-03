@@ -12,5 +12,5 @@ if __name__ == "__main__":
     # app.setWindowIcon(app_icon)
 
     main_window = PDWindow()
-
+    print("cos")
     sys.exit(app.exec_())

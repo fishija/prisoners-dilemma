@@ -102,6 +102,12 @@
            </item>
            <item>
             <widget class="QSpinBox" name="n_spinBox">
+             <property name="minimum">
+              <number>3</number>
+             </property>
+             <property name="maximum">
+              <number>999999999</number>
+             </property>
              <property name="value">
               <number>4</number>
              </property>
@@ -144,7 +150,7 @@
             <item>
              <layout class="QGridLayout" name="gridLayout">
               <item row="1" column="1">
-               <widget class="QSpinBox" name="cd_uno"/>
+               <widget class="QSpinBox" name="cd_uno_spinBox"/>
               </item>
               <item row="3" column="0">
                <widget class="QLabel" name="label_6">
@@ -168,7 +174,7 @@
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QSpinBox" name="dc_uno">
+               <widget class="QSpinBox" name="dc_uno_spinBox">
                 <property name="value">
                  <number>50</number>
                 </property>
@@ -182,38 +188,38 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QSpinBox" name="cc_uno">
+               <widget class="QSpinBox" name="cc_uno_spinBox">
                 <property name="value">
                  <number>30</number>
                 </property>
                </widget>
               </item>
               <item row="3" column="1">
-               <widget class="QSpinBox" name="dd_uno">
+               <widget class="QSpinBox" name="dd_uno_spinBox">
                 <property name="value">
                  <number>10</number>
                 </property>
                </widget>
               </item>
               <item row="0" column="2">
-               <widget class="QSpinBox" name="cc_dos">
+               <widget class="QSpinBox" name="cc_dos_spinBox">
                 <property name="value">
                  <number>30</number>
                 </property>
                </widget>
               </item>
               <item row="1" column="2">
-               <widget class="QSpinBox" name="cd_dos">
+               <widget class="QSpinBox" name="cd_dos_spinBox">
                 <property name="value">
                  <number>50</number>
                 </property>
                </widget>
               </item>
               <item row="2" column="2">
-               <widget class="QSpinBox" name="dc_dos"/>
+               <widget class="QSpinBox" name="dc_dos_spinBox"/>
               </item>
               <item row="3" column="2">
-               <widget class="QSpinBox" name="dd_dos">
+               <widget class="QSpinBox" name="dd_dos_spinBox">
                 <property name="value">
                  <number>10</number>
                 </property>
@@ -240,12 +246,12 @@
          <item>
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="1" column="1">
-            <widget class="QSpinBox" name="num_of_tournaments">
+            <widget class="QSpinBox" name="num_of_tournaments_spinBox">
              <property name="minimum">
               <number>1</number>
              </property>
              <property name="maximum">
-              <number>200</number>
+              <number>999999999</number>
              </property>
              <property name="value">
               <number>150</number>
@@ -260,9 +266,12 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QDoubleSpinBox" name="prob_of_init_c">
+            <widget class="QDoubleSpinBox" name="prob_of_init_c_spinBox">
              <property name="decimals">
               <number>2</number>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
              </property>
              <property name="singleStep">
               <double>0.010000000000000</double>
@@ -287,9 +296,9 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QSpinBox" name="num_of_opponents">
+            <widget class="QSpinBox" name="num_of_opponents_spinBox">
              <property name="minimum">
-              <number>10</number>
+              <number>2</number>
              </property>
              <property name="maximum">
               <number>999999999</number>
@@ -307,7 +316,7 @@
             </widget>
            </item>
            <item row="3" column="1">
-            <widget class="QSpinBox" name="prehistory_size">
+            <widget class="QSpinBox" name="prehistory_l_spinBox">
              <property name="minimum">
               <number>1</number>
              </property>
@@ -359,9 +368,12 @@
          <item>
           <layout class="QGridLayout" name="gridLayout_3">
            <item row="0" column="1">
-            <widget class="QSpinBox" name="pop_size">
+            <widget class="QSpinBox" name="pop_size_spinBox">
+             <property name="minimum">
+              <number>2</number>
+             </property>
              <property name="maximum">
-              <number>500</number>
+              <number>999999999</number>
              </property>
              <property name="value">
               <number>100</number>
@@ -369,9 +381,12 @@
             </widget>
            </item>
            <item row="4" column="1">
-            <widget class="QDoubleSpinBox" name="mutation_prob">
+            <widget class="QDoubleSpinBox" name="mutation_prob_spinBox">
              <property name="decimals">
               <number>3</number>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
              </property>
              <property name="value">
               <double>0.005000000000000</double>
@@ -386,9 +401,12 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QSpinBox" name="num_of_gener">
+            <widget class="QSpinBox" name="num_of_gener_spinBox">
+             <property name="minimum">
+              <number>1</number>
+             </property>
              <property name="maximum">
-              <number>1000</number>
+              <number>999999999</number>
              </property>
              <property name="value">
               <number>200</number>
@@ -396,9 +414,12 @@
             </widget>
            </item>
            <item row="3" column="1">
-            <widget class="QDoubleSpinBox" name="crossover_prob">
+            <widget class="QDoubleSpinBox" name="crossover_prob_spinBox">
              <property name="decimals">
               <number>2</number>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
              </property>
              <property name="singleStep">
               <double>0.010000000000000</double>
@@ -430,7 +451,13 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QSpinBox" name="tournament_size">
+            <widget class="QSpinBox" name="tournament_size_spinBox">
+             <property name="minimum">
+              <number>2</number>
+             </property>
+             <property name="maximum">
+              <number>999999999</number>
+             </property>
              <property name="value">
               <number>3</number>
              </property>
@@ -514,9 +541,12 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="num_of_runs">
+            <widget class="QSpinBox" name="num_of_runs_spinBox">
              <property name="minimum">
               <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>999999999</number>
              </property>
             </widget>
            </item>

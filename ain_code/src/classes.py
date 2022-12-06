@@ -1,4 +1,5 @@
 import queue
+import random
 from src.funcitons import to_binary
 
 
@@ -59,10 +60,10 @@ class Individual:
             elif self.my_choice == 1:
                 self.score += (2 * coop_players_count) + 1
 
-    def mutation (self, id: int):
+    def mutation (self, id: int, mutation_prob: float):
         self.id=id
         for current_id_bit in self.id:
-            if random.random()<=mutation_prob:
+            if random.random() <= mutation_prob:
                 #change current id bit to opposite
                 pass
             pass

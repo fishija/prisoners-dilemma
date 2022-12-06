@@ -17,7 +17,7 @@ class Individual:
     prehistory = 0
     my_choice = None
     tournament_history = []
-
+ 
     def __init__(self, id: int, prehistory: int):
         self.id = id
         self.prehistory = prehistory
@@ -58,3 +58,11 @@ class Individual:
 
             elif self.my_choice == 1:
                 self.score += (2 * coop_players_count) + 1
+
+    def mutation (self, id: int):
+        self.id=id
+        for current_id_bit in self.id:
+            if random.random()<=mutation_prob:
+                #change current id bit to opposite
+                pass
+            pass

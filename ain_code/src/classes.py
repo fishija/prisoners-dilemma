@@ -1,4 +1,5 @@
 import queue
+from src.funcitons import to_binary
 
 
 class Individual:
@@ -6,10 +7,10 @@ class Individual:
     _summary_
 
     Attributes:
-        id (int): Bytes individual as decimal number.
+        id (int): Binary individual as decimal number.
         score (int): AVG of total payoff function.
-        prehistory (int): Bytes prehistory as decimal number. Do not change!
-        tournament_history (): History from individuals perspective.
+        prehistory (int): Binary prehistory as decimal number. Do not change!
+        tournament_history (str): History from individuals perspective.
     """
     id = 0
     score = 0
@@ -20,11 +21,10 @@ class Individual:
     def __init__(self, id: int, prehistory: int):
         self.id = id
         self.prehistory = prehistory
-
-        # prehistory to bytes !!!!!!!!!!!!!!!!!
-        # self.tournament_history = prehistory
+        self.tournament_history = to_binary(prehistory)
 
     def choice(self, coop_players_count: int) -> int:
+        temp = to_binary(self.my_choice) + to_binary(coop_players_count)
         # temp = self.my_choice and coop_players_count -> binary
 
         # self.tournament_history.drop(0)

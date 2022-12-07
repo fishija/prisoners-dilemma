@@ -1,47 +1,81 @@
-import queue
 import random
-from src.funcitons import to_binary
+from src.funcitons import to_binary, to_binary_length
 
 
 class Game:
     """
     _summary_
+    """
+    is_2_PD = False
+    N = 0
+    two_pd_payoff_func = dict()
+    prob_of_init_C = 0
+    num_of_tournaments = 0
+    num_of_opponents = 0
+    prehistory_L = 0
+    pop_size = 0
+    num_of_gener = 0
+    tournament_size = 0
+    crossover_prob = 0
+    mutation_prob = 0
+    seed = None
+    debug = False
+
+    def __init__(self, is_2_PD, N, two_pd_payoff_func, prob_of_init_C, num_of_tournaments, num_of_opponents, prehistory_L, pop_size, num_of_gener, tournament_size, crossover_prob, mutation_prob, seed, debug):
+        pass
+
+    def play(self):
+        # create generations in loop
+
+        # create chart -- either at the end or in create generations loop
+        pass
+
+
+class Generation:
+    """
+    _summary_
 
     Attributes:
-        prehistory (list): Like [[0,1,0], [1,0,0], [1,1,1], [0,0,1]]. Which means prehistory_l = 4, players = 3.
+        history_count (list): Count for every history that occured in 
     """
-    player_count = 0
-    prehistory = []
+    pop_size = 0
+    tournament_size = 0
+    crossover_prob = 0
 
-    def update_prehistory(self, last_play: list):
+    history_count = []
+
+    def __init__(self, pop_size, tournament_size, crossover_prob):
+        pass
+
+    # create individuals
+
+    # random individuals to PdTournament
+
+
+class PdTournament:
+    """
+    Attributes:
+        history (list): Like [[0,1,0], [1,0,0], [1,1,1], [0,0,1]]. Which means prehistory_L = 4, players = 3.
+    """
+    history = []
+
+    def update_history(self, last_play: list):
         """
-        Update prehistory with last play of all players.
+        Update history with last play of all players.
 
         Args:
             last_play (list): Like [0,1,1].
         """
-        self.prehistory.pop()
-        self.prehistory.insert(0, last_play)
+        self.history.pop()
+        self.history.insert(0, last_play)
 
-    # def prehistory_to_decimal(self):
-    #     """
-    #     1. Whole prehistory to 
-    #     """
-    #     whole_binary = ''
-
-    #     for i in self.prehistory:
-    #         for j in i:
-    #             whole_binary += str(j)
-
-    #     return int(whole_binary, 2)
-
-    def prep_prehistory_for_individual(self, individual_id: int):
+    def prep_history_for_individual(self, individual_id: int):
         """
-        Return changed prehistory per individual like [[ind_choice, how_many_inds_cooperated], ...]
+        Return changed history per individual like [[ind_choice, how_many_inds_cooperated], ...]
         """
         to_ret = []
 
-        for i in self.prehistory:
+        for i in self.history:
             ind_choice = i[individual_id]
 
             coop_individuals = 0
@@ -53,9 +87,8 @@ class Game:
 
         return to_ret
 
-
-class Generation:
-    pass
+    def fight(self, ind_1, ind_2):
+        pass
 
 
 class Individual:
@@ -64,17 +97,19 @@ class Individual:
 
     Attributes:
         id (int): Binary individual as decimal number.
-        score (int): AVG of total payoff function.
-        tournament_history (str): History from individuals perspective.
+        score (int): Total score per individual.
     """
     id = 0
     score = 0
     my_choice = None
  
     def __init__(self, prob_of_init_c: float, N: int, L: int):
-        len = 2**(N*L)
+        ind_len = '1'
+        ind_len += to_binary(N-1)
+        ind_len *= L
+        ind_len = int(ind_len, 2)
 
-        for i in range(len):
+        for i in range(ind_len):
             if (random.random() <= prob_of_init_c):
                 id += 2**i
 
@@ -92,20 +127,31 @@ class Individual:
         # return self.my_choice
         pass
 
+    # def prehistory_to_decimal(self):
+    #     """
+    #     1. Whole prehistory to 
+    #     """
+    #     whole_binary = ''
+    #     for i in self.prehistory:
+    #         for j in i:
+    #             whole_binary += str(j)
+
+    #     return int(whole_binary, 2)
+
     def count_score(self, coop_players_count, two_p_payoff_func = None):
         # if 2pPD
         if two_p_payoff_func:
             if self.my_choice == 0 and coop_players_count == 0:
-                # score += two_p_payoff_func[dd]
+                self.score += two_p_payoff_func['dd_uno']
                 pass
             elif self.my_choice == 0 and coop_players_count == 1:
-                # score += two_p_payoff_func[dc]
+                self.score += two_p_payoff_func['dc_uno']
                 pass
             elif self.my_choice == 1 and coop_players_count == 0:
-                # score += two_p_payoff_func[cd]
+                self.score += two_p_payoff_func['cd_uno']
                 pass
             elif self.my_choice == 1 and coop_players_count == 1:
-                # score += two_p_payoff_func[cc]
+                self.score += two_p_payoff_func['cc_uno']
                 pass
 
         else:

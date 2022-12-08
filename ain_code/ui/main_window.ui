@@ -298,7 +298,7 @@
            <item row="2" column="1">
             <widget class="QSpinBox" name="num_of_opponents_spinBox">
              <property name="minimum">
-              <number>2</number>
+              <number>10</number>
              </property>
              <property name="maximum">
               <number>999999999</number>

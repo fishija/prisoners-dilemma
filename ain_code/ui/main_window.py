@@ -145,7 +145,7 @@ class Ui_MainWindow(object):
         self.label_7.setObjectName("label_7")
         self.gridLayout_2.addWidget(self.label_7, 1, 0, 1, 1)
         self.num_of_opponents_spinBox = QtWidgets.QSpinBox(self.frame)
-        self.num_of_opponents_spinBox.setMinimum(2)
+        self.num_of_opponents_spinBox.setMinimum(10)
         self.num_of_opponents_spinBox.setMaximum(999999999)
         self.num_of_opponents_spinBox.setProperty("value", 10)
         self.num_of_opponents_spinBox.setObjectName("num_of_opponents_spinBox")

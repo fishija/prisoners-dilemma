@@ -4,6 +4,8 @@ from PyQt5.QtCore import QRegExp
 
 from ui.main_window import Ui_MainWindow
 
+from src.classes import Game
+
 import random
 import sys
 
@@ -106,32 +108,50 @@ class PDWindow(Ui_MainWindow, QMainWindow):
         if self.input_valid():
             self.set_attributes()
             
-            # Pd game params
-            print(self.two_pd, type(self.two_pd))
-            print(self.n_pd, type(self.n_pd))
-            print(self.n_players, type(self.n_players))
-            print(self.two_pd_payoff_func['cc_uno'], type(self.two_pd_payoff_func['cc_uno']))
-            # print(self.two_pd_payoff_func['cc_dos'], type(self.two_pd_payoff_func['cc_dos']))
-            print(self.two_pd_payoff_func['cd_uno'], type(self.two_pd_payoff_func['cd_uno']))
-            # print(self.two_pd_payoff_func['cd_dos'], type(self.two_pd_payoff_func['cd_dos']))
-            print(self.two_pd_payoff_func['dc_uno'], type(self.two_pd_payoff_func['dc_uno']))
-            # print(self.two_pd_payoff_func['dc_dos'], type(self.two_pd_payoff_func['dc_dos']))
-            print(self.two_pd_payoff_func['dd_uno'], type(self.two_pd_payoff_func['dd_uno']))
-            # print(self.two_pd_payoff_func['dd_dos'], type(self.two_pd_payoff_func['dd_dos']))
-            print(self.prob_of_init_c, type(self.prob_of_init_c))
-            print(self.num_of_tournaments, type(self.num_of_tournaments))
-            print(self.num_of_opponents, type(self.num_of_opponents))
-            print(self.prehistory_l, type(self.prehistory_l))
+            # # Pd game params
+            # print(self.two_pd, type(self.two_pd))
+            # print(self.n_pd, type(self.n_pd))
+            # print(self.n_players, type(self.n_players))
+            # print(self.two_pd_payoff_func['cc_uno'], type(self.two_pd_payoff_func['cc_uno']))
+            # # print(self.two_pd_payoff_func['cc_dos'], type(self.two_pd_payoff_func['cc_dos']))
+            # print(self.two_pd_payoff_func['cd_uno'], type(self.two_pd_payoff_func['cd_uno']))
+            # # print(self.two_pd_payoff_func['cd_dos'], type(self.two_pd_payoff_func['cd_dos']))
+            # print(self.two_pd_payoff_func['dc_uno'], type(self.two_pd_payoff_func['dc_uno']))
+            # # print(self.two_pd_payoff_func['dc_dos'], type(self.two_pd_payoff_func['dc_dos']))
+            # print(self.two_pd_payoff_func['dd_uno'], type(self.two_pd_payoff_func['dd_uno']))
+            # # print(self.two_pd_payoff_func['dd_dos'], type(self.two_pd_payoff_func['dd_dos']))
+            # print(self.prob_of_init_c, type(self.prob_of_init_c))
+            # print(self.num_of_tournaments, type(self.num_of_tournaments))
+            # print(self.num_of_opponents, type(self.num_of_opponents))
+            # print(self.prehistory_l, type(self.prehistory_l))
 
-            # GA params
-            print(self.pop_size, type(self.pop_size))
-            print(self.num_of_gener, type(self.num_of_gener))
-            print(self.tournament_size, type(self.tournament_size))
-            print(self.crossover_prob, type(self.crossover_prob))
-            print(self.mutation_prob, type(self.mutation_prob))
-            print(self.elitist_strategy, type(self.elitist_strategy))
+            # # GA params
+            # print(self.pop_size, type(self.pop_size))
+            # print(self.num_of_gener, type(self.num_of_gener))
+            # print(self.tournament_size, type(self.tournament_size))
+            # print(self.crossover_prob, type(self.crossover_prob))
+            # print(self.mutation_prob, type(self.mutation_prob))
+            # print(self.elitist_strategy, type(self.elitist_strategy))
 
-            # Other params
-            print(self.seed, type(self.seed))
-            print(self.num_of_runs, type(self.num_of_runs))
-            print(self.debug, type(self.debug))
+            # # Other params
+            # print(self.seed, type(self.seed))
+            # print(self.num_of_runs, type(self.num_of_runs))
+            # print(self.debug, type(self.debug))
+
+            game = Game(self.two_pd, 
+                    self.n_players, 
+                    self.two_pd_payoff_func, 
+                    self.prob_of_init_c, 
+                    self.num_of_tournaments, 
+                    self.num_of_opponents,
+                    self.prehistory_l,
+                    self.pop_size,
+                    self.num_of_gener,
+                    self.tournament_size,
+                    self.crossover_prob,
+                    self.mutation_prob,
+                    self.elitist_strategy,
+                    self.seed,
+                    self.debug)
+
+            game.play()

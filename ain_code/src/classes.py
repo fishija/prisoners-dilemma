@@ -413,6 +413,10 @@ class Game:
             old_generation.fight_for_death_u_knobs(self.num_of_opponents)
             old_generation.hard_tournament()
             self.history_count = old_generation.history_count #######################################################################################################################################################################################
+            
+            for ind in old_generation.list_of_ind:
+                print('Ind score = ', ind.score)
+            
             old_generation.crossover()
             old_generation.mutate_individuals()
 

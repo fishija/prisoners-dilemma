@@ -55,31 +55,31 @@ class Individual:
 
         binary_id = to_binary_length(self.id, self.ind_len)
 
-        self.my_choice = binary_id[decimal_history]
+        self.my_choice = int(binary_id[decimal_history])
 
         return decimal_history
 
     def count_score(self, coop_players_count, two_pd_payoff_func = None):
         # if 2pPD
         if two_pd_payoff_func:
-            if self.my_choice == 0 and coop_players_count == 0:
+            if self.my_choice == 0 and coop_players_count[0][1] == 0:
                 self.score += two_pd_payoff_func['dd_uno']
 
-            elif self.my_choice == 0 and coop_players_count == 1:
+            elif self.my_choice == 0 and coop_players_count[0][1] == 1:
                 self.score += two_pd_payoff_func['dc_uno']
 
-            elif self.my_choice == 1 and coop_players_count == 0:
+            elif self.my_choice == 1 and coop_players_count[0][1] == 0:
                 self.score += two_pd_payoff_func['cd_uno']
 
-            elif self.my_choice == 1 and coop_players_count == 1:
+            elif self.my_choice == 1 and coop_players_count[0][1] == 1:
                 self.score += two_pd_payoff_func['cc_uno']
 
         else:
             if self.my_choice == 0:
-                self.score += 2 * coop_players_count + 1
+                self.score += 2 * coop_players_count[0][1] + 1
 
             elif self.my_choice == 1:
-                self.score += (2 * coop_players_count)
+                self.score += (2 * coop_players_count[0][1])
 
     def mutation (self, mutation_prob: float):
         temp_binary_id = ''
@@ -163,10 +163,15 @@ class PdTournament:
 
         return to_ret
 
-    def start_whole_tournament(self):
+    def start_whole_tournament(self, num_of_opponents):
         print('Whole tournament started')
+
         for ind in self.list_of_ind:
-            self.run_one_tournament(ind)
+            ind.score = 0
+
+        for ind in self.list_of_ind:
+            for opp in range(num_of_opponents):
+                self.run_one_tournament(ind)
 
     def run_one_tournament(self, ind: Individual):
         self.update_history()
@@ -194,16 +199,20 @@ class PdTournament:
 
             self.update_history(last_play)
 
-            for ind_dictionary in self.currently_used_inds:
-                if self.N > 2:
-                    ind_dictionary['individual'].count_score(self.prep_history_for_individual( ind_dictionary['number']))
-                else:
-                    ind_dictionary['individual'].count_score(self.prep_history_for_individual( ind_dictionary['number']), self.two_pd_payoff_func)
+            if self.N > 2:
+                ind.count_score(self.prep_history_for_individual(0))
+            else:
+                ind.count_score(self.prep_history_for_individual(0), self.two_pd_payoff_func)
 
-        for ind_dictionary in self.currently_used_inds:
-            self.list_of_ind[ind_dictionary['number']].score = ind_dictionary['individual'].score
+        self.list_of_ind[self.list_of_ind.index(ind)].score = ind_dictionary['individual'].score
+
+        # for ind_dictionary in self.currently_used_inds:
+        #     print(ind_dictionary['number'])
+        #     self.list_of_ind[ind_dictionary['number']].score = ind_dictionary['individual'].score
 
     def end_tournament(self):
+        # for ind in self.list_of_ind:
+        #     print('Ind {}: {}'.format(ind.id, ind.score))
         return self.list_of_ind
 
 
@@ -241,21 +250,22 @@ class Generation:
         self.N = N
         self.L = L
 
-        if list_of_ind:
-            self.list_of_ind = list_of_ind
-        else:
+        self.list_of_ind = list_of_ind
+
+        if not list_of_ind:
+            self.list_of_ind = []
             for i in range(pop_size):
                 self.list_of_ind.append(Individual(prob_of_init_C, N, L))
 
         self.history_count = [0] * self.list_of_ind[0].ind_len
 
-    def fight_for_death_u_knobs(self):
+    def fight_for_death_u_knobs(self, num_of_opponents):
         if self.two_pd_payoff_func:
             self.temp_tournament = PdTournament(self.list_of_ind, self.N, self.L, self.num_of_tournaments, self.two_pd_payoff_func)
         else:
             self.temp_tournament = PdTournament(self.list_of_ind, self.N, self.L, self.num_of_tournaments)
 
-        self.temp_tournament.start_whole_tournament()
+        self.temp_tournament.start_whole_tournament(num_of_opponents)
 
         self.history_count = [sum(x) for x in zip(self.temp_tournament.history_count, self.history_count)]
         self.list_of_ind = self.temp_tournament.end_tournament()
@@ -263,19 +273,19 @@ class Generation:
     def hard_tournament(self):
         best_ind_list = []
 
-        for ind in self.list_of_ind:
-            ind.score = 0
-
         for i in range(self.pop_size):
             random_chosen_individuals = []
+            original_list_index = []
 
             for j in range(self.tournament_size):
-                temp_ind = self.list_of_ind[random.randint(0, self.pop_size - 1)]
+                int_of_ind_to_choose = random.randint(0, self.pop_size - 1)
 
-                while temp_ind in random_chosen_individuals:
-                    temp_ind = self.list_of_ind[random.randint(0, self.pop_size - 1)]
+                if random_chosen_individuals:
+                    while int_of_ind_to_choose in original_list_index:
+                        int_of_ind_to_choose = random.randint(0, self.pop_size - 1)
 
-                random_chosen_individuals.append(temp_ind)
+                random_chosen_individuals.append(self.list_of_ind[int_of_ind_to_choose])
+                original_list_index.append(int_of_ind_to_choose)
 
             best_ind_list.append(sorted(random_chosen_individuals, key=lambda x: x.score, reverse=True)[0])
 
@@ -296,11 +306,10 @@ class Generation:
         
     def crossover(self):
 
-        
-
-
         self.best_individual = max(self.list_of_ind)
         print('Best individual id: ', to_binary_length(self.best_individual.id, self.best_individual.ind_len))
+        print('Best individual score: ', self.best_individual.score)
+
         crossovered_ind_list = []
         
         for ind in self.list_of_ind:
@@ -390,7 +399,7 @@ class Game:
         list_of_ind = []
 
         for i in range(self.num_of_gener):
-            print('Generacion: ', i)
+            print('Generation: ', i)
 
             if not self.is_2_PD and not list_of_ind:
                 old_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob)
@@ -401,7 +410,7 @@ class Game:
             else:
                 old_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob, self.two_pd_payoff_func, list_of_ind)
 
-            old_generation.fight_for_death_u_knobs()
+            old_generation.fight_for_death_u_knobs(self.num_of_opponents)
             old_generation.hard_tournament()
             self.history_count = old_generation.history_count #######################################################################################################################################################################################
             old_generation.crossover()
@@ -412,7 +421,9 @@ class Game:
 
             list_of_ind = old_generation.list_of_ind
 
+            for ind in list_of_ind:
+                ind.score = 0
 
-        print(self.history_count)
+        # print(self.history_count)
             
         # create chart -- either at the end or in create generations loop

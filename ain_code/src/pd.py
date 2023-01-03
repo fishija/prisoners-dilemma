@@ -2,12 +2,32 @@ from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from PyQt5.QtCore import QRegExp
 
+from PyQt5.QtWidgets import QApplication, QMainWindow,QFileDialog,  QDialog, QLabel, QComboBox, QMessageBox, QHeaderView, QTreeWidgetItem, QWidget, QVBoxLayout, QTreeWidget, QCheckBox, QHBoxLayout
+from PyQt5.QtCore import QThread, Qt, QAbstractTableModel, QCoreApplication, QSize, QThreadPool
+from PyQt5.QtGui import QPixmap
+
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
+from matplotlib.figure import Figure
+
 from ui.main_window import Ui_MainWindow
 
-from src.classes import Game
+from src.classes import GameWorker
 
+import matplotlib
+import pandas as pd
 import random
 import sys
+
+
+matplotlib.use('Qt5Agg')
+
+
+class MplCanvas(FigureCanvasQTAgg):
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+        super(MplCanvas, self).__init__(fig)
 
 
 class PDWindow(Ui_MainWindow, QMainWindow):
@@ -34,6 +54,10 @@ class PDWindow(Ui_MainWindow, QMainWindow):
     num_of_runs = 0
     debug = False
 
+    # Params to present data
+    avg_data_per_generation = pd.DataFrame(columns=['Avg per Gen', 'Avg per Best'])
+    # history_count_per_gen = pd.DataFrame(columns=[])
+    
 
     def __init__(self):
         super(PDWindow, self). __init__()
@@ -103,55 +127,60 @@ class PDWindow(Ui_MainWindow, QMainWindow):
                 QMessageBox.warning(self, '2p PD payoff func ERROR', 'Data in 2p PD payoff function has to look like:\n\nCD_left/DC_right < DD_left/DD_right < CC_left/CC_right < DC_left/CD_left')
                 return False
         return True
+
+    def thread_finished(self):
+        # Unlock app
+        self.run_button.setEnabled(True)
+        print(self.avg_data_per_generation)
+        sc = MplCanvas(self, width=5, height=4, dpi=100)
+        self.avg_data_per_generation.plot(ax=sc.axes)
+
+        layout = QVBoxLayout()
+        layout.addWidget(sc)
+
+        self.avg_widget.setLayout(layout)
+
+
+    def update_upper_plot(self, avg_gen: float, avg_best: float):
+        print(avg_gen, avg_best)
+        self.avg_data_per_generation.loc[len(self.avg_data_per_generation)] = [avg_gen, avg_best]
+        pass
+
+    def update_lower_plot(self, history_count: list):
+        # print(history_count)
+        pass
                 
     def run(self):
         if self.input_valid():
+            # Clean plots!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+            # Lock app
+            self.run_button.setDisabled(True)
+
+
             self.set_attributes()
-            
-            # # Pd game params
-            # print(self.two_pd, type(self.two_pd))
-            # print(self.n_pd, type(self.n_pd))
-            # print(self.n_players, type(self.n_players))
-            # print(self.two_pd_payoff_func['cc_uno'], type(self.two_pd_payoff_func['cc_uno']))
-            # # print(self.two_pd_payoff_func['cc_dos'], type(self.two_pd_payoff_func['cc_dos']))
-            # print(self.two_pd_payoff_func['cd_uno'], type(self.two_pd_payoff_func['cd_uno']))
-            # # print(self.two_pd_payoff_func['cd_dos'], type(self.two_pd_payoff_func['cd_dos']))
-            # print(self.two_pd_payoff_func['dc_uno'], type(self.two_pd_payoff_func['dc_uno']))
-            # # print(self.two_pd_payoff_func['dc_dos'], type(self.two_pd_payoff_func['dc_dos']))
-            # print(self.two_pd_payoff_func['dd_uno'], type(self.two_pd_payoff_func['dd_uno']))
-            # # print(self.two_pd_payoff_func['dd_dos'], type(self.two_pd_payoff_func['dd_dos']))
-            # print(self.prob_of_init_c, type(self.prob_of_init_c))
-            # print(self.num_of_tournaments, type(self.num_of_tournaments))
-            # print(self.num_of_opponents, type(self.num_of_opponents))
-            # print(self.prehistory_l, type(self.prehistory_l))
 
-            # # GA params
-            # print(self.pop_size, type(self.pop_size))
-            # print(self.num_of_gener, type(self.num_of_gener))
-            # print(self.tournament_size, type(self.tournament_size))
-            # print(self.crossover_prob, type(self.crossover_prob))
-            # print(self.mutation_prob, type(self.mutation_prob))
-            # print(self.elitist_strategy, type(self.elitist_strategy))
 
-            # # Other params
-            # print(self.seed, type(self.seed))
-            # print(self.num_of_runs, type(self.num_of_runs))
-            # print(self.debug, type(self.debug))
 
-            game = Game(self.two_pd, 
-                    self.n_players, 
-                    self.two_pd_payoff_func, 
-                    self.prob_of_init_c, 
-                    self.num_of_tournaments, 
-                    self.num_of_opponents,
-                    self.prehistory_l,
-                    self.pop_size,
-                    self.num_of_gener,
-                    self.tournament_size,
-                    self.crossover_prob,
-                    self.mutation_prob,
-                    self.elitist_strategy,
-                    self.seed,
-                    self.debug)
+            self.threadpool = QThreadPool()
+            self.worker = GameWorker(self.two_pd, 
+                                    self.n_players, 
+                                    self.two_pd_payoff_func, 
+                                    self.prob_of_init_c, 
+                                    self.num_of_tournaments, 
+                                    self.num_of_opponents,
+                                    self.prehistory_l,
+                                    self.pop_size,
+                                    self.num_of_gener,
+                                    self.tournament_size,
+                                    self.crossover_prob,
+                                    self.mutation_prob,
+                                    self.elitist_strategy,
+                                    self.seed,
+                                    self.debug)
 
-            game.play()
+            self.worker.signals.finished.connect(self.thread_finished)
+            self.worker.signals.avg_progress.connect(self.update_upper_plot)
+            self.worker.signals.updated_history_count.connect(self.update_lower_plot)
+            self.threadpool.start(self.worker)

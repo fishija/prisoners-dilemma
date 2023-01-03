@@ -2,6 +2,8 @@ import random
 import copy
 from src.funcitons import to_binary, to_binary_length
 
+from PyQt5.QtCore import QRunnable, pyqtSignal, QObject
+
 
 class Individual:
     """
@@ -171,18 +173,20 @@ class PdTournament:
         return to_ret
 
     def start_whole_tournament(self, num_of_opponents):
-        print('Whole tournament started')
+        # print('Whole tournament started')
 
         for ind in self.list_of_ind:
             ind.score = 0
 
-        print(len(set(self.list_of_ind)))
+        # print(len(set(self.list_of_ind)))
 
         for ind in self.list_of_ind:
             for opp in range(num_of_opponents):
-                self.run_one_tournament(ind)
+                self.run_one_tournament(ind, num_of_opponents)
 
-    def run_one_tournament(self, ind: Individual):
+            ind.score = ind.score/(self.num_of_tournaments * num_of_opponents)
+
+    def run_one_tournament(self, ind: Individual, num_of_opponents):
         self.update_history()
         self.currently_used_inds = []
 
@@ -270,7 +274,7 @@ class Generation:
     def hard_tournament(self):
         best_ind_list = []
 
-        print(len(set(self.list_of_ind)))
+        # print(len(set(self.list_of_ind)))
 
         for i in range(self.pop_size):
             random_chosen_individuals = []
@@ -290,29 +294,32 @@ class Generation:
 
 
         self.list_of_ind = best_ind_list
-        print(len(set(self.list_of_ind)))
+        # print(len(set(self.list_of_ind)))
 
 
     def cross_two_inds(self, ind_uno: Individual, ind_dos: Individual):
-        ind_len = ind_uno.ind_len
+        temp_ind_uno = copy.deepcopy(ind_uno)
+        temp_ind_dos = copy.deepcopy(ind_dos)
 
-        ind_uno_bits = to_binary_length(ind_uno.id, ind_len)
-        ind_dos_bits = to_binary_length(ind_dos.id, ind_len)
+        ind_len = temp_ind_uno.ind_len
+
+        temp_ind_uno_bits = to_binary_length(temp_ind_uno.id, ind_len)
+        temp_ind_dos_bits = to_binary_length(temp_ind_dos.id, ind_len)
 
         chosen_num = random.randint(1, ind_len-1)
 
-        ind_uno.id = int(ind_uno_bits[:chosen_num] + ind_dos_bits[chosen_num:], 2)
-        ind_dos.id = int(ind_dos_bits[:chosen_num] + ind_uno_bits[chosen_num:], 2)
+        temp_ind_uno.id = int(temp_ind_uno_bits[:chosen_num] + temp_ind_dos_bits[chosen_num:], 2)
+        temp_ind_dos.id = int(temp_ind_dos_bits[:chosen_num] + temp_ind_uno_bits[chosen_num:], 2)
 
-        ind_uno.score = 0
-        ind_dos.score = 0
+        temp_ind_uno.score = 0
+        temp_ind_dos.score = 0
 
-        return ind_uno, ind_dos
+        return Individual(overwrite=temp_ind_uno), Individual(overwrite=temp_ind_dos)
         
     def crossover(self):########################################################
         self.best_individual = Individual(overwrite = max(self.list_of_ind))
-        print('Best individual id: ', to_binary_length(self.best_individual.id, self.best_individual.ind_len))
-        print('Best individual score: ', self.best_individual.score)
+        # print('Best individual id: ', to_binary_length(self.best_individual.id, self.best_individual.ind_len))
+        # print("Avg score for Best: {}".format(self.best_individual.score))
 
         crossovered_ind_list = []
         
@@ -351,15 +358,17 @@ class Generation:
 
     def do_elitist(self):
         self.hard_tournament()
-        worst_individual = Individual(overwrite = min(self.list_of_ind))
+        worst_individual = min(self.list_of_ind)
         self.list_of_ind.remove(worst_individual)
-        self.list_of_ind.append(self.best_individual)
+        self.list_of_ind.append(Individual(overwrite=self.best_individual))
 
 
-class Game:
-    """
-    _summary_
-    """
+class WorkerSignals(QObject):
+    avg_progress = pyqtSignal(float, float)
+    updated_history_count = pyqtSignal(list)
+    finished = pyqtSignal()
+
+class GameWorker(QRunnable):
     is_2_PD = False
     N = 0
     two_pd_payoff_func = dict()
@@ -378,52 +387,33 @@ class Game:
     history_count = []
 
     def __init__(self, is_2_PD, N, two_pd_payoff_func, prob_of_init_C, num_of_tournaments, num_of_opponents, prehistory_L, pop_size, num_of_gener, tournament_size, crossover_prob, mutation_prob, elitist_strategy, seed, debug):
-        # if is_2_PD:
-        #     self.is_2_PD = is_2_PD
-        #     self.N = 2
-        # else:
-        #     self.N = N
+        super(GameWorker, self).__init__()
 
-        # self.two_pd_payoff_func = two_pd_payoff_func
-        # self.prob_of_init_C = prob_of_init_C
-        # self.num_of_tournaments = num_of_tournaments
-        # self.num_of_opponents = num_of_opponents
-        # self.prehistory_L = prehistory_L
-        # self.pop_size = pop_size
-        # self.num_of_gener = num_of_gener
-        # self.tournament_size = tournament_size
-        # self.crossover_prob = crossover_prob
-        # self.mutation_prob = mutation_prob
-        # self.debug = debug
-        # self.elitist_strategy = elitist_strategy
+        self.signals = WorkerSignals()
 
-        # if seed:
-        #     random.seed(seed)
+        if is_2_PD:
+            self.is_2_PD = is_2_PD
+            self.N = 2
+        else:
+            self.N = N
 
-
-
-        self.is_2_PD = True
-        self.N = 2
         self.two_pd_payoff_func = two_pd_payoff_func
         self.prob_of_init_C = prob_of_init_C
-        self.num_of_tournaments = 2
-
-        self.num_of_opponents = 2
-        self.prehistory_L = 1
-        self.pop_size = 10
-        self.num_of_gener = 10
-        self.tournament_size = 2
-        self.crossover_prob = 0.85
+        self.num_of_tournaments = num_of_tournaments
+        self.num_of_opponents = num_of_opponents
+        self.prehistory_L = prehistory_L
+        self.pop_size = pop_size
+        self.num_of_gener = num_of_gener
+        self.tournament_size = tournament_size
+        self.crossover_prob = crossover_prob
         self.mutation_prob = mutation_prob
-        self.debug = False
-        self.elitist_strategy = False
+        self.debug = debug
+        self.elitist_strategy = elitist_strategy
 
-        random.seed(1)
+        if seed:
+            random.seed(seed)
 
-
-
-
-    def play(self):
+    def run(self):
         list_of_ind = []
 
         for i in range(self.num_of_gener):
@@ -442,12 +432,26 @@ class Game:
 
             curr_generation.hard_tournament()
 
-            self.history_count = curr_generation.history_count
+
+
+            temp_avg_gen_score = 0
 
             for ind in curr_generation.list_of_ind:
-                print('Ind score = ', ind.score)
+                temp_avg_gen_score += ind.score
+
+            # print("Avg score for Gen {}: {}".format(i, temp_avg_gen_score/self.pop_size))
+
+            self.history_count = curr_generation.history_count
             
             curr_generation.crossover()
+
+
+
+            self.signals.avg_progress.emit((temp_avg_gen_score/self.pop_size), (curr_generation.best_individual.score))
+            self.signals.updated_history_count.emit(self.history_count)
+
+
+
 
             curr_generation.mutate_individuals()
 
@@ -457,9 +461,4 @@ class Game:
 
             list_of_ind = curr_generation.list_of_ind
 
-            for ind in list_of_ind:
-                ind.score = 0
-
-        # print(self.history_count)
-            
-        # create chart -- either at the end or in create generations loop
+        self.signals.finished.emit()

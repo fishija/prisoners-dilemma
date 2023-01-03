@@ -2,19 +2,17 @@ from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from PyQt5.QtCore import QRegExp
 
-from PyQt5.QtWidgets import QApplication, QMainWindow,QFileDialog,  QDialog, QLabel, QComboBox, QMessageBox, QHeaderView, QTreeWidgetItem, QWidget, QVBoxLayout, QTreeWidget, QCheckBox, QHBoxLayout
-from PyQt5.QtCore import QThread, Qt, QAbstractTableModel, QCoreApplication, QSize, QThreadPool
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QVBoxLayout, QHBoxLayout
+from PyQt5.QtCore import QThread
 
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+import matplotlib
 from matplotlib.figure import Figure
 
 from ui.main_window import Ui_MainWindow
 
 from src.classes import GameWorker
 
-import matplotlib
 import pandas as pd
 import random
 import sys
@@ -23,7 +21,7 @@ import sys
 matplotlib.use('Qt5Agg')
 
 
-class MplCanvas(FigureCanvasQTAgg):
+class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
@@ -69,6 +67,13 @@ class PDWindow(Ui_MainWindow, QMainWindow):
 
         # connect run button
         self.run_button.clicked.connect(self.run)
+
+        # create canvas
+        self.canvas = MplCanvas(self)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.canvas)
+        self.avg_frame.setLayout(layout)
 
         self.show()
 
@@ -131,19 +136,35 @@ class PDWindow(Ui_MainWindow, QMainWindow):
     def thread_finished(self):
         # Unlock app
         self.run_button.setEnabled(True)
-        print(self.avg_data_per_generation)
-        sc = MplCanvas(self, width=5, height=4, dpi=100)
-        self.avg_data_per_generation.plot(ax=sc.axes)
 
-        layout = QVBoxLayout()
-        layout.addWidget(sc)
+        import time
 
-        self.avg_widget.setLayout(layout)
-
+        start = time.time()
+        self.canvas.axes.cla()
+        self.avg_data_per_generation.plot(ax=self.canvas.axes)
+        self.canvas.draw()
+        print('Plotting took {}s'.format(time.time()-start))
+        pass
 
     def update_upper_plot(self, avg_gen: float, avg_best: float):
+        import time
+        self.avg_data_per_generation.loc[len(self.avg_data_per_generation) + 1] = [avg_gen, avg_best]
         print(avg_gen, avg_best)
-        self.avg_data_per_generation.loc[len(self.avg_data_per_generation)] = [avg_gen, avg_best]
+
+        self.avg_gen.append(avg_gen)
+        
+        if self.x_data:
+            self.x_data.append(self.x_data[-1] + 1)
+        else:
+            self.x_data.append(1)
+
+        # if self.x_data[-1] % 5 == 0:
+        #     start = time.time()
+        #     self.canvas.axes.cla()
+        #     self.avg_data_per_generation.plot(ax=self.canvas.axes)
+        #     self.canvas.draw()
+        #     print('Plotting took {}s'.format(time.time()-start))
+
         pass
 
     def update_lower_plot(self, history_count: list):
@@ -151,8 +172,24 @@ class PDWindow(Ui_MainWindow, QMainWindow):
         pass
                 
     def run(self):
+
+        self.avg_data_per_generation = pd.DataFrame(columns=['Avg per Gen', 'Avg per Best'])
+        # self.history_count_per_gen = pd.DataFrame(columns=[])
+
         if self.input_valid():
-            # Clean plots!!!!!!!!!!!!!!!!!!!!!!!!!!
+            # Create new plots
+
+            self.avg_gen = []
+            self.x_data = []
+
+
+
+            # self.figure = Figure()
+            # self.canvas = FigureCanvas(self.figure)
+
+
+
+
 
 
             # Lock app
@@ -162,8 +199,7 @@ class PDWindow(Ui_MainWindow, QMainWindow):
             self.set_attributes()
 
 
-
-            self.threadpool = QThreadPool()
+            self.thread = QThread()
             self.worker = GameWorker(self.two_pd, 
                                     self.n_players, 
                                     self.two_pd_payoff_func, 
@@ -179,8 +215,15 @@ class PDWindow(Ui_MainWindow, QMainWindow):
                                     self.elitist_strategy,
                                     self.seed,
                                     self.debug)
+            
+            self.worker.moveToThread(self.thread)
 
-            self.worker.signals.finished.connect(self.thread_finished)
-            self.worker.signals.avg_progress.connect(self.update_upper_plot)
-            self.worker.signals.updated_history_count.connect(self.update_lower_plot)
-            self.threadpool.start(self.worker)
+            self.thread.started.connect(self.worker.run)
+            self.worker.finished.connect(self.thread.quit)
+            self.worker.finished.connect(self.worker.deleteLater)
+            self.thread.finished.connect(self.thread.deleteLater)
+            self.thread.finished.connect(self.thread_finished)
+            self.worker.avg_progress.connect(self.update_upper_plot)
+            self.worker.updated_history_count.connect(self.update_lower_plot)
+
+            self.thread.start()

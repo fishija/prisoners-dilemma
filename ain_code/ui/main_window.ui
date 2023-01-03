@@ -631,12 +631,19 @@
       <item>
        <widget class="QLabel" name="label_17">
         <property name="text">
-         <string>Average total payoff of the best individual</string>
+         <string>Average total payoff</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="avg_widget" native="true"/>
+       <widget class="QFrame" name="avg_frame">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_18">
@@ -646,7 +653,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="history_widget" native="true"/>
+       <widget class="QFrame" name="freq_frame">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>

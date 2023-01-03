@@ -363,12 +363,7 @@ class Generation:
         self.list_of_ind.append(Individual(overwrite=self.best_individual))
 
 
-class WorkerSignals(QObject):
-    avg_progress = pyqtSignal(float, float)
-    updated_history_count = pyqtSignal(list)
-    finished = pyqtSignal()
-
-class GameWorker(QRunnable):
+class GameWorker(QObject):
     is_2_PD = False
     N = 0
     two_pd_payoff_func = dict()
@@ -386,10 +381,12 @@ class GameWorker(QRunnable):
 
     history_count = []
 
+    avg_progress = pyqtSignal(float, float)
+    updated_history_count = pyqtSignal(list)
+    finished = pyqtSignal()
+
     def __init__(self, is_2_PD, N, two_pd_payoff_func, prob_of_init_C, num_of_tournaments, num_of_opponents, prehistory_L, pop_size, num_of_gener, tournament_size, crossover_prob, mutation_prob, elitist_strategy, seed, debug):
         super(GameWorker, self).__init__()
-
-        self.signals = WorkerSignals()
 
         if is_2_PD:
             self.is_2_PD = is_2_PD
@@ -413,7 +410,12 @@ class GameWorker(QRunnable):
         if seed:
             random.seed(seed)
 
+
+        random.seed(1) ##############################################################################################
+        
+
     def run(self):
+        
         list_of_ind = []
 
         for i in range(self.num_of_gener):
@@ -447,8 +449,8 @@ class GameWorker(QRunnable):
 
 
 
-            self.signals.avg_progress.emit((temp_avg_gen_score/self.pop_size), (curr_generation.best_individual.score))
-            self.signals.updated_history_count.emit(self.history_count)
+            self.avg_progress.emit((temp_avg_gen_score/self.pop_size), (curr_generation.best_individual.score))
+            self.updated_history_count.emit(self.history_count)
 
 
 
@@ -461,4 +463,4 @@ class GameWorker(QRunnable):
 
             list_of_ind = curr_generation.list_of_ind
 
-        self.signals.finished.emit()
+        self.finished.emit()

@@ -18,9 +18,16 @@ class Individual:
     ind_len = 0
     score = 0
     N = 0
+    oponentes_jodidos = 0
     my_choice = None
  
-    def __init__(self, prob_of_init_c: float = None, N: int = None, L: int = None, overwrite = None):
+    def __init__(self, prob_of_init_c: float = None, N: int = None, L: int = None, overwrite = None, binary_id: str = None):
+        # if binary_id:
+        #     binary_id = binary_id.replace(' ', '')
+        #     self.ind_len = len(binary_id)
+        #     self.N = N
+        #     self.id = int(binary_id, 2)
+
         if not overwrite:
             self.ind_len = '1'
             self.ind_len += to_binary(N-1)
@@ -37,6 +44,7 @@ class Individual:
             self.score = overwrite.score
             self.N = overwrite.N
             self.my_choice = overwrite.my_choice
+            self.oponentes_jodidos = overwrite.oponentes_jodidos
 
     def __gt__(self, other):
         if self.score > other.score:
@@ -65,7 +73,7 @@ class Individual:
 
         binary_id = to_binary_length(self.id, self.ind_len)
 
-        self.my_choice = int(binary_id[decimal_history])
+        self.my_choice = int(binary_id[decimal_history-1])
 
         return decimal_history
 
@@ -141,6 +149,8 @@ class PdTournament:
             self.history.pop()
             self.history.insert(0, last_play)
         else:
+            # self.history = [[0,1],[1,0],[0,0]]
+
             self.history.clear()
             for l in range(self.L):
                 temp = []
@@ -176,41 +186,36 @@ class PdTournament:
     def start_whole_tournament(self, num_of_opponents):
         for ind in self.list_of_ind:
             ind.score = 0
+            ind.oponentes_jodidos = 0
 
-        for ind in self.list_of_ind:
-            for opp in range(num_of_opponents):
-                self.run_one_tournament(ind, num_of_opponents)
+        for index, ind in enumerate(self.list_of_ind):
+            while ind.oponentes_jodidos < num_of_opponents:
+                currently_used_inds = [ind]
+                for random_selected_ind in random.sample(list(self.list_of_ind[:index] + self.list_of_ind[(index+1):]), k=(self.N-1)):
+                    currently_used_inds.append(random_selected_ind)
 
-            ind.score = ind.score/(self.num_of_tournaments * num_of_opponents)
+                self.run_one_tournament(currently_used_inds)
 
-    def run_one_tournament(self, ind: Individual, num_of_opponents):
+    def run_one_tournament(self, currently_used_inds):
         self.update_history()
-        self.currently_used_inds = []
 
-        self.currently_used_inds.append(ind)
-
-        temp_individuals = copy.copy(self.list_of_ind)
-
-        temp_individuals.remove(ind)
-
-        for n in range(1, self.N):
-            temp = random.randint(0, len(temp_individuals)-1)
-            self.currently_used_inds.append(temp_individuals[temp])
-            del temp_individuals[temp]
-
-        for i in range(self.num_of_tournaments):
+        for _ in range(self.num_of_tournaments):
             last_play = []
 
-            for curr_used_ind in self.currently_used_inds:
-                self.history_count[curr_used_ind.choose(self.prep_history_for_individual(self.currently_used_inds.index(curr_used_ind)))] += 1
-                last_play.append(int(curr_used_ind.my_choice))
+            for index, cur_ind in enumerate(currently_used_inds):
+                self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
+                last_play.append(int(cur_ind.my_choice))
 
             self.update_history(last_play)
 
-            if self.N > 2:
-                ind.count_score(self.prep_history_for_individual(0))
-            else:
-                ind.count_score(self.prep_history_for_individual(0), self.two_pd_payoff_func)
+            for index, cur_ind in enumerate(currently_used_inds):
+                if self.N > 2:
+                    cur_ind.count_score(self.prep_history_for_individual(index))
+                else:
+                    cur_ind.count_score(self.prep_history_for_individual(index), self.two_pd_payoff_func)
+
+        for cur_ind in currently_used_inds:
+            cur_ind.oponentes_jodidos += 1
 
 
 class Generation:
@@ -251,6 +256,9 @@ class Generation:
 
         if not list_of_ind:
             self.list_of_ind = []
+            # self.list_of_ind.append(Individual(prob_of_init_C, N, L, binary_id = '0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1'))
+            # self.list_of_ind.append(Individual(prob_of_init_C, N, L, binary_id = '0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 1 1 1 1 1 0 0 0 0 '))
+
             for i in range(pop_size):
                 self.list_of_ind.append(Individual(prob_of_init_C, N, L))
 
@@ -401,6 +409,18 @@ class GameWorker(QObject):
         if seed:
             random.seed(seed)
 
+        
+        # self.num_of_tournaments = 5
+        # self.num_of_opponents = 1
+        # self.pop_size = 2
+        # self.num_of_gener = 2
+        # self.tournament_size = 2
+        # random.seed(1)
+
+
+
+
+
     def run(self):
         list_of_ind = []
         avg_data_per_generation = pd.DataFrame(columns=['Avg per Gen', 'Avg per Best'])
@@ -422,14 +442,13 @@ class GameWorker(QObject):
 
             curr_generation.fight_for_death_u_knobs(self.num_of_opponents)
 
-            curr_generation.hard_tournament()
-
-
-
-            temp_avg_gen_score = 0
-
+            sum_of_avg_score_for_gen = 0
+            # Count avg scores and all collective oponentes_jodidos
             for ind in curr_generation.list_of_ind:
-                temp_avg_gen_score += ind.score
+                ind.score = ind.score/(ind.oponentes_jodidos * self.num_of_tournaments)
+                sum_of_avg_score_for_gen += ind.score
+
+            curr_generation.hard_tournament()
 
             self.history_count = curr_generation.history_count
             h_c_sum = sum(self.history_count)
@@ -441,8 +460,12 @@ class GameWorker(QObject):
 
             best_individual_ids.append(curr_generation.best_individual.id)
 
+
+
+            
+
             # UPDATE UPPER PLOT :)
-            avg_data_per_generation.loc[len(avg_data_per_generation) + 1] = [(temp_avg_gen_score/self.pop_size), (curr_generation.best_individual.score)]
+            avg_data_per_generation.loc[len(avg_data_per_generation) + 1] = [(sum_of_avg_score_for_gen/self.pop_size), (curr_generation.best_individual.score)]
             
             self.canvas_uno.axes.clear()
             self.canvas_uno.fig.set_tight_layout(True)
@@ -463,11 +486,6 @@ class GameWorker(QObject):
                 self.canvas_dos.axes.set_title('Frequencies of applied strategies', fontsize=14)
                 history_count_per_gen.plot(ax=self.canvas_dos.axes)
                 self.canvas_dos.draw()
-
-
-
-
-
 
             curr_generation.mutate_individuals()
 

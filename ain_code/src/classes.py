@@ -3,7 +3,7 @@ import copy
 import pandas as pd
 from src.funcitons import to_binary, to_binary_length
 
-from PyQt5.QtCore import QRunnable, pyqtSignal, QObject
+from PyQt5.QtCore import pyqtSignal, QObject
 
 
 class Individual:
@@ -370,7 +370,7 @@ class GameWorker(QObject):
 
     history_count = []
 
-    finished = pyqtSignal()
+    finished = pyqtSignal(pd.DataFrame, pd.DataFrame, list, list)
 
     def __init__(self, is_2_PD, N, two_pd_payoff_func, prob_of_init_C, num_of_tournaments, num_of_opponents, prehistory_L, pop_size, num_of_gener, tournament_size, crossover_prob, mutation_prob, elitist_strategy, seed, debug, freq_gen_start, delta_freq, canvas_uno, canvas_dos):
         super(GameWorker, self).__init__()
@@ -405,6 +405,8 @@ class GameWorker(QObject):
         list_of_ind = []
         avg_data_per_generation = pd.DataFrame(columns=['Avg per Gen', 'Avg per Best'])
         history_count_per_gen = pd.DataFrame()
+        whole_history_count = []
+        best_individual_ids = []
 
         for gen in range(1, self.num_of_gener + 1):
             print('Generation: ', gen)
@@ -430,8 +432,14 @@ class GameWorker(QObject):
                 temp_avg_gen_score += ind.score
 
             self.history_count = curr_generation.history_count
+            h_c_sum = sum(self.history_count)
+            for id, h_c in enumerate(self.history_count):
+                self.history_count[id] = h_c / h_c_sum
+            whole_history_count.append(self.history_count)
             
             curr_generation.crossover()
+
+            best_individual_ids.append(curr_generation.best_individual.id)
 
             # UPDATE UPPER PLOT :)
             avg_data_per_generation.loc[len(avg_data_per_generation) + 1] = [(temp_avg_gen_score/self.pop_size), (curr_generation.best_individual.score)]
@@ -446,10 +454,6 @@ class GameWorker(QObject):
 
             # UPDATE LOWER PLOT :)
             if gen == self.freq_gen_start or (gen > self.freq_gen_start and (((gen - self.freq_gen_start) % self.delta_freq) == 0)):
-                h_c_sum = sum(self.history_count)
-                for id, h_c in enumerate(self.history_count):
-                    self.history_count[id] = h_c / h_c_sum
-
                 history_count_per_gen["gen {}".format(gen)] = self.history_count
                 # history_count_per_gen.loc[len(history_count_per_gen) + 1] = self.history_count
 
@@ -473,4 +477,4 @@ class GameWorker(QObject):
 
             list_of_ind = curr_generation.list_of_ind
 
-        self.finished.emit()
+        self.finished.emit(avg_data_per_generation, history_count_per_gen, whole_history_count, best_individual_ids)

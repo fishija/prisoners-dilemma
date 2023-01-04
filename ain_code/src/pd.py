@@ -12,6 +12,10 @@ from matplotlib.figure import Figure
 from ui.main_window import Ui_MainWindow
 
 from src.classes import GameWorker
+from src.funcitons import create_results_1_single_run,\
+                          create_results_2_single_run,\
+                          create_results_2_30_single_run,\
+                          create_results_3_single_run
 
 import pandas as pd
 import random
@@ -97,13 +101,13 @@ class PDWindow(Ui_MainWindow, QMainWindow):
         self.prehistory_l = self.prehistory_l_spinBox.value()
 
         self.two_pd_payoff_func['cc_uno'] = self.cc_uno_spinBox.value()
-        # self.two_pd_payoff_func['cc_dos'] = self.cc_dos_spinBox.value()
+        self.two_pd_payoff_func['cc_dos'] = self.cc_dos_spinBox.value()
         self.two_pd_payoff_func['cd_uno'] = self.cd_uno_spinBox.value()
-        # self.two_pd_payoff_func['cd_dos'] = self.cd_dos_spinBox.value()
+        self.two_pd_payoff_func['cd_dos'] = self.cd_dos_spinBox.value()
         self.two_pd_payoff_func['dc_uno'] = self.dc_uno_spinBox.value()
-        # self.two_pd_payoff_func['dc_dos'] = self.dc_dos_spinBox.value()
+        self.two_pd_payoff_func['dc_dos'] = self.dc_dos_spinBox.value()
         self.two_pd_payoff_func['dd_uno'] = self.dd_uno_spinBox.value()
-        # self.two_pd_payoff_func['dd_dos'] = self.dd_dos_spinBox.value()
+        self.two_pd_payoff_func['dd_dos'] = self.dd_dos_spinBox.value()
 
         # GA params
         self.pop_size = self.pop_size_spinBox.value()
@@ -111,7 +115,7 @@ class PDWindow(Ui_MainWindow, QMainWindow):
         self.tournament_size = self.tournament_size_spinBox.value()
         self.crossover_prob = self.crossover_prob_spinBox.value()
         self.mutation_prob = self.mutation_prob_spinBox.value()
-        self.elitist_strategy_checkBox.isChecked()
+        self.elitist_strategy = self.elitist_strategy_checkBox.isChecked()
 
         # Other params
         if self.seed_line.text() == '':
@@ -157,13 +161,26 @@ class PDWindow(Ui_MainWindow, QMainWindow):
 
         return True
 
-    def thread_finished(self):
+    def manage_created_output_files(self, avg_data_per_generation, history_count_per_gen, whole_history_count, best_individual_ids):
+
+        # if coś
+        # create_results_1_single_run(self, 'result_1', avg_data_per_generation)
+        # elif coś innego
+        # create_results_2_single_run(self, 'result_2', whole_history_count)
+        # elif coś jeszcze innego
+        # create_results_2_30_single_run(self, 'result_2_', whole_history_count)
+        # elif coś jeszcze innego
+        create_results_3_single_run(self, 'result_3', best_individual_ids)
+
+
+    def thread_finished(self, avg_data_per_generation: pd.DataFrame, history_count_per_gen: pd.DataFrame, whole_history_count: list, best_individual_ids: list):
         self.num_of_runs -= 1
 
         if self.num_of_runs:
             self.run()
         else:
             # Unlock app
+            self.manage_created_output_files(avg_data_per_generation, history_count_per_gen, whole_history_count, best_individual_ids)
             self.run_button.setEnabled(True)
                 
     def run(self):
@@ -215,7 +232,7 @@ class PDWindow(Ui_MainWindow, QMainWindow):
             self.thread.started.connect(self.worker.run)
             self.worker.finished.connect(self.thread.quit)
             self.worker.finished.connect(self.worker.deleteLater)
+            self.worker.finished.connect(self.thread_finished)
             self.thread.finished.connect(self.thread.deleteLater)
-            self.thread.finished.connect(self.thread_finished)
 
             self.thread.start()

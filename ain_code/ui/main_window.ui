@@ -324,7 +324,7 @@
            <item row="2" column="1">
             <widget class="QSpinBox" name="num_of_opponents_spinBox">
              <property name="minimum">
-              <number>10</number>
+              <number>1</number>
              </property>
              <property name="maximum">
               <number>1000</number>
@@ -347,7 +347,7 @@
               <number>1</number>
              </property>
              <property name="maximum">
-              <number>3</number>
+              <number>6</number>
              </property>
              <property name="value">
               <number>3</number>
@@ -622,6 +622,9 @@
            </item>
            <item>
             <widget class="QSpinBox" name="delta_freq_spinBox">
+             <property name="minimum">
+              <number>1</number>
+             </property>
              <property name="maximum">
               <number>100</number>
              </property>

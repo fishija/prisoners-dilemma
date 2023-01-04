@@ -67,14 +67,12 @@ class PDWindow(Ui_MainWindow, QMainWindow):
         self.canvas_uno = MplCanvas(self)
         self.canvas_uno.fig.set_tight_layout(True)
         self.canvas_uno.axes.set_xlabel('Generations', fontsize=10)
-        self.canvas_uno.axes.set_ylabel('Avg. score', fontsize=10)
         self.canvas_uno.axes.set_title('Average total payoff', fontsize=14)
 
         # create canvas_dos
         self.canvas_dos = MplCanvas(self)
         self.canvas_dos.fig.set_tight_layout(True)
         self.canvas_dos.axes.set_xlabel('Strategies', fontsize=10)
-        self.canvas_dos.axes.set_ylabel('Frequency', fontsize=10)
         self.canvas_dos.axes.set_title('Frequencies of applied strategies', fontsize=14)
 
 
@@ -145,8 +143,8 @@ class PDWindow(Ui_MainWindow, QMainWindow):
                 QMessageBox.warning(self, 'Input ERROR', 'Data in 2p PD payoff function has to look like:\n\nCD_left/DC_right < DD_left/DD_right < CC_left/CC_right < DC_left/CD_left')
                 return False
 
-        if self.num_of_opponents > self.pop_size:
-            QMessageBox.warning(self, 'Input ERROR', 'Number of opponents cannot be greater than size of population')
+        if self.num_of_opponents >= self.pop_size:
+            QMessageBox.warning(self, 'Input ERROR', 'Number of opponents cannot be greater nor equal to size of population')
             return False
 
         if self.num_of_gener < self.freq_gen_start:
@@ -175,12 +173,10 @@ class PDWindow(Ui_MainWindow, QMainWindow):
 
         self.canvas_uno.fig.set_tight_layout(True)
         self.canvas_uno.axes.set_xlabel('Generations', fontsize=10)
-        self.canvas_uno.axes.set_ylabel('Avg. score', fontsize=10)
         self.canvas_uno.axes.set_title('Average total payoff', fontsize=14)
 
         self.canvas_dos.fig.set_tight_layout(True)
         self.canvas_dos.axes.set_xlabel('Strategies', fontsize=10)
-        self.canvas_dos.axes.set_ylabel('Frequency', fontsize=10)
         self.canvas_dos.axes.set_title('Frequencies of applied strategies', fontsize=14)
         self.canvas_uno.draw()
         self.canvas_dos.draw()

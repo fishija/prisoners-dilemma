@@ -174,12 +174,8 @@ class PdTournament:
         return to_ret
 
     def start_whole_tournament(self, num_of_opponents):
-        # print('Whole tournament started')
-
         for ind in self.list_of_ind:
             ind.score = 0
-
-        # print(len(set(self.list_of_ind)))
 
         for ind in self.list_of_ind:
             for opp in range(num_of_opponents):
@@ -193,11 +189,9 @@ class PdTournament:
 
         self.currently_used_inds.append(ind)
 
-        temp_individuals = copy.copy(self.list_of_ind) #####################################
+        temp_individuals = copy.copy(self.list_of_ind)
 
         temp_individuals.remove(ind)
-
-        # print(list(set(self.list_of_ind) - set(temp_individuals)))
 
         for n in range(1, self.N):
             temp = random.randint(0, len(temp_individuals)-1)
@@ -275,8 +269,6 @@ class Generation:
     def hard_tournament(self):
         best_ind_list = []
 
-        # print(len(set(self.list_of_ind)))
-
         for i in range(self.pop_size):
             random_chosen_individuals = []
             original_list_index = []
@@ -293,10 +285,7 @@ class Generation:
 
             best_ind_list.append(sorted(random_chosen_individuals, key=lambda x: x.score, reverse=True)[0])
 
-
         self.list_of_ind = best_ind_list
-        # print(len(set(self.list_of_ind)))
-
 
     def cross_two_inds(self, ind_uno: Individual, ind_dos: Individual):
         temp_ind_uno = copy.deepcopy(ind_uno)
@@ -317,10 +306,8 @@ class Generation:
 
         return Individual(overwrite=temp_ind_uno), Individual(overwrite=temp_ind_dos)
         
-    def crossover(self):########################################################
+    def crossover(self):
         self.best_individual = Individual(overwrite = max(self.list_of_ind))
-        # print('Best individual id: ', to_binary_length(self.best_individual.id, self.best_individual.ind_len))
-        # print("Avg score for Best: {}".format(self.best_individual.score))
 
         crossovered_ind_list = []
         
@@ -442,8 +429,6 @@ class GameWorker(QObject):
             for ind in curr_generation.list_of_ind:
                 temp_avg_gen_score += ind.score
 
-            # print("Avg score for Gen {}: {}".format(i, temp_avg_gen_score/self.pop_size))
-
             self.history_count = curr_generation.history_count
             
             curr_generation.crossover()
@@ -454,7 +439,6 @@ class GameWorker(QObject):
             self.canvas_uno.axes.clear()
             self.canvas_uno.fig.set_tight_layout(True)
             self.canvas_uno.axes.set_xlabel('Generations', fontsize=10)
-            self.canvas_uno.axes.set_ylabel('Avg. score', fontsize=10)
             self.canvas_uno.axes.set_title('Average total payoff', fontsize=14)
             avg_data_per_generation.plot(ax=self.canvas_uno.axes)
             self.canvas_uno.draw()
@@ -462,13 +446,16 @@ class GameWorker(QObject):
 
             # UPDATE LOWER PLOT :)
             if gen == self.freq_gen_start or (gen > self.freq_gen_start and (((gen - self.freq_gen_start) % self.delta_freq) == 0)):
+                h_c_sum = sum(self.history_count)
+                for id, h_c in enumerate(self.history_count):
+                    self.history_count[id] = h_c / h_c_sum
+
                 history_count_per_gen["gen {}".format(gen)] = self.history_count
                 # history_count_per_gen.loc[len(history_count_per_gen) + 1] = self.history_count
 
                 self.canvas_dos.axes.clear()
                 self.canvas_dos.fig.set_tight_layout(True)
                 self.canvas_dos.axes.set_xlabel('Strategies', fontsize=10)
-                self.canvas_dos.axes.set_ylabel('Frequency', fontsize=10)
                 self.canvas_dos.axes.set_title('Frequencies of applied strategies', fontsize=14)
                 history_count_per_gen.plot(ax=self.canvas_dos.axes)
                 self.canvas_dos.draw()
@@ -485,8 +472,5 @@ class GameWorker(QObject):
                 curr_generation.do_elitist()
 
             list_of_ind = curr_generation.list_of_ind
-
-            # for ind in list_of_ind:
-            #     print("ind.id = ", ind.id)
 
         self.finished.emit()

@@ -23,9 +23,9 @@ matplotlib.use('Qt5Agg')
 
 class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-        super(MplCanvas, self).__init__(fig)
+        self.fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = self.fig.add_subplot(111)
+        super(MplCanvas, self).__init__(self.fig)
 
 
 class PDWindow(Ui_MainWindow, QMainWindow):
@@ -50,12 +50,7 @@ class PDWindow(Ui_MainWindow, QMainWindow):
     # Other params
     seed = 0
     num_of_runs = 0
-    debug = False
-
-    # Params to present data
-    avg_data_per_generation = pd.DataFrame(columns=['Avg per Gen', 'Avg per Best'])
-    # history_count_per_gen = pd.DataFrame(columns=[])
-    
+    debug = False    
 
     def __init__(self):
         super(PDWindow, self). __init__()
@@ -68,12 +63,28 @@ class PDWindow(Ui_MainWindow, QMainWindow):
         # connect run button
         self.run_button.clicked.connect(self.run)
 
-        # create canvas
-        self.canvas = MplCanvas(self)
+        # create canvas_uno
+        self.canvas_uno = MplCanvas(self)
+        self.canvas_uno.fig.set_tight_layout(True)
+        self.canvas_uno.axes.set_xlabel('Generations', fontsize=10)
+        self.canvas_uno.axes.set_ylabel('Avg. score', fontsize=10)
+        self.canvas_uno.axes.set_title('Average total payoff', fontsize=14)
+
+        # create canvas_dos
+        self.canvas_dos = MplCanvas(self)
+        self.canvas_dos.fig.set_tight_layout(True)
+        self.canvas_dos.axes.set_xlabel('Strategies', fontsize=10)
+        self.canvas_dos.axes.set_ylabel('Frequency', fontsize=10)
+        self.canvas_dos.axes.set_title('Frequencies of applied strategies', fontsize=14)
+
 
         layout = QVBoxLayout()
-        layout.addWidget(self.canvas)
+        layout.addWidget(self.canvas_uno)
         self.avg_frame.setLayout(layout)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.canvas_dos)
+        self.freq_frame.setLayout(layout)
 
         self.show()
 
@@ -112,6 +123,8 @@ class PDWindow(Ui_MainWindow, QMainWindow):
 
         self.num_of_runs = self.num_of_runs_spinBox.value()
         self.debug = self.debug_checkBox.isChecked()
+        self.freq_gen_start = self.freq_gen_start_spinBox.value()
+        self.delta_freq = self.delta_freq_spinBox.value()
 
     def input_valid(self):
         # cd_uno/dc_dos < dd_uno/dd_dos < cc_uno/cc_dos < dc_uno/cd_uno
@@ -129,76 +142,57 @@ class PDWindow(Ui_MainWindow, QMainWindow):
                not dd_uno > cd_uno or not dd_uno > dc_dos or\
                not dd_dos > cd_uno or not dd_dos > dc_dos:
 
-                QMessageBox.warning(self, '2p PD payoff func ERROR', 'Data in 2p PD payoff function has to look like:\n\nCD_left/DC_right < DD_left/DD_right < CC_left/CC_right < DC_left/CD_left')
+                QMessageBox.warning(self, 'Input ERROR', 'Data in 2p PD payoff function has to look like:\n\nCD_left/DC_right < DD_left/DD_right < CC_left/CC_right < DC_left/CD_left')
                 return False
+
+        if self.num_of_opponents > self.pop_size:
+            QMessageBox.warning(self, 'Input ERROR', 'Number of opponents cannot be greater than size of population')
+            return False
+
+        if self.num_of_gener < self.freq_gen_start:
+            QMessageBox.warning(self, 'Input ERROR', 'Number of generations must be greater or equal to frequency gen start')
+            return False
+
+        if self.pop_size < self.tournament_size:
+            QMessageBox.warning(self, 'Input ERROR', 'Size of population must be greater or equal to tournament size')
+            return False
+
         return True
 
     def thread_finished(self):
-        # Unlock app
-        self.run_button.setEnabled(True)
+        self.num_of_runs -= 1
 
-        import time
-
-        start = time.time()
-        self.canvas.axes.cla()
-        self.avg_data_per_generation.plot(ax=self.canvas.axes)
-        self.canvas.draw()
-        print('Plotting took {}s'.format(time.time()-start))
-        pass
-
-    def update_upper_plot(self, avg_gen: float, avg_best: float):
-        import time
-        self.avg_data_per_generation.loc[len(self.avg_data_per_generation) + 1] = [avg_gen, avg_best]
-        print(avg_gen, avg_best)
-
-        self.avg_gen.append(avg_gen)
-        
-        if self.x_data:
-            self.x_data.append(self.x_data[-1] + 1)
+        if self.num_of_runs:
+            self.run()
         else:
-            self.x_data.append(1)
-
-        # if self.x_data[-1] % 5 == 0:
-        #     start = time.time()
-        #     self.canvas.axes.cla()
-        #     self.avg_data_per_generation.plot(ax=self.canvas.axes)
-        #     self.canvas.draw()
-        #     print('Plotting took {}s'.format(time.time()-start))
-
-        pass
-
-    def update_lower_plot(self, history_count: list):
-        # print(history_count)
-        pass
+            # Unlock app
+            self.run_button.setEnabled(True)
                 
     def run(self):
 
-        self.avg_data_per_generation = pd.DataFrame(columns=['Avg per Gen', 'Avg per Best'])
-        # self.history_count_per_gen = pd.DataFrame(columns=[])
+        self.canvas_uno.axes.clear()
+        self.canvas_dos.axes.clear()
+
+        self.canvas_uno.fig.set_tight_layout(True)
+        self.canvas_uno.axes.set_xlabel('Generations', fontsize=10)
+        self.canvas_uno.axes.set_ylabel('Avg. score', fontsize=10)
+        self.canvas_uno.axes.set_title('Average total payoff', fontsize=14)
+
+        self.canvas_dos.fig.set_tight_layout(True)
+        self.canvas_dos.axes.set_xlabel('Strategies', fontsize=10)
+        self.canvas_dos.axes.set_ylabel('Frequency', fontsize=10)
+        self.canvas_dos.axes.set_title('Frequencies of applied strategies', fontsize=14)
+        self.canvas_uno.draw()
+        self.canvas_dos.draw()
+
+        if self.run_button.isEnabled():
+            self.set_attributes()
 
         if self.input_valid():
-            # Create new plots
-
-            self.avg_gen = []
-            self.x_data = []
-
-
-
-            # self.figure = Figure()
-            # self.canvas = FigureCanvas(self.figure)
-
-
-
-
-
 
             # Lock app
             self.run_button.setDisabled(True)
-
-
-            self.set_attributes()
-
-
+                
             self.thread = QThread()
             self.worker = GameWorker(self.two_pd, 
                                     self.n_players, 
@@ -214,7 +208,11 @@ class PDWindow(Ui_MainWindow, QMainWindow):
                                     self.mutation_prob,
                                     self.elitist_strategy,
                                     self.seed,
-                                    self.debug)
+                                    self.debug,
+                                    self.freq_gen_start,
+                                    self.delta_freq,
+                                    self.canvas_uno,
+                                    self.canvas_dos)
             
             self.worker.moveToThread(self.thread)
 
@@ -223,7 +221,5 @@ class PDWindow(Ui_MainWindow, QMainWindow):
             self.worker.finished.connect(self.worker.deleteLater)
             self.thread.finished.connect(self.thread.deleteLater)
             self.thread.finished.connect(self.thread_finished)
-            self.worker.avg_progress.connect(self.update_upper_plot)
-            self.worker.updated_history_count.connect(self.update_lower_plot)
 
             self.thread.start()

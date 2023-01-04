@@ -1,5 +1,6 @@
 import random
 import copy
+import pandas as pd
 from src.funcitons import to_binary, to_binary_length
 
 from PyQt5.QtCore import QRunnable, pyqtSignal, QObject
@@ -342,7 +343,8 @@ class Generation:
                 crossovered_ind_list.append(Individual(overwrite = ind_dos))
 
         while len(crossovered_ind_list) != self.pop_size:
-            chosen_ind_uno, chosen_ind_dos = random.choices(list(set(self.list_of_ind)), k = 2)
+            chosen_ind_uno, chosen_ind_dos = random.choices(list(self.list_of_ind), k = 2)
+
             ind_uno, ind_dos= self.cross_two_inds(chosen_ind_uno, chosen_ind_dos)
 
             if ind_uno:
@@ -381,11 +383,9 @@ class GameWorker(QObject):
 
     history_count = []
 
-    avg_progress = pyqtSignal(float, float)
-    updated_history_count = pyqtSignal(list)
     finished = pyqtSignal()
 
-    def __init__(self, is_2_PD, N, two_pd_payoff_func, prob_of_init_C, num_of_tournaments, num_of_opponents, prehistory_L, pop_size, num_of_gener, tournament_size, crossover_prob, mutation_prob, elitist_strategy, seed, debug):
+    def __init__(self, is_2_PD, N, two_pd_payoff_func, prob_of_init_C, num_of_tournaments, num_of_opponents, prehistory_L, pop_size, num_of_gener, tournament_size, crossover_prob, mutation_prob, elitist_strategy, seed, debug, freq_gen_start, delta_freq, canvas_uno, canvas_dos):
         super(GameWorker, self).__init__()
 
         if is_2_PD:
@@ -406,20 +406,21 @@ class GameWorker(QObject):
         self.mutation_prob = mutation_prob
         self.debug = debug
         self.elitist_strategy = elitist_strategy
+        self.freq_gen_start = freq_gen_start
+        self.delta_freq = delta_freq
+        self.canvas_uno = canvas_uno
+        self.canvas_dos = canvas_dos
 
         if seed:
             random.seed(seed)
 
-
-        random.seed(1) ##############################################################################################
-        
-
     def run(self):
-        
         list_of_ind = []
+        avg_data_per_generation = pd.DataFrame(columns=['Avg per Gen', 'Avg per Best'])
+        history_count_per_gen = pd.DataFrame()
 
-        for i in range(self.num_of_gener):
-            print('Generation: ', i)
+        for gen in range(1, self.num_of_gener + 1):
+            print('Generation: ', gen)
 
             if not self.is_2_PD and not list_of_ind:
                 curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob)
@@ -447,10 +448,32 @@ class GameWorker(QObject):
             
             curr_generation.crossover()
 
+            # UPDATE UPPER PLOT :)
+            avg_data_per_generation.loc[len(avg_data_per_generation) + 1] = [(temp_avg_gen_score/self.pop_size), (curr_generation.best_individual.score)]
+            
+            self.canvas_uno.axes.clear()
+            self.canvas_uno.fig.set_tight_layout(True)
+            self.canvas_uno.axes.set_xlabel('Generations', fontsize=10)
+            self.canvas_uno.axes.set_ylabel('Avg. score', fontsize=10)
+            self.canvas_uno.axes.set_title('Average total payoff', fontsize=14)
+            avg_data_per_generation.plot(ax=self.canvas_uno.axes)
+            self.canvas_uno.draw()
 
 
-            self.avg_progress.emit((temp_avg_gen_score/self.pop_size), (curr_generation.best_individual.score))
-            self.updated_history_count.emit(self.history_count)
+            # UPDATE LOWER PLOT :)
+            if gen == self.freq_gen_start or (gen > self.freq_gen_start and (((gen - self.freq_gen_start) % self.delta_freq) == 0)):
+                history_count_per_gen["gen {}".format(gen)] = self.history_count
+                # history_count_per_gen.loc[len(history_count_per_gen) + 1] = self.history_count
+
+                self.canvas_dos.axes.clear()
+                self.canvas_dos.fig.set_tight_layout(True)
+                self.canvas_dos.axes.set_xlabel('Strategies', fontsize=10)
+                self.canvas_dos.axes.set_ylabel('Frequency', fontsize=10)
+                self.canvas_dos.axes.set_title('Frequencies of applied strategies', fontsize=14)
+                history_count_per_gen.plot(ax=self.canvas_dos.axes)
+                self.canvas_dos.draw()
+
+
 
 
 
@@ -462,5 +485,8 @@ class GameWorker(QObject):
                 curr_generation.do_elitist()
 
             list_of_ind = curr_generation.list_of_ind
+
+            # for ind in list_of_ind:
+            #     print("ind.id = ", ind.id)
 
         self.finished.emit()

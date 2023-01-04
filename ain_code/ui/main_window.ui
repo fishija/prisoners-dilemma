@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1043</width>
-    <height>753</height>
+    <width>967</width>
+    <height>736</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_6">
+   <layout class="QHBoxLayout" name="horizontalLayout_7">
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
@@ -150,7 +150,11 @@
             <item>
              <layout class="QGridLayout" name="gridLayout">
               <item row="1" column="1">
-               <widget class="QSpinBox" name="cd_uno_spinBox"/>
+               <widget class="QSpinBox" name="cd_uno_spinBox">
+                <property name="maximum">
+                 <number>200</number>
+                </property>
+               </widget>
               </item>
               <item row="3" column="0">
                <widget class="QLabel" name="label_6">
@@ -175,6 +179,9 @@
               </item>
               <item row="2" column="1">
                <widget class="QSpinBox" name="dc_uno_spinBox">
+                <property name="maximum">
+                 <number>200</number>
+                </property>
                 <property name="value">
                  <number>50</number>
                 </property>
@@ -189,6 +196,9 @@
               </item>
               <item row="0" column="1">
                <widget class="QSpinBox" name="cc_uno_spinBox">
+                <property name="maximum">
+                 <number>200</number>
+                </property>
                 <property name="value">
                  <number>30</number>
                 </property>
@@ -196,6 +206,9 @@
               </item>
               <item row="3" column="1">
                <widget class="QSpinBox" name="dd_uno_spinBox">
+                <property name="maximum">
+                 <number>200</number>
+                </property>
                 <property name="value">
                  <number>10</number>
                 </property>
@@ -203,6 +216,9 @@
               </item>
               <item row="0" column="2">
                <widget class="QSpinBox" name="cc_dos_spinBox">
+                <property name="maximum">
+                 <number>200</number>
+                </property>
                 <property name="value">
                  <number>30</number>
                 </property>
@@ -210,16 +226,26 @@
               </item>
               <item row="1" column="2">
                <widget class="QSpinBox" name="cd_dos_spinBox">
+                <property name="maximum">
+                 <number>200</number>
+                </property>
                 <property name="value">
                  <number>50</number>
                 </property>
                </widget>
               </item>
               <item row="2" column="2">
-               <widget class="QSpinBox" name="dc_dos_spinBox"/>
+               <widget class="QSpinBox" name="dc_dos_spinBox">
+                <property name="maximum">
+                 <number>200</number>
+                </property>
+               </widget>
               </item>
               <item row="3" column="2">
                <widget class="QSpinBox" name="dd_dos_spinBox">
+                <property name="maximum">
+                 <number>200</number>
+                </property>
                 <property name="value">
                  <number>10</number>
                 </property>
@@ -251,7 +277,7 @@
               <number>1</number>
              </property>
              <property name="maximum">
-              <number>999999999</number>
+              <number>1000</number>
              </property>
              <property name="value">
               <number>4</number>
@@ -301,7 +327,7 @@
               <number>10</number>
              </property>
              <property name="maximum">
-              <number>999999999</number>
+              <number>1000</number>
              </property>
              <property name="value">
               <number>10</number>
@@ -392,7 +418,7 @@
               <double>1.000000000000000</double>
              </property>
              <property name="value">
-              <double>0.005000000000000</double>
+              <double>0.003000000000000</double>
              </property>
             </widget>
            </item>
@@ -556,6 +582,57 @@
           </layout>
          </item>
          <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QLabel" name="label_17">
+             <property name="text">
+              <string>freq_gen_start</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="freq_gen_start_spinBox">
+             <property name="maximum">
+              <number>1000</number>
+             </property>
+             <property name="value">
+              <number>30</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_18">
+             <property name="text">
+              <string>delta_freq</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="delta_freq_spinBox">
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>10</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
           <spacer name="verticalSpacer_7">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
@@ -629,14 +706,13 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <widget class="QLabel" name="label_17">
-        <property name="text">
-         <string>Average total payoff</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QFrame" name="avg_frame">
+        <property name="minimumSize">
+         <size>
+          <width>500</width>
+          <height>300</height>
+         </size>
+        </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
@@ -646,14 +722,13 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_18">
-        <property name="text">
-         <string>Frequencies of applied strategies</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QFrame" name="freq_frame">
+        <property name="minimumSize">
+         <size>
+          <width>500</width>
+          <height>300</height>
+         </size>
+        </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>

@@ -91,6 +91,12 @@ class PDWindow(Ui_MainWindow, QMainWindow):
 
         self.show()
 
+    def set_seed_conditionally(self):
+        if self.seed_line.text() == '':
+            self.seed = random.randint(0, sys.maxsize)
+        else:
+            self.seed = float(self.seed_line.text())
+
     def set_attributes(self):
         # Pd game params
         self.two_pd = self.two_pd_radioButton.isChecked()
@@ -119,11 +125,6 @@ class PDWindow(Ui_MainWindow, QMainWindow):
         self.elitist_strategy = self.elitist_strategy_checkBox.isChecked()
 
         # Other params
-        if self.seed_line.text() == '':
-            self.seed = random.randint(0, sys.maxsize)
-        else:
-            self.seed = float(self.seed_line.text())
-
         self.num_of_runs = self.num_of_runs_spinBox.value()
         self.debug = self.debug_checkBox.isChecked()
         self.freq_gen_start = self.freq_gen_start_spinBox.value()
@@ -211,6 +212,8 @@ class PDWindow(Ui_MainWindow, QMainWindow):
 
             # Lock app
             self.run_button.setDisabled(True)
+
+            self.set_seed_conditionally()
                 
             self.thread = QThread()
             self.worker = GameWorker(self.two_pd, 

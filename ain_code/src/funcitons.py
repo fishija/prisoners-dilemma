@@ -1,3 +1,5 @@
+import pandas as pd
+import numpy as np
 import os
 
 
@@ -164,11 +166,10 @@ def create_results_3_single_run(PDWindow, filename, best_individual_ids):
 
 def create_m_result_1_multiple_run(PDWindow, filename, list_of_dfs):
     filename = filename + '.txt'
-
     create_results_dir()
 
     for df in list_of_dfs:
-        df.rename(columns = {'Avg per Best': 'best_fit', 'Avg per Gen': 'avg_fit'}, inplace = True)
+        df.rename(columns = {'Avg per Best': 'best_fit', 'Avg per Gen': 'avg_fit'}, inplace=True)
 
     with open(os.path.join("RESULTS", filename), 'w') as out_f:
         to_write = ''
@@ -176,7 +177,7 @@ def create_m_result_1_multiple_run(PDWindow, filename, list_of_dfs):
 
         for index, df in enumerate(list_of_dfs):
 
-            to_write += '#\n# Exper {}'.format(index + 1)
+            to_write += '#\n# Exper {}\n'.format(index + 1)
 
             to_write += '# 1 2 3\n'
 
@@ -188,44 +189,112 @@ def create_m_result_1_multiple_run(PDWindow, filename, list_of_dfs):
         out_f.write(to_write)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def create_std_result_1_multiple_run(PDWindow, filename, df):
+def create_std_result_1_multiple_run(PDWindow, filename, list_of_dfs):
+    filename = filename + '.txt'
     create_results_dir()
 
-    with open(os.path.join("RESULTS", filename), 'w') as out_f:
-        pass
+    for index, df in enumerate(list_of_dfs):
+        df.drop('avg_fit', axis=1, inplace=True)
+        df.rename(columns = {'best_fit':'{}'.format(index)}, inplace=True)
+        list_of_dfs[index] = df.T
 
+    temp_df = pd.concat(list_of_dfs, axis = 0)
+
+    df_ready = pd.DataFrame()
+
+    df_ready['avg_best'] = temp_df.mean()
+    df_ready['std_best'] = np.std(temp_df)
+
+    with open(os.path.join("RESULTS", "std_result_1.txt"), 'w') as out_f:
+        to_write = ''
+        to_write += write_window_data(PDWindow)
+
+        to_write += '#\n# 1 2 3\n'
+
+        to_write += '# gen avg_best std_best\n'
+
+        for index, row in df_ready.iterrows():
+            to_write += "{} {} {}\n".format(index-1, row['avg_best'], row['std_best'])
+
+        out_f.write(to_write)
 
 def create_result_1N_single_run(PDWindow, filename, df):
+    filename = filename + '.txt'
     create_results_dir()
     create_results_1_single_run(PDWindow, filename, df)
 
 
-def create_result_2N_single_run(PDWindow, filename, df):
+
+
+
+# if gen == self.freq_gen_start or (gen > self.freq_gen_start and (((gen - self.freq_gen_start) % self.delta_freq) == 0)):
+#      history_count_per_gen["gen {}".format(gen)] = self.history_count
+
+
+
+
+
+
+def create_result_2N_single_run(PDWindow, filename, whole_game_histories):
+    filename = filename + '.txt'
     create_results_dir()
+    histories_count = len(whole_game_histories[0])
+
+    print(histories_count)
 
     with open(os.path.join("RESULTS", filename), 'w') as out_f:
-        pass
+        to_write = ''
+        to_write += write_window_data(PDWindow)
+
+        to_write += '#\n# 10 best frequencies\n#'
+
+        for i in range(1, 22):
+            to_write += ' {}'.format(i)
+
+        to_write += '\n# gen'
+
+        for i in range(0,10):
+            to_write += ' history_id freq'
+
+        to_write += '\n'
+
+        for index in range(PDWindow.freq_gen_start-1, len(whole_game_histories), PDWindow.delta_freq):
+            to_write += '{}'.format(index)
+
+            sorted_key_list = sorted(range(histories_count), key=lambda k: whole_game_histories[index][k])[0:10]
 
 
-def create_result_2N_30_single_run(PDWindow, filename, df):
+            for key in sorted_key_list:
+                to_write += ' {} {}'.format(to_binary(key), whole_game_histories[index][key])
+
+
+            to_write += '\n'
+
+
+
+
+
+        out_f.write(to_write)
+
+
+def create_result_2N_30_single_run(PDWindow, filename, whole_game_histories):
     create_results_dir()
 
-    with open(os.path.join("RESULTS", filename), 'w') as out_f:
-        pass
+    for index in range(PDWindow.freq_gen_start-1, len(whole_game_histories), PDWindow.delta_freq):
+        temp_filename = "{}{}.txt".format(filename, index + 1)
+        temp_history = whole_game_histories[index]
+
+        with open(os.path.join("RESULTS", temp_filename), 'w') as out_f:
+            to_write = ''
+            to_write += write_window_data(PDWindow)
+
+            to_write += '# 1 2\n'
+
+            to_write += '# history freq_of_history'
+
+            for index, frequency in enumerate(temp_history):
+                to_write += '\n{} {}'.format(index,frequency)
+
+            to_write += '\n'
+
+            out_f.write(to_write)

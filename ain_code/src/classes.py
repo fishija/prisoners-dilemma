@@ -378,7 +378,7 @@ class GameWorker(QObject):
 
     history_count = []
 
-    finished = pyqtSignal(pd.DataFrame, pd.DataFrame, list, list)
+    finished = pyqtSignal(pd.DataFrame, list, list)
 
     def __init__(self, is_2_PD, N, two_pd_payoff_func, prob_of_init_C, num_of_tournaments, num_of_opponents, prehistory_L, pop_size, num_of_gener, tournament_size, crossover_prob, mutation_prob, elitist_strategy, seed, debug, freq_gen_start, delta_freq, canvas_uno, canvas_dos):
         super(GameWorker, self).__init__()
@@ -416,8 +416,6 @@ class GameWorker(QObject):
         # self.num_of_gener = 2
         # self.tournament_size = 2
         # random.seed(1)
-
-
 
 
 
@@ -495,4 +493,4 @@ class GameWorker(QObject):
 
             list_of_ind = curr_generation.list_of_ind
 
-        self.finished.emit(avg_data_per_generation, history_count_per_gen, whole_history_count, best_individual_ids)
+        self.finished.emit(avg_data_per_generation, whole_history_count, best_individual_ids)

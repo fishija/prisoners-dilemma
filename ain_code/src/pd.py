@@ -16,7 +16,11 @@ from src.funcitons import create_results_1_single_run,\
                           create_results_2_single_run,\
                           create_results_2_30_single_run,\
                           create_results_3_single_run,\
-                          create_m_result_1_multiple_run
+                          create_m_result_1_multiple_run,\
+                          create_std_result_1_multiple_run,\
+                          create_result_1N_single_run,\
+                          create_result_2N_single_run,\
+                          create_result_2N_30_single_run
 
 import pandas as pd
 import random
@@ -166,20 +170,24 @@ class PDWindow(Ui_MainWindow, QMainWindow):
 
         return True
 
-    def manage_created_output_files(self, avg_data_per_generation, history_count_per_gen, whole_history_count, best_individual_ids):
+    def manage_created_output_files(self, avg_data_per_generation, whole_history_count, best_individual_ids):
 
-        # if coś
-        # create_results_1_single_run(self, 'result_1', avg_data_per_generation)
-        # elif coś innego
-        # create_results_2_single_run(self, 'result_2', whole_history_count)
-        # elif coś jeszcze innego
-        # create_results_2_30_single_run(self, 'result_2_', whole_history_count)
-        # elif coś jeszcze innego
-        # create_results_3_single_run(self, 'result_3', best_individual_ids)
-        # elif coś jeszcze innego
-        create_m_result_1_multiple_run(self, 'm_result_1', self.multiple_run_data_storage)
+        if self.two_pd and self.num_of_runs_spinBox.value() == 1:
+            create_results_1_single_run(self, 'result_1', avg_data_per_generation)
+            create_results_2_single_run(self, 'result_2', whole_history_count)
+            create_results_2_30_single_run(self, 'result_2_', whole_history_count)
+            create_results_3_single_run(self, 'result_3', best_individual_ids)
 
-    def thread_finished(self, avg_data_per_generation: pd.DataFrame, history_count_per_gen: pd.DataFrame, whole_history_count: list, best_individual_ids: list):
+        elif self.two_pd and self.num_of_runs_spinBox.value() > 1:
+            create_m_result_1_multiple_run(self, 'm_result_1', self.multiple_run_data_storage)
+            create_std_result_1_multiple_run(self, 'std_result_1', self.multiple_run_data_storage)
+
+        elif not self.two_pd and self.num_of_runs_spinBox.value() == 1:
+            create_result_1N_single_run(self, 'result_1N', avg_data_per_generation)
+            create_result_2N_single_run(self, 'result_2N', whole_history_count)
+            create_result_2N_30_single_run(self, 'result_2N_', whole_history_count)
+
+    def thread_finished(self, avg_data_per_generation: pd.DataFrame, whole_history_count: list, best_individual_ids: list):
         self.num_of_runs -= 1
         self.multiple_run_data_storage.append(avg_data_per_generation)
 
@@ -187,8 +195,9 @@ class PDWindow(Ui_MainWindow, QMainWindow):
             self.run()
         else:
             # Unlock app
-            self.manage_created_output_files(avg_data_per_generation, history_count_per_gen, whole_history_count, best_individual_ids)
+            self.manage_created_output_files(avg_data_per_generation, whole_history_count, best_individual_ids)
             self.run_button.setEnabled(True)
+            self.num_of_runs_spinBox.setEnabled(True)
                 
     def run(self):
 
@@ -212,6 +221,7 @@ class PDWindow(Ui_MainWindow, QMainWindow):
 
             # Lock app
             self.run_button.setDisabled(True)
+            self.num_of_runs_spinBox.setDisabled(True)
 
             self.set_seed_conditionally()
                 

@@ -218,21 +218,11 @@ def create_std_result_1_multiple_run(PDWindow, filename, list_of_dfs):
 
         out_f.write(to_write)
 
+
 def create_result_1N_single_run(PDWindow, filename, df):
     filename = filename + '.txt'
     create_results_dir()
     create_results_1_single_run(PDWindow, filename, df)
-
-
-
-
-
-# if gen == self.freq_gen_start or (gen > self.freq_gen_start and (((gen - self.freq_gen_start) % self.delta_freq) == 0)):
-#      history_count_per_gen["gen {}".format(gen)] = self.history_count
-
-
-
-
 
 
 def create_result_2N_single_run(PDWindow, filename, whole_game_histories):
@@ -263,16 +253,10 @@ def create_result_2N_single_run(PDWindow, filename, whole_game_histories):
 
             sorted_key_list = sorted(range(histories_count), key=lambda k: whole_game_histories[index][k])[0:10]
 
-
             for key in sorted_key_list:
                 to_write += ' {} {}'.format(to_binary(key), whole_game_histories[index][key])
 
-
             to_write += '\n'
-
-
-
-
 
         out_f.write(to_write)
 

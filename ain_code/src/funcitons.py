@@ -162,19 +162,47 @@ def create_results_3_single_run(PDWindow, filename, best_individual_ids):
         out_f.write(to_write)
 
 
+def create_m_result_1_multiple_run(PDWindow, filename, list_of_dfs):
+    filename = filename + '.txt'
 
-
-
-
-
-
-
-
-def create_m_result_1_multiple_run(PDWindow, filename, df):
     create_results_dir()
 
+    for df in list_of_dfs:
+        df.rename(columns = {'Avg per Best': 'best_fit', 'Avg per Gen': 'avg_fit'}, inplace = True)
+
     with open(os.path.join("RESULTS", filename), 'w') as out_f:
-        pass
+        to_write = ''
+        to_write += write_window_data(PDWindow)
+
+        for index, df in enumerate(list_of_dfs):
+
+            to_write += '#\n# Exper {}'.format(index + 1)
+
+            to_write += '# 1 2 3\n'
+
+            to_write += '# gen best_fit avg_fit\n'
+
+            for index, row in df.iterrows():
+                to_write += "{} {} {}\n".format(index-1, row['best_fit'], row['avg_fit'])
+
+        out_f.write(to_write)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def create_std_result_1_multiple_run(PDWindow, filename, df):

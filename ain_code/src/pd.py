@@ -15,7 +15,8 @@ from src.classes import GameWorker
 from src.funcitons import create_results_1_single_run,\
                           create_results_2_single_run,\
                           create_results_2_30_single_run,\
-                          create_results_3_single_run
+                          create_results_3_single_run,\
+                          create_m_result_1_multiple_run
 
 import pandas as pd
 import random
@@ -128,6 +129,9 @@ class PDWindow(Ui_MainWindow, QMainWindow):
         self.freq_gen_start = self.freq_gen_start_spinBox.value()
         self.delta_freq = self.delta_freq_spinBox.value()
 
+        # Additional structures
+        self.multiple_run_data_storage = []
+
     def input_valid(self):
         # cd_uno/dc_dos < dd_uno/dd_dos < cc_uno/cc_dos < dc_uno/cd_uno
 
@@ -170,11 +174,13 @@ class PDWindow(Ui_MainWindow, QMainWindow):
         # elif coś jeszcze innego
         # create_results_2_30_single_run(self, 'result_2_', whole_history_count)
         # elif coś jeszcze innego
-        create_results_3_single_run(self, 'result_3', best_individual_ids)
-
+        # create_results_3_single_run(self, 'result_3', best_individual_ids)
+        # elif coś jeszcze innego
+        create_m_result_1_multiple_run(self, 'm_result_1', self.multiple_run_data_storage)
 
     def thread_finished(self, avg_data_per_generation: pd.DataFrame, history_count_per_gen: pd.DataFrame, whole_history_count: list, best_individual_ids: list):
         self.num_of_runs -= 1
+        self.multiple_run_data_storage.append(avg_data_per_generation)
 
         if self.num_of_runs:
             self.run()

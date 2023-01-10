@@ -229,8 +229,7 @@ def create_result_2N_single_run(PDWindow, filename, whole_game_histories):
     filename = filename + '.txt'
     create_results_dir()
     histories_count = len(whole_game_histories[0])
-
-    print(histories_count)
+    history_binary_len = len(to_binary(histories_count))
 
     with open(os.path.join("RESULTS", filename), 'w') as out_f:
         to_write = ''
@@ -251,10 +250,10 @@ def create_result_2N_single_run(PDWindow, filename, whole_game_histories):
         for index in range(PDWindow.freq_gen_start-1, len(whole_game_histories), PDWindow.delta_freq):
             to_write += '{}'.format(index)
 
-            sorted_key_list = sorted(range(histories_count), key=lambda k: whole_game_histories[index][k])[0:10]
+            sorted_key_list = sorted(range(histories_count), key=lambda k: whole_game_histories[index][k], reverse=True)[0:10]
 
             for key in sorted_key_list:
-                to_write += ' {} {}'.format(to_binary(key), whole_game_histories[index][key])
+                to_write += ' {} {}'.format(to_binary_length(key, history_binary_len), whole_game_histories[index][key])
 
             to_write += '\n'
 
@@ -282,3 +281,48 @@ def create_result_2N_30_single_run(PDWindow, filename, whole_game_histories):
             to_write += '\n'
 
             out_f.write(to_write)
+
+
+
+
+
+
+
+
+def print_11(ind_list):
+    print("Strategies")
+    for ind in ind_list:
+        whole_ind_binary = to_binary_length(ind.id, ind.ind_len)
+        print(whole_ind_binary)
+
+    print("Prehistory")
+
+
+
+def print_12():
+    pass
+
+
+def print_13():
+    pass
+
+
+def print_14():
+    pass
+
+
+def print_21():
+    pass
+
+
+def print_22():
+    pass
+
+
+def print_23():
+    pass
+
+
+def print_31():
+    pass
+

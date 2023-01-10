@@ -1,5 +1,5 @@
 from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtWidgets import QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QDialog, QFileDialog
 from PyQt5.QtCore import QRegExp
 
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QVBoxLayout, QHBoxLayout
@@ -10,6 +10,7 @@ import matplotlib
 from matplotlib.figure import Figure
 
 from ui.main_window import Ui_MainWindow
+from ui.load_dialog import Ui_LoadDialog
 
 from src.classes import GameWorker
 from src.funcitons import create_results_1_single_run,\
@@ -20,14 +21,122 @@ from src.funcitons import create_results_1_single_run,\
                           create_std_result_1_multiple_run,\
                           create_result_1N_single_run,\
                           create_result_2N_single_run,\
-                          create_result_2N_30_single_run
+                          create_result_2N_30_single_run,\
+                          to_binary
 
 import pandas as pd
 import random
 import sys
+import os
 
 
 matplotlib.use('Qt5Agg')
+
+
+class LoadDialog(Ui_LoadDialog, QDialog):
+    strategies = []
+    prehistory = ''
+
+    def __init__(self, parent):
+        super(LoadDialog, self).__init__()
+
+        self.setupUi(self)
+
+        QDialog.setModal(self,True)
+
+        self.strategies_path = ''
+        self.prehistory_path = ''
+        self.strategies = []
+        self.prehistory = ''
+        self.parent = parent
+
+        # connect buttons
+        self.choose_strategies_button.clicked.connect(self.choose_strategies)
+        self.choose_prehistory_button.clicked.connect(self.choose_prehistory)
+        self.run_button.clicked.connect(self.check_and_run)
+        self.cancel_button.clicked.connect(self.reject)
+
+        self.show()
+
+    def choose_strategies(self):
+        chosen_path = QFileDialog.getOpenFileName(self, "Choose STRATEGIES .txt file", '', "Text file (*.txt)")[0]
+
+        if chosen_path != '':
+            self.strategies_path = chosen_path
+            self.strategies_textEdit.setPlainText(chosen_path)
+
+    def choose_prehistory(self):
+        chosen_path = QFileDialog.getOpenFileName(self, "Choose PREHISTORY .txt file", '', "Text file (*.txt)")[0]
+
+        if chosen_path != '':
+            self.prehistory_path = chosen_path
+            self.prehistory_textEdit.setPlainText(chosen_path)
+
+    def read_file(self, f_path):
+        to_ret = []
+        with open(f_path, 'r') as f:
+            file_lines = f.read().splitlines()
+
+            for line in file_lines:
+                line = line.replace(' ', '')
+
+                if line:
+                    if line[0] == '#':
+                        continue
+                    to_ret.append(line)
+        
+        return to_ret
+
+    def check_and_run(self):
+        # create temporary variables
+        N = 0
+        L = self.parent.prehistory_l
+        pop_size = self.parent.pop_size
+        num_of_opponents = self.parent.num_of_opponents
+
+        if self.parent.two_pd:
+            N = 2
+        else:
+            N = self.parent.n_players
+
+        ind_len = '1'
+        ind_len += to_binary(N-1)       
+        ind_len *= L       
+        ind_len = int(ind_len, 2) + 1
+
+        if self.strategies_path == '':
+            QMessageBox.warning(self, 'ERROR', 'Archivo "Strategies" no seleccionado')
+            
+        elif self.prehistory_path == '':
+            QMessageBox.warning(self, 'ERROR', 'Archivo "Prehistory" no seleccionado')
+
+        elif not os.path.exists(self.strategies_path):
+            QMessageBox.warning(self, 'ERROR', 'Archivo "Strategies" no encontrado')
+
+        elif not os.path.exists(self.prehistory_path):
+            QMessageBox.warning(self, 'ERROR', 'Archivo "Prehistory" no encontrado')
+
+        else:
+            self.strategies = self.read_file(self.strategies_path)
+            self.prehistory = ''.join(self.read_file(self.prehistory_path))
+
+            if len(self.strategies) < N:
+                QMessageBox.warning(self, 'ERROR', 'No hay suficiente estrategia')
+
+            elif len(self.prehistory) != (N * L):
+                QMessageBox.warning(self, 'ERROR', 'Prehistoria de mala duración')
+
+            elif len(self.strategies[0]) < ind_len:
+                QMessageBox.warning(self, 'ERROR', 'Estrategia de longitud incorrecta')
+
+            elif len(self.strategies) != pop_size:
+                QMessageBox.warning(self, 'ERROR', 'Una población demasiado pequeña')
+
+            elif len(self.strategies) < num_of_opponents:
+                QMessageBox.warning(self, 'ERROR', 'Demasiados "num_of_opponents"')
+
+            else:
+                self.accept()
 
 
 class MplCanvas(FigureCanvas):
@@ -59,7 +168,11 @@ class PDWindow(Ui_MainWindow, QMainWindow):
     # Other params
     seed = 0
     num_of_runs = 0
-    debug = False    
+    debug = False
+
+    # loaded
+    strategies = []
+    prehistory = ''
 
     def __init__(self):
         super(PDWindow, self). __init__()
@@ -69,7 +182,7 @@ class PDWindow(Ui_MainWindow, QMainWindow):
         # set seed input validator
         self.seed_line.setValidator(QRegExpValidator(QRegExp(r'\d+')))
 
-        # connect run button
+        # connect buttons
         self.run_button.clicked.connect(self.run)
 
         # create canvas_uno
@@ -84,6 +197,9 @@ class PDWindow(Ui_MainWindow, QMainWindow):
         self.canvas_dos.axes.set_xlabel('Strategies', fontsize=10)
         self.canvas_dos.axes.set_title('Frequencies of applied strategies', fontsize=14)
 
+        # set loaded data
+        self.strategies = []
+        self.prehistory = ''
 
         layout = QVBoxLayout()
         layout.addWidget(self.canvas_uno)
@@ -94,6 +210,13 @@ class PDWindow(Ui_MainWindow, QMainWindow):
         self.freq_frame.setLayout(layout)
 
         self.show()
+
+    def data_loaded(self):
+        self.load_dialog = LoadDialog(self)
+        load_accepted = self.load_dialog.exec_()
+        if load_accepted:
+            return True
+        return False
 
     def set_seed_conditionally(self):
         if self.seed_line.text() == '':
@@ -168,6 +291,10 @@ class PDWindow(Ui_MainWindow, QMainWindow):
             QMessageBox.warning(self, 'Input ERROR', 'Size of population must be greater or equal to tournament size')
             return False
 
+        if not self.two_pd and self.pop_size < self.n_players:
+            QMessageBox.warning(self, 'Input ERROR', 'Size of population must be greater or equal to players count')
+            return False
+
         return True
 
     def manage_created_output_files(self, avg_data_per_generation, whole_history_count, best_individual_ids):
@@ -198,6 +325,8 @@ class PDWindow(Ui_MainWindow, QMainWindow):
             self.manage_created_output_files(avg_data_per_generation, whole_history_count, best_individual_ids)
             self.run_button.setEnabled(True)
             self.num_of_runs_spinBox.setEnabled(True)
+            self.strategies = []
+            self.prehistory = ''
                 
     def run(self):
 
@@ -219,39 +348,47 @@ class PDWindow(Ui_MainWindow, QMainWindow):
 
         if self.input_valid():
 
-            # Lock app
-            self.run_button.setDisabled(True)
-            self.num_of_runs_spinBox.setDisabled(True)
+            if self.load_checkBox.isChecked() and (not self.strategies or not self.prehistory):
+                if self.data_loaded():
+                    self.strategies = self.load_dialog.strategies
+                    self.prehistory = self.load_dialog.prehistory
+                    self.run()
 
-            self.set_seed_conditionally()
+            else:
+
+                # Lock app
+                self.run_button.setDisabled(True)
+                self.num_of_runs_spinBox.setDisabled(True)
+
+                self.set_seed_conditionally()
+                    
+                self.thread = QThread()
+                self.worker = GameWorker(self.two_pd, 
+                                        self.n_players, 
+                                        self.two_pd_payoff_func, 
+                                        self.prob_of_init_c, 
+                                        self.num_of_tournaments, 
+                                        self.num_of_opponents,
+                                        self.prehistory_l,
+                                        self.pop_size,
+                                        self.num_of_gener,
+                                        self.tournament_size,
+                                        self.crossover_prob,
+                                        self.mutation_prob,
+                                        self.elitist_strategy,
+                                        self.seed,
+                                        self.debug,
+                                        self.freq_gen_start,
+                                        self.delta_freq,
+                                        self.canvas_uno,
+                                        self.canvas_dos)
                 
-            self.thread = QThread()
-            self.worker = GameWorker(self.two_pd, 
-                                    self.n_players, 
-                                    self.two_pd_payoff_func, 
-                                    self.prob_of_init_c, 
-                                    self.num_of_tournaments, 
-                                    self.num_of_opponents,
-                                    self.prehistory_l,
-                                    self.pop_size,
-                                    self.num_of_gener,
-                                    self.tournament_size,
-                                    self.crossover_prob,
-                                    self.mutation_prob,
-                                    self.elitist_strategy,
-                                    self.seed,
-                                    self.debug,
-                                    self.freq_gen_start,
-                                    self.delta_freq,
-                                    self.canvas_uno,
-                                    self.canvas_dos)
-            
-            self.worker.moveToThread(self.thread)
+                self.worker.moveToThread(self.thread)
 
-            self.thread.started.connect(self.worker.run)
-            self.worker.finished.connect(self.thread.quit)
-            self.worker.finished.connect(self.worker.deleteLater)
-            self.worker.finished.connect(self.thread_finished)
-            self.thread.finished.connect(self.thread.deleteLater)
+                self.thread.started.connect(self.worker.run)
+                self.worker.finished.connect(self.thread.quit)
+                self.worker.finished.connect(self.worker.deleteLater)
+                self.worker.finished.connect(self.thread_finished)
+                self.thread.finished.connect(self.thread.deleteLater)
 
-            self.thread.start()
+                self.thread.start()

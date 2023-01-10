@@ -418,7 +418,6 @@ class GameWorker(QObject):
         # random.seed(1)
 
 
-
     def run(self):
         list_of_ind = []
         avg_data_per_generation = pd.DataFrame(columns=['Avg per Gen', 'Avg per Best'])
@@ -427,7 +426,7 @@ class GameWorker(QObject):
         best_individual_ids = []
 
         for gen in range(1, self.num_of_gener + 1):
-            print('Generation: ', gen)
+            # print('Generation: ', gen)
 
             if not self.is_2_PD and not list_of_ind:
                 curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob)

@@ -47,6 +47,10 @@ def write_window_data(PDWindow):
     return to_ret
 
 
+def save_plot_in_results(created_plot, name):
+    created_plot.savefig("RESULTS/{}".format(name))
+
+
 def create_results_1_single_run(PDWindow, filename, df):
     filename = filename + '.txt'
 
@@ -299,7 +303,7 @@ def print_11(ind_list):
 
 
 
-def print_12():
+def print_12(): 
     pass
 
 

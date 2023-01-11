@@ -381,7 +381,11 @@ class PDWindow(Ui_MainWindow, QMainWindow):
                                         self.freq_gen_start,
                                         self.delta_freq,
                                         self.canvas_uno,
-                                        self.canvas_dos)
+                                        self.canvas_dos,
+                                        self.strategies,
+                                        self.prehistory,
+                                        self.num_of_runs_spinBox.value(),
+                                        self.num_of_runs)
                 
                 self.worker.moveToThread(self.thread)
 

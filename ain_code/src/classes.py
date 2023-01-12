@@ -1,9 +1,17 @@
 import random
 import copy
 import pandas as pd
-from src.funcitons import to_binary, to_binary_length, save_plot_in_results
+from src.funcitons import to_binary, to_binary_length, save_plot_in_results, create_results_dir, \
+                        print_11, print_12, print_13, print_14, print_21, print_22, print_23, print_31
 
 from PyQt5.QtCore import pyqtSignal, QObject
+
+
+
+chosen_randoms = []
+debug = False
+
+
 
 
 class Individual:
@@ -35,7 +43,8 @@ class Individual:
             self.N = N
 
             for i in range(self.ind_len):
-                if (random.random() <= prob_of_init_c):
+                x = random.random()
+                if (x <= prob_of_init_c):
                     self.id += 2**i
         else:
             self.id = overwrite.id
@@ -54,6 +63,9 @@ class Individual:
         if self.score < other.score:
             return True
         return False
+
+    def to_binary_for_this_old_fuck(self):
+        return to_binary_length(self.id, self.ind_len)
 
     def choose(self, coop_players_count: list) -> int:
         """
@@ -99,9 +111,13 @@ class Individual:
                 self.score += (2 * coop_players_count[0][1])
 
     def mutation (self, mutation_prob: float):
+        print_temp = []
         temp_binary_id = ''
         for current_id_bit in to_binary_length(self.id, self.ind_len):
-            if random.random() <= mutation_prob:
+            x = random.random()
+            chosen_randoms.append(x)
+            if x <= mutation_prob:
+                print_temp.append(len(temp_binary_id)+1)
                 #change current ids bit to opposite
                 if current_id_bit == '1':
                     current_id_bit = '0'
@@ -110,6 +126,12 @@ class Individual:
 
             temp_binary_id += current_id_bit
         
+
+        # if print_temp:     
+        #     print('B4 mutation: ind = {}, mutate_at = {}'.format(to_binary_length(self.id, self.ind_len), print_temp))
+        #     print('After mutation: ind = {}'.format(to_binary_length(self.id, self.ind_len)))
+
+
         self.id = int(temp_binary_id, 2)
 
 
@@ -151,7 +173,7 @@ class PdTournament:
             self.history.insert(0, last_play)
             
         elif self.input_prehistory:
-            self.history = [self.input_prehistory[i:i+self.L] for i in range(0,len(self.input_prehistory), self.L)]
+            self.history = [self.input_prehistory[i:i+self.N] for i in range(0,len(self.input_prehistory), self.N)]
             for index, chunk in enumerate(self.history):
                 temp = []
                 for c in chunk:
@@ -164,12 +186,22 @@ class PdTournament:
             for _ in range(self.L):
                 temp = []
                 for n in range(self.N):
-                    if random.random() < 0.5:
+                    x = random.random()
+                    chosen_randoms.append(x)
+                    if x < 0.5:
                         temp.append(0)
                     else:
                         temp.append(1)
 
                 self.history.append(temp)
+
+        if not last_play and self.N == 2 and debug:
+            print_11(self.list_of_ind, self.history)
+
+        elif not last_play and debug:
+            print_21(self.list_of_ind, self.history)
+
+        # print('History = {}'.format(self.history))
 
     def prep_history_for_individual(self, individual_id: int):
         """
@@ -203,12 +235,31 @@ class PdTournament:
                 for random_selected_ind in random.sample(list(self.list_of_ind[:index] + self.list_of_ind[(index+1):]), k=(self.N-1)):
                     currently_used_inds.append(random_selected_ind)
 
+                if self.N == 2 and debug:
+                    print_12(currently_used_inds[0].to_binary_for_this_old_fuck(), currently_used_inds[1].to_binary_for_this_old_fuck(), index, self.list_of_ind.index(currently_used_inds[1]))
+                    print_13(num_of_opponents - ind.oponentes_jodidos, self.history_count)
+                elif debug:
+                    N_players_strat_id = []
+                    for cur in currently_used_inds:
+                        N_players_strat_id.append(self.list_of_ind.index(cur))
+
+                    temp_list_of_ind = []
+                    for ind in currently_used_inds:
+                        temp_list_of_ind.append(ind.to_binary_for_this_old_fuck())
+
+                    print_22(None, num_of_opponents - ind.oponentes_jodidos, temp_list_of_ind, N_players_strat_id, self.history_count)
+
                 self.run_one_tournament(currently_used_inds)
 
     def run_one_tournament(self, currently_used_inds):
         self.update_history()
 
-        for _ in range(self.num_of_tournaments):
+        # print('Tournament individuals {')
+        # for cur_ind in currently_used_inds:
+        #     print(to_binary_length(cur_ind.id, cur_ind.ind_len))
+        # print('}')
+
+        for k in range(self.num_of_tournaments):
             last_play = []
 
             for index, cur_ind in enumerate(currently_used_inds):
@@ -217,11 +268,55 @@ class PdTournament:
 
             self.update_history(last_play)
 
+            print_temp = []
+
             for index, cur_ind in enumerate(currently_used_inds):
                 if self.N > 2:
                     cur_ind.count_score(self.prep_history_for_individual(index))
                 else:
                     cur_ind.count_score(self.prep_history_for_individual(index), self.two_pd_payoff_func)
+
+                print_temp.append(cur_ind.score)
+
+            # print("Scores = {}".format(print_temp))
+            if self.N==2 and debug:
+                temp_score_uno = 0
+                temp_score_dos = 0
+
+                if last_play[0] == 0 and last_play[1] == 0:
+                    temp_score_uno += self.two_pd_payoff_func['dd_uno']
+                    temp_score_dos += self.two_pd_payoff_func['dd_uno']
+
+                elif last_play[0] == 0 and last_play[1] == 1:
+                    temp_score_uno += self.two_pd_payoff_func['dc_uno']
+                    temp_score_dos += self.two_pd_payoff_func['cd_uno']
+
+                elif last_play[0] == 1 and last_play[1] == 0:
+                    temp_score_uno += self.two_pd_payoff_func['cd_uno']
+                    temp_score_dos += self.two_pd_payoff_func['dc_uno']
+
+                elif last_play[0] == 1 and last_play[1] == 1:
+                    temp_score_uno += self.two_pd_payoff_func['cc_uno']
+                    temp_score_dos += self.two_pd_payoff_func['cc_uno']
+
+                print_14(k, last_play[0], last_play[1], temp_score_uno, temp_score_dos, [currently_used_inds[0].score, currently_used_inds[1].score], self.history, self.prep_history_for_individual(0), self.prep_history_for_individual(1), self.list_of_ind.index(currently_used_inds[0]),  self.list_of_ind.index(currently_used_inds[1]), self.history_count)
+            elif debug:
+                temp_scores = []
+                temp_sum_scores = []
+                temp_N_players_strat_id = []
+
+                for i in range(0, self.N-1):
+                    temp_sum_scores.append(currently_used_inds[i].score)
+                    temp_history = self.prep_history_for_individual(i)
+                    temp_N_players_strat_id.append(self.list_of_ind.index(currently_used_inds[i]))
+
+                    if temp_history[0][0] == 0:
+                        temp_scores.append(2 * temp_history[0][1] + 1)
+                    else:
+                        temp_scores.append(2 * temp_history[0][1])
+
+                print_23(k, last_play, last_play.count(1), temp_scores, temp_sum_scores, self.history, last_play, temp_N_players_strat_id, self.history_count)
+
 
         for cur_ind in currently_used_inds:
             cur_ind.oponentes_jodidos += 1
@@ -317,9 +412,14 @@ class Generation:
         temp_ind_dos_bits = to_binary_length(temp_ind_dos.id, ind_len)
 
         chosen_num = random.randint(1, ind_len-1)
+        chosen_randoms.append(chosen_num)
+
+        # print("Before cross (chosen_num = {})[\nind_uno = {},\nind_dos = {}\n]".format(chosen_num, to_binary_length(temp_ind_uno.id, temp_ind_uno.ind_len), to_binary_length(temp_ind_dos.id, temp_ind_uno.ind_len)))
 
         temp_ind_uno.id = int(temp_ind_uno_bits[:chosen_num] + temp_ind_dos_bits[chosen_num:], 2)
         temp_ind_dos.id = int(temp_ind_dos_bits[:chosen_num] + temp_ind_uno_bits[chosen_num:], 2)
+
+        # print("After cross[\nind_uno = {},\nind_dos = {}\n]".format(to_binary_length(temp_ind_uno.id, temp_ind_uno.ind_len), to_binary_length(temp_ind_dos.id, temp_ind_uno.ind_len)))
 
         temp_ind_uno.score = 0
         temp_ind_dos.score = 0
@@ -330,11 +430,17 @@ class Generation:
         self.best_individual = Individual(overwrite = max(self.list_of_ind))
 
         crossovered_ind_list = []
+
+        self.temp_strategies =  copy.deepcopy(self.list_of_ind)
         
         for ind in self.list_of_ind:
             x = random.random()
+            chosen_randoms.append(x)
             if x > self.crossover_prob:
+                # print("crossover x = {}, ind_id = {}".format(x, ind.id))
                 self.list_of_ind.remove(ind)
+
+        self.parent_strategies = copy.deepcopy(self.list_of_ind)
         
         for i in range(0, len(self.list_of_ind), 2):
             ind_uno, ind_dos = None, None
@@ -360,10 +466,28 @@ class Generation:
                 crossovered_ind_list.append(Individual(overwrite = ind_dos))
 
         self.list_of_ind = crossovered_ind_list
+        self.child_strategies = copy.deepcopy(self.list_of_ind)
 
     def mutate_individuals(self):
         for ind in self.list_of_ind:
             ind.mutation(self.mutation_prob)
+        # print('\n')
+
+        for index, ind in enumerate(self.temp_strategies):
+            self.temp_strategies[index] = ind.to_binary_for_this_old_fuck()
+
+        for index, ind in enumerate(self.parent_strategies):
+            self.parent_strategies[index] = ind.to_binary_for_this_old_fuck()
+
+        for index, ind in enumerate(self.child_strategies):
+            self.child_strategies[index] = ind.to_binary_for_this_old_fuck()
+
+        temp_list_of_ind = []
+        for ind in self.list_of_ind:
+            temp_list_of_ind.append(ind.to_binary_for_this_old_fuck())
+
+        if debug:
+            print_31(self.temp_strategies, self.parent_strategies, self.child_strategies, temp_list_of_ind)
 
     def do_elitist(self):
         self.hard_tournament()
@@ -385,7 +509,6 @@ class GameWorker(QObject):
     tournament_size = 0
     crossover_prob = 0
     mutation_prob = 0
-    debug = False
     elitist_strategy = False
 
     input_strategies = []
@@ -397,7 +520,7 @@ class GameWorker(QObject):
 
     finished = pyqtSignal(pd.DataFrame, list, list)
 
-    def __init__(self, is_2_PD, N, two_pd_payoff_func, prob_of_init_C, num_of_tournaments, num_of_opponents, prehistory_L, pop_size, num_of_gener, tournament_size, crossover_prob, mutation_prob, elitist_strategy, seed, debug, freq_gen_start, delta_freq, canvas_uno, canvas_dos, strategies, prehistory, num_of_runs, num_of_runs_left):
+    def __init__(self, is_2_PD, N, two_pd_payoff_func, prob_of_init_C, num_of_tournaments, num_of_opponents, prehistory_L, pop_size, num_of_gener, tournament_size, crossover_prob, mutation_prob, elitist_strategy, seed, deb, freq_gen_start, delta_freq, canvas_uno, canvas_dos, strategies, prehistory, num_of_runs, num_of_runs_left):
         super(GameWorker, self).__init__()
 
         if is_2_PD:
@@ -416,7 +539,8 @@ class GameWorker(QObject):
         self.tournament_size = tournament_size
         self.crossover_prob = crossover_prob
         self.mutation_prob = mutation_prob
-        self.debug = debug
+        global debug 
+        debug = deb
         self.elitist_strategy = elitist_strategy
         self.freq_gen_start = freq_gen_start
         self.delta_freq = delta_freq
@@ -431,6 +555,12 @@ class GameWorker(QObject):
         if seed:
             random.seed(seed)
 
+        if debug:
+            create_results_dir()
+            with open("RESULTS/DEBUG.txt", 'w') as f:
+                pass
+
+
     def run(self):
         list_of_ind = []
         avg_data_per_generation = pd.DataFrame(columns=['Avg per Gen', 'Avg per Best'])
@@ -440,6 +570,7 @@ class GameWorker(QObject):
 
 
         for gen in range(1, self.num_of_gener + 1):
+            # print('Generation {}'.format(gen-1))
             if self.input_strategies and self.input_prehistory:
                 if not self.is_2_PD and not list_of_ind:
                     curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob, input_strategies = self.input_strategies, input_prehistory = self.input_prehistory)
@@ -459,6 +590,9 @@ class GameWorker(QObject):
                     curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob, list_of_ind=list_of_ind)
                 else:
                     curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob, self.two_pd_payoff_func, list_of_ind)
+
+            # for ind in curr_generation.list_of_ind:
+            #     print('ind = {}'.format(to_binary_length(ind.id, ind.ind_len)))
 
             curr_generation.fight_for_death_u_knobs(self.num_of_opponents)
 

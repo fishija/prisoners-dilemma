@@ -293,40 +293,138 @@ def create_result_2N_30_single_run(PDWindow, filename, whole_game_histories):
 
 
 
-def print_11(ind_list):
-    print("Strategies")
-    for ind in ind_list:
-        whole_ind_binary = to_binary_length(ind.id, ind.ind_len)
-        print(whole_ind_binary)
+def print_11(ind_list, prehistory):
+    with open('RESULTS/DEBUG.txt', 'a') as f:
+        temp = ''
+        temp += 'Strategies\n'
 
-    print("Prehistory")
+        for ind in ind_list:
+            whole_ind_binary = to_binary_length(ind.id, ind.ind_len)
+            temp += "{}\n".format(whole_ind_binary)
 
-
-
-def print_12(): 
-    pass
-
-
-def print_13():
-    pass
+        temp += "Prehistory\n{}\n\n".format(prehistory)
+        f.write(temp)
 
 
-def print_14():
-    pass
+def print_12(strat_1, strat_2, id_1, id_2): 
+    with open('RESULTS/DEBUG.txt', 'a') as f:
+        temp = ''
+        temp += 'P1_start\n{}\nP2_strat\n{}\nstrat_id_1 = {}\nstrat_id_2 = {}\n\n'.format(strat_1, strat_2, id_1, id_2)
+        # print("P1_strat")
+        # print(strat_1)
+        # print("P2_strat")
+        # print(strat_2)
+        # print("strat_id_1 = ", id_1)
+        # print("strat_id_2 = ", id_2)
+        f.write(temp)
 
 
-def print_21():
-    pass
+def print_13(c_opponents, gener_history_freq):
+    with open('RESULTS/DEBUG.txt', 'a') as f:
+        temp = ''
+        temp += 'c_opponents\n{}\ngener_history_freq\n{}\n\n'.format(c_opponents, gener_history_freq)
+        # print("c_opponents")
+        # print(c_opponents)
+        # print("gener_history_freq")
+        # print(gener_history_freq)
+        f.write(temp)
 
 
-def print_22():
-    pass
+def print_14(k, curr_action_P1, curr_action_P2, payoff_P1, payoff_P2, SUM_with_opponents, prehistory, P1_preh, P2_preh, strat_id_1, strat_id_2, gener_history_freq):
+    with open('RESULTS/DEBUG.txt', 'a') as f:
+        temp = ''
+        temp += "Tournament - 2 players\n"
+        temp += f"Gra = {k}\n"
+        temp += f"curr_action_P1 = {curr_action_P1}\n"
+        temp += f"curr_action_P2 = {curr_action_P2}\n"
+        temp += f"payoff_P1 = {payoff_P1}\n"
+        temp += f"payoff_P2 = {payoff_P2}\n"
+        temp += "SUM_with_opponents\n"
+        temp += f"{SUM_with_opponents}\n"
+        temp += "Prehistory\n"
+        temp += f"{prehistory}\n"
+        temp += "P1_preh\n"
+        temp += f"{P1_preh}\n"
+        temp += "P2_preh\n"
+        temp += f"{P2_preh}\n"
+        temp += f"strat_id_1 = {strat_id_1}\n"
+        temp += f"strat_id_2 = {strat_id_2}\n"
+        temp += "gener_history_freq\n"
+        temp += f"{gener_history_freq}\n"
+        temp += '\n\n'
+        f.write(temp)
 
 
-def print_23():
-    pass
+def print_21(ind_list, prehistory):
+    with open('RESULTS/DEBUG.txt', 'a') as f:
+        temp = ''
+        temp += 'Strategies_N\n'
+        # print("Strategies_N")
+        for ind in ind_list:
+            whole_ind_binary = to_binary_length(ind.id, ind.ind_len)
+            temp += f"{whole_ind_binary}\n"
+            # print(whole_ind_binary)
+        temp += 'Prehistory_N\n'
+        # print("Prehistory_N")
+        temp += f"{prehistory}\n"
+        temp += '\n\n'
+        # print(prehistory)
+        f.write(temp)
 
 
-def print_31():
-    pass
+def print_22(id_N_players, c_of_opponents, N_players_strategies, N_players_strat_id, gener_history_freq):
+    with open('RESULTS/DEBUG.txt', 'a') as f:
+        temp = ''
+        # print("id_N_players")
+        # print(id_N_players)
+        temp += "c_of_opponents\n"
+        temp += f"{c_of_opponents}\n"
+        temp += "N_players_strategies\n"
+        temp += f"{N_players_strategies}\n"
+        temp += "N_players_strat_id\n"
+        temp += f"{N_players_strat_id}\n"
+        temp += "gener_history_freq\n"
+        temp += f"{gener_history_freq}\n"
+        temp += '\n'
+        f.write(temp)
 
+
+def print_23(k, curr_action_N_players, num_of_C_N_players, payoff_N_players, SUM_with_opponents, Prehistory_N, N_players_preh, N_players_strat_id, gener_history_freq):
+    with open('RESULTS/DEBUG.txt', 'a') as f:
+        temp = ''
+        temp += "Tournament - N players\n"
+        temp += f"K = {k}\n"
+        temp += "curr_action_N_players\n"
+        temp += f"{curr_action_N_players}\n"
+        temp += "num_of_C_N_players\n"
+        temp += f"{num_of_C_N_players}\n"
+        temp += "payoff_N_players\n"
+        temp += f"{payoff_N_players}\n"
+        temp += "SUM_with_oppoents\n"
+        temp += f"{SUM_with_opponents}\n"
+        temp += "Prehistory_N\n"
+        temp += f"{Prehistory_N}\n"
+        temp += "N_players_preh\n"
+        temp += f"{N_players_preh}\n"
+        temp += "N_players_strat_id\n"
+        temp += f"{N_players_strat_id}\n"
+        temp += "gener_history_freq\n"
+        temp += f"{gener_history_freq}\n"
+        temp += '\n'
+        f.write(temp)
+
+
+def print_31(temp_Strategies, parent_Strategies, child_Strategies, Strategies):
+    with open('RESULTS/DEBUG.txt', 'a') as f:
+        temp = ''
+        temp += "After GA operators\n"
+        temp += "temp_Strategies\n"
+        temp += f"{temp_Strategies}\n"
+        temp += "parent_Strategies\n"
+        temp += f"{parent_Strategies}\n"
+        temp += "child_Strategies\n"
+        temp += f"{child_Strategies}\n"
+        temp += "Strategies\n"
+        temp += f"{Strategies}\n"
+        temp += '\n'
+        f.write(temp)

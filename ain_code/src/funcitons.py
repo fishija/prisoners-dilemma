@@ -66,7 +66,7 @@ def create_results_1_single_run(PDWindow, filename, df):
         to_write += '# gen best_fit avg_fit\n'
 
         for index, row in df.iterrows():
-            to_write += "{} {} {}\n".format(index-1, row['best_fit'], row['avg_fit'])
+            to_write += "{} {} {}\n".format(index-1, round(row['best_fit'], 2), round(row['avg_fit'], 2))
 
         out_f.write(to_write)
 
@@ -96,7 +96,7 @@ def create_results_2_single_run(PDWindow, filename, whole_game_histories):
             to_write += '{}'.format(index)
 
             for history in gen_histories:
-                to_write += ' {}'.format(history)
+                to_write += ' {}'.format(round(history, 2))
 
             to_write += '\n'
         
@@ -118,7 +118,7 @@ def create_results_2_30_single_run(PDWindow, filename, whole_game_histories):
             to_write += '# history freq_of_game_histories\n'
 
             for index, val in enumerate(whole_game_histories[gen_num]):
-                to_write += '{} {}\n'.format(index, val)
+                to_write += '{} {}\n'.format(index, round(val, 2))
 
             out_f.write(to_write)
 
@@ -134,13 +134,11 @@ def create_results_3_single_run(PDWindow, filename, best_individual_ids):
     else:
         n = PDWindow.n_players
 
-    ind_len = '1'
-    ind_len += to_binary(n-1)
-    ind_len *= l
-    ind_len = int(ind_len, 2) + 1
+    temp_individual_ids = []
+    ind_len = best_individual_ids[0].ind_len
 
-    for i in range(len(best_individual_ids)):
-        best_individual_ids[i] = to_binary_length(best_individual_ids[i], ind_len)
+    for ind in best_individual_ids:
+        temp_individual_ids.append(to_binary_length(ind.id, ind.ind_len))
 
     with open(os.path.join("RESULTS", filename), 'w') as out_f:
         to_write = ''
@@ -148,17 +146,17 @@ def create_results_3_single_run(PDWindow, filename, best_individual_ids):
 
         to_write += '#\n# best strategy\n#'
 
-        for i in range(1, len(best_individual_ids[0]) + 1):
+        for i in range(1, ind_len + 2):
             to_write += ' {}'.format(i)
 
         to_write += '\n# gen'
 
-        for i in range(len(best_individual_ids[0])):
+        for i in range(ind_len):
             to_write += ' {}'.format(i)
 
         to_write += '\n'
 
-        for index, id in enumerate(best_individual_ids):
+        for index, id in enumerate(temp_individual_ids):
             to_write += '{}'.format(index)
             for bin_number in id:
                 to_write += ' {}'.format(bin_number)
@@ -188,7 +186,7 @@ def create_m_result_1_multiple_run(PDWindow, filename, list_of_dfs):
             to_write += '# gen best_fit avg_fit\n'
 
             for index, row in df.iterrows():
-                to_write += "{} {} {}\n".format(index-1, row['best_fit'], row['avg_fit'])
+                to_write += "{} {} {}\n".format(index-1, round(row['best_fit'], 2), round(row['avg_fit'], 2))
 
         out_f.write(to_write)
 
@@ -198,6 +196,7 @@ def create_std_result_1_multiple_run(PDWindow, filename, list_of_dfs):
     create_results_dir()
 
     for index, df in enumerate(list_of_dfs):
+        print("aaa = ", df.head())
         df.drop('avg_fit', axis=1, inplace=True)
         df.rename(columns = {'best_fit':'{}'.format(index)}, inplace=True)
         list_of_dfs[index] = df.T
@@ -218,22 +217,37 @@ def create_std_result_1_multiple_run(PDWindow, filename, list_of_dfs):
         to_write += '# gen avg_best std_best\n'
 
         for index, row in df_ready.iterrows():
-            to_write += "{} {} {}\n".format(index-1, row['avg_best'], row['std_best'])
+            to_write += "{} {} {}\n".format(index-1, round(row['avg_best'], 2), round(row['std_best'], 2))
 
         out_f.write(to_write)
 
 
-def create_result_1N_single_run(PDWindow, filename, df):
+def create_result_1N_single_run(PDWindow, filename, df, num_of_C_N, n_players):
     filename = filename + '.txt'
     create_results_dir()
-    create_results_1_single_run(PDWindow, filename, df)
+
+    df.rename(columns = {'Avg per Best': 'best_fit', 'Avg per Gen': 'avg_fit'}, inplace = True)
+
+    with open(os.path.join("RESULTS", filename), 'w') as out_f:
+        to_write = ''
+        to_write += write_window_data(PDWindow)
+
+        to_write += '#\n# 1 2 3 4 5\n'
+
+        to_write += '# gen best_fit avg_fit avg_N_of_C %_avg_C\n'
+
+        for index, row in df.iterrows():
+            tempppp = num_of_C_N[index-1][0]/num_of_C_N[index-1][1]
+
+            to_write += "{} {} {} {} {}\n".format(index-1, round(row['best_fit'], 2), round(row['avg_fit'], 2), round(tempppp, 2), round((tempppp/n_players), 2))
+
+        out_f.write(to_write)
 
 
 def create_result_2N_single_run(PDWindow, filename, whole_game_histories):
     filename = filename + '.txt'
     create_results_dir()
     histories_count = len(whole_game_histories[0])
-    history_binary_len = len(to_binary(histories_count))
 
     with open(os.path.join("RESULTS", filename), 'w') as out_f:
         to_write = ''
@@ -257,7 +271,7 @@ def create_result_2N_single_run(PDWindow, filename, whole_game_histories):
             sorted_key_list = sorted(range(histories_count), key=lambda k: whole_game_histories[index][k], reverse=True)[0:10]
 
             for key in sorted_key_list:
-                to_write += ' {} {}'.format(to_binary_length(key, history_binary_len), whole_game_histories[index][key])
+                to_write += ' {} {}'.format(key, round(whole_game_histories[index][key], 2))
 
             to_write += '\n'
 
@@ -270,19 +284,24 @@ def create_result_2N_30_single_run(PDWindow, filename, whole_game_histories):
     for index in range(PDWindow.freq_gen_start-1, len(whole_game_histories), PDWindow.delta_freq):
         temp_filename = "{}{}.txt".format(filename, index + 1)
         temp_history = whole_game_histories[index]
+        histories_count = len(whole_game_histories[0])
 
         with open(os.path.join("RESULTS", temp_filename), 'w') as out_f:
             to_write = ''
             to_write += write_window_data(PDWindow)
 
-            to_write += '# 1 2\n'
+            to_write += '#\n# 10 best frequencies in gen {}\n#'.format(index+1)
 
-            to_write += '# history freq_of_history'
+            to_write += '\n# 1 2\n'
 
-            for index, frequency in enumerate(temp_history):
-                to_write += '\n{} {}'.format(index,frequency)
+            to_write += '# history_id freq\n'
 
-            to_write += '\n'
+            sorted_key_list = sorted(range(histories_count), key=lambda k: whole_game_histories[index][k], reverse=True)[0:10]
+
+            sorted_key_list.sort()
+
+            for key in sorted_key_list:
+                to_write += '{} {}\n'.format(key, round(temp_history[key], 2))
 
             out_f.write(to_write)
 
@@ -291,11 +310,9 @@ def create_result_2N_30_single_run(PDWindow, filename, whole_game_histories):
 
 
 
-
-
 def print_11(ind_list, prehistory):
     with open('RESULTS/DEBUG.txt', 'a') as f:
-        temp = ''
+        temp = '\nprint_11\n'
         temp += 'Strategies\n'
 
         for ind in ind_list:
@@ -308,7 +325,7 @@ def print_11(ind_list, prehistory):
 
 def print_12(strat_1, strat_2, id_1, id_2): 
     with open('RESULTS/DEBUG.txt', 'a') as f:
-        temp = ''
+        temp = '\nprint_12\n'
         temp += 'P1_start\n{}\nP2_strat\n{}\nstrat_id_1 = {}\nstrat_id_2 = {}\n\n'.format(strat_1, strat_2, id_1, id_2)
         # print("P1_strat")
         # print(strat_1)
@@ -321,7 +338,7 @@ def print_12(strat_1, strat_2, id_1, id_2):
 
 def print_13(c_opponents, gener_history_freq):
     with open('RESULTS/DEBUG.txt', 'a') as f:
-        temp = ''
+        temp = '\nprint_13\n'
         temp += 'c_opponents\n{}\ngener_history_freq\n{}\n\n'.format(c_opponents, gener_history_freq)
         # print("c_opponents")
         # print(c_opponents)
@@ -332,7 +349,7 @@ def print_13(c_opponents, gener_history_freq):
 
 def print_14(k, curr_action_P1, curr_action_P2, payoff_P1, payoff_P2, SUM_with_opponents, prehistory, P1_preh, P2_preh, strat_id_1, strat_id_2, gener_history_freq):
     with open('RESULTS/DEBUG.txt', 'a') as f:
-        temp = ''
+        temp = '\nprint_14\n'
         temp += "Tournament - 2 players\n"
         temp += f"Gra = {k}\n"
         temp += f"curr_action_P1 = {curr_action_P1}\n"
@@ -357,7 +374,7 @@ def print_14(k, curr_action_P1, curr_action_P2, payoff_P1, payoff_P2, SUM_with_o
 
 def print_21(ind_list, prehistory):
     with open('RESULTS/DEBUG.txt', 'a') as f:
-        temp = ''
+        temp = '\nprint_21\n'
         temp += 'Strategies_N\n'
         # print("Strategies_N")
         for ind in ind_list:
@@ -374,7 +391,7 @@ def print_21(ind_list, prehistory):
 
 def print_22(id_N_players, c_of_opponents, N_players_strategies, N_players_strat_id, gener_history_freq):
     with open('RESULTS/DEBUG.txt', 'a') as f:
-        temp = ''
+        temp = '\nprint_22\n'
         # print("id_N_players")
         # print(id_N_players)
         temp += "c_of_opponents\n"
@@ -391,7 +408,7 @@ def print_22(id_N_players, c_of_opponents, N_players_strategies, N_players_strat
 
 def print_23(k, curr_action_N_players, num_of_C_N_players, payoff_N_players, SUM_with_opponents, Prehistory_N, N_players_preh, N_players_strat_id, gener_history_freq):
     with open('RESULTS/DEBUG.txt', 'a') as f:
-        temp = ''
+        temp = '\nprint_23\n'
         temp += "Tournament - N players\n"
         temp += f"K = {k}\n"
         temp += "curr_action_N_players\n"
@@ -416,7 +433,7 @@ def print_23(k, curr_action_N_players, num_of_C_N_players, payoff_N_players, SUM
 
 def print_31(temp_Strategies, parent_Strategies, child_Strategies, Strategies):
     with open('RESULTS/DEBUG.txt', 'a') as f:
-        temp = ''
+        temp = '\nprint_31\n'
         temp += "After GA operators\n"
         temp += "temp_Strategies\n"
         temp += f"{temp_Strategies}\n"

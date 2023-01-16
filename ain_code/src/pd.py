@@ -32,6 +32,8 @@ import os
 
 matplotlib.use('Qt5Agg')
 
+global_num_of_C_N = [0,0]
+
 
 class LoadDialog(Ui_LoadDialog, QDialog):
     strategies = []
@@ -310,15 +312,20 @@ class PDWindow(Ui_MainWindow, QMainWindow):
             create_std_result_1_multiple_run(self, 'std_result_1', self.multiple_run_data_storage)
 
         elif not self.two_pd and self.num_of_runs_spinBox.value() == 1:
-            create_result_1N_single_run(self, 'result_1N', avg_data_per_generation)
+            create_result_1N_single_run(self, 'result_1N', avg_data_per_generation, global_num_of_C_N, self.n_players)
             create_result_2N_single_run(self, 'result_2N', whole_history_count)
             create_result_2N_30_single_run(self, 'result_2N_', whole_history_count)
 
-    def thread_finished(self, avg_data_per_generation: pd.DataFrame, whole_history_count: list, best_individual_ids: list):
+    def thread_finished(self, avg_data_per_generation: pd.DataFrame, whole_history_count: list, best_individual_ids: list, num_of_C_N: list):
+        global global_num_of_C_N
+        global_num_of_C_N = num_of_C_N
         self.num_of_runs -= 1
         self.multiple_run_data_storage.append(avg_data_per_generation)
 
         if self.num_of_runs:
+            # del avg_data_per_generation
+            # del whole_history_count
+            # del best_individual_ids
             self.run()
         else:
             # Unlock app
@@ -327,6 +334,9 @@ class PDWindow(Ui_MainWindow, QMainWindow):
             self.num_of_runs_spinBox.setEnabled(True)
             self.strategies = []
             self.prehistory = ''
+            # del avg_data_per_generation
+            # del whole_history_count
+            # del best_individual_ids
                 
     def run(self):
 

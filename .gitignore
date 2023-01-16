@@ -2,3 +2,5 @@ ain_venv
 *__pycache__*
 .DS_Store
 *test*
+dist
+build

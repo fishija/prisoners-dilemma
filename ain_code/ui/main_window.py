@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'main_window.ui'
+# Form implementation generated from reading ui file 'ui\main_window.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1114, 779)
+        MainWindow.resize(1038, 779)
         MainWindow.setStyleSheet("#frame, #frame_2, #frame_4{\n"
 "    border: 1px solid black;\n"
 "}")
@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
         self.label.setObjectName("label")
         self.verticalLayout_4.addWidget(self.label)
         self.frame = QtWidgets.QFrame(self.centralwidget)
-        self.frame.setMaximumSize(QtCore.QSize(280, 16777215))
+        self.frame.setMaximumSize(QtCore.QSize(290, 16777215))
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
@@ -55,7 +55,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.label_19)
         self.n_spinBox = QtWidgets.QSpinBox(self.frame)
         self.n_spinBox.setMinimum(3)
-        self.n_spinBox.setMaximum(8)
+        self.n_spinBox.setMaximum(20)
         self.n_spinBox.setProperty("value", 4)
         self.n_spinBox.setObjectName("n_spinBox")
         self.horizontalLayout.addWidget(self.n_spinBox)
@@ -175,7 +175,7 @@ class Ui_MainWindow(object):
         self.label_10.setObjectName("label_10")
         self.verticalLayout_4.addWidget(self.label_10)
         self.frame_2 = QtWidgets.QFrame(self.centralwidget)
-        self.frame_2.setMaximumSize(QtCore.QSize(280, 16777215))
+        self.frame_2.setMaximumSize(QtCore.QSize(290, 16777215))
         self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_2.setObjectName("frame_2")
@@ -237,7 +237,7 @@ class Ui_MainWindow(object):
         spacerItem5 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_4.addItem(spacerItem5)
         self.widget = QtWidgets.QWidget(self.centralwidget)
-        self.widget.setMaximumSize(QtCore.QSize(280, 16777215))
+        self.widget.setMaximumSize(QtCore.QSize(290, 16777215))
         self.widget.setObjectName("widget")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
@@ -276,6 +276,7 @@ class Ui_MainWindow(object):
         self.label_17.setObjectName("label_17")
         self.horizontalLayout_6.addWidget(self.label_17)
         self.freq_gen_start_spinBox = QtWidgets.QSpinBox(self.frame_4)
+        self.freq_gen_start_spinBox.setMinimumSize(QtCore.QSize(50, 0))
         self.freq_gen_start_spinBox.setMinimum(1)
         self.freq_gen_start_spinBox.setMaximum(1000)
         self.freq_gen_start_spinBox.setProperty("value", 5)
@@ -287,8 +288,9 @@ class Ui_MainWindow(object):
         self.label_18.setObjectName("label_18")
         self.horizontalLayout_6.addWidget(self.label_18)
         self.delta_freq_spinBox = QtWidgets.QSpinBox(self.frame_4)
+        self.delta_freq_spinBox.setMinimumSize(QtCore.QSize(50, 0))
         self.delta_freq_spinBox.setMinimum(1)
-        self.delta_freq_spinBox.setMaximum(100)
+        self.delta_freq_spinBox.setMaximum(200)
         self.delta_freq_spinBox.setProperty("value", 10)
         self.delta_freq_spinBox.setObjectName("delta_freq_spinBox")
         self.horizontalLayout_6.addWidget(self.delta_freq_spinBox)

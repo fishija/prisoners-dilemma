@@ -8,6 +8,7 @@ from PyQt5.QtCore import pyqtSignal, QObject
 
 
 
+global_num_of_C_N = []
 chosen_randoms = []
 debug = False
 
@@ -106,9 +107,13 @@ class Individual:
         else:
             if self.my_choice == 0:
                 self.score += 2 * coop_players_count[0][1] + 1
+                global_num_of_C_N[-1][0] += coop_players_count[0][1]
+                global_num_of_C_N[-1][1] += 1
 
             elif self.my_choice == 1:
                 self.score += (2 * coop_players_count[0][1])
+                global_num_of_C_N[-1][0] += coop_players_count[0][1] + 1
+                global_num_of_C_N[-1][1] += 1
 
     def mutation (self, mutation_prob: float):
         print_temp = []
@@ -361,7 +366,7 @@ class Generation:
         if list_of_ind:
             self.list_of_ind = list_of_ind
 
-        elif not list_of_ind and not input_strategies:
+        elif not list_of_ind and not input_strategies:            
             for _ in range(pop_size):
                 self.list_of_ind.append(Individual(prob_of_init_C, N, L))
 
@@ -399,7 +404,7 @@ class Generation:
                 original_list_index.append(int_of_ind_to_choose)
 
             best_ind_list.append(sorted(random_chosen_individuals, key=lambda x: x.score, reverse=True)[0])
-
+      
         self.list_of_ind = best_ind_list
 
     def cross_two_inds(self, ind_uno: Individual, ind_dos: Individual):
@@ -518,7 +523,7 @@ class GameWorker(QObject):
 
     history_count = []
 
-    finished = pyqtSignal(pd.DataFrame, list, list)
+    finished = pyqtSignal(pd.DataFrame, list, list, list)
 
     def __init__(self, is_2_PD, N, two_pd_payoff_func, prob_of_init_C, num_of_tournaments, num_of_opponents, prehistory_L, pop_size, num_of_gener, tournament_size, crossover_prob, mutation_prob, elitist_strategy, seed, deb, freq_gen_start, delta_freq, canvas_uno, canvas_dos, strategies, prehistory, num_of_runs, num_of_runs_left):
         super(GameWorker, self).__init__()
@@ -567,10 +572,12 @@ class GameWorker(QObject):
         history_count_per_gen = pd.DataFrame()
         whole_history_count = []
         best_individual_ids = []
-
+        global global_num_of_C_N
 
         for gen in range(1, self.num_of_gener + 1):
             # print('Generation {}'.format(gen-1))
+            global_num_of_C_N.append([0,0])
+
             if self.input_strategies and self.input_prehistory:
                 if not self.is_2_PD and not list_of_ind:
                     curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob, input_strategies = self.input_strategies, input_prehistory = self.input_prehistory)
@@ -612,12 +619,12 @@ class GameWorker(QObject):
             
             curr_generation.crossover()
 
-            best_individual_ids.append(curr_generation.best_individual.id)
+            best_individual_ids.append(curr_generation.best_individual)
 
 
             # UPDATE UPPER PLOT :)
             avg_data_per_generation.loc[len(avg_data_per_generation) + 1] = [(sum_of_avg_score_for_gen/self.pop_size), (curr_generation.best_individual.score)]
-            
+
             self.canvas_uno.axes.clear()
             self.canvas_uno.fig.set_tight_layout(True)
             self.canvas_uno.axes.set_xlabel('Generations', fontsize=10)
@@ -650,4 +657,4 @@ class GameWorker(QObject):
             save_plot_in_results(self.canvas_uno.fig, "Average_data_run_num_{}.jpg".format(temp_num))
             save_plot_in_results(self.canvas_dos.fig, "Frequencies_run_num_{}.jpg".format(temp_num))
 
-        self.finished.emit(avg_data_per_generation, whole_history_count, best_individual_ids)
+        self.finished.emit(avg_data_per_generation, whole_history_count, best_individual_ids, global_num_of_C_N)

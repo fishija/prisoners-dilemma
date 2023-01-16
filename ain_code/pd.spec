@@ -28,7 +28,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='Prisoners_Dilemma',
+    name='Prisoners_Dilemma_v2',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

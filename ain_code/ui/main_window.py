@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui\main_window.ui'
+# Form implementation generated from reading ui file 'main_window.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -133,7 +133,7 @@ class Ui_MainWindow(object):
         self.num_of_tournaments_spinBox = QtWidgets.QSpinBox(self.frame)
         self.num_of_tournaments_spinBox.setMinimum(1)
         self.num_of_tournaments_spinBox.setMaximum(1000)
-        self.num_of_tournaments_spinBox.setProperty("value", 4)
+        self.num_of_tournaments_spinBox.setProperty("value", 151)
         self.num_of_tournaments_spinBox.setObjectName("num_of_tournaments_spinBox")
         self.gridLayout_2.addWidget(self.num_of_tournaments_spinBox, 1, 1, 1, 1)
         self.label_20 = QtWidgets.QLabel(self.frame)
@@ -201,7 +201,7 @@ class Ui_MainWindow(object):
         self.num_of_gener_spinBox = QtWidgets.QSpinBox(self.frame_2)
         self.num_of_gener_spinBox.setMinimum(1)
         self.num_of_gener_spinBox.setMaximum(999999999)
-        self.num_of_gener_spinBox.setProperty("value", 10)
+        self.num_of_gener_spinBox.setProperty("value", 200)
         self.num_of_gener_spinBox.setObjectName("num_of_gener_spinBox")
         self.gridLayout_3.addWidget(self.num_of_gener_spinBox, 1, 1, 1, 1)
         self.crossover_prob_spinBox = QtWidgets.QDoubleSpinBox(self.frame_2)
@@ -279,7 +279,7 @@ class Ui_MainWindow(object):
         self.freq_gen_start_spinBox.setMinimumSize(QtCore.QSize(50, 0))
         self.freq_gen_start_spinBox.setMinimum(1)
         self.freq_gen_start_spinBox.setMaximum(1000)
-        self.freq_gen_start_spinBox.setProperty("value", 5)
+        self.freq_gen_start_spinBox.setProperty("value", 30)
         self.freq_gen_start_spinBox.setObjectName("freq_gen_start_spinBox")
         self.horizontalLayout_6.addWidget(self.freq_gen_start_spinBox)
         spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)

@@ -573,6 +573,7 @@ class GameWorker(QObject):
         whole_history_count = []
         best_individual_ids = []
         global global_num_of_C_N
+        global_num_of_C_N = []
 
         for gen in range(1, self.num_of_gener + 1):
             # print('Generation {}'.format(gen-1))
@@ -652,9 +653,11 @@ class GameWorker(QObject):
 
             list_of_ind = curr_generation.list_of_ind
 
-        if self.input_num_of_runs > 1:
-            temp_num = abs(self.num_of_runs_left - self.input_num_of_runs) + 1
-            save_plot_in_results(self.canvas_uno.fig, "Average_data_run_num_{}.jpg".format(temp_num))
-            save_plot_in_results(self.canvas_dos.fig, "Frequencies_run_num_{}.jpg".format(temp_num))
+        # if self.input_num_of_runs > 1:
+        #     temp_num = abs(self.num_of_runs_left - self.input_num_of_runs) + 1
+            # save_plot_in_results(self.canvas_uno.fig, "Average_data_run_num_{}.jpg".format(temp_num))
+            # save_plot_in_results(self.canvas_dos.fig, "Frequencies_run_num_{}.jpg".format(temp_num))
 
+
+        print(global_num_of_C_N)
         self.finished.emit(avg_data_per_generation, whole_history_count, best_individual_ids, global_num_of_C_N)

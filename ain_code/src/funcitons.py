@@ -31,6 +31,7 @@ def write_window_data(PDWindow):
         to_ret += '# n = {}\n'.format(PDWindow.n_players)
 
     to_ret += '# prob_of_init_c = {}\n'.format(PDWindow.prob_of_init_c)
+    to_ret += '# num_of_tournaments = {}\n'.format(PDWindow.num_of_tournaments)
     to_ret += '# num_of_opponents = {}\n'.format(PDWindow.num_of_opponents)
     to_ret += '# prehistory_l = {}\n'.format(PDWindow.prehistory_l)
     to_ret += '# pop_size = {}\n'.format(PDWindow.pop_size)
@@ -226,6 +227,8 @@ def create_std_result_1_multiple_run(PDWindow, filename, list_of_dfs):
 def create_result_1N_single_run(PDWindow, filename, df, num_of_C_N, n_players):
     filename = filename + '.txt'
     create_results_dir()
+
+    print(num_of_C_N, n_players)
 
     df.rename(columns = {'Avg per Best': 'best_fit', 'Avg per Gen': 'avg_fit'}, inplace = True)
 

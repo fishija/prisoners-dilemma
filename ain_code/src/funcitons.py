@@ -48,6 +48,7 @@ def write_window_data(PDWindow):
 
 
 def save_plot_in_results(created_plot, name):
+    create_results_dir()
     created_plot.savefig("RESULTS/{}".format(name))
 
 
@@ -237,7 +238,10 @@ def create_result_1N_single_run(PDWindow, filename, df, num_of_C_N, n_players):
         to_write += '# gen best_fit avg_fit avg_N_of_C %_avg_C\n'
 
         for index, row in df.iterrows():
-            tempppp = num_of_C_N[index-1][0]/num_of_C_N[index-1][1]
+            if num_of_C_N[index-1][1] == 0:
+                tempppp = 0.0
+            else:
+                tempppp = num_of_C_N[index-1][0]/num_of_C_N[index-1][1]
 
             to_write += "{} {} {} {} {}\n".format(index-1, round(row['best_fit'], 2), round(row['avg_fit'], 2), round(tempppp, 2), round((tempppp/n_players), 2))
 
@@ -311,6 +315,7 @@ def create_result_2N_30_single_run(PDWindow, filename, whole_game_histories):
 
 
 def print_11(ind_list, prehistory):
+    create_results_dir()
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_11\n'
         temp += 'Strategies\n'
@@ -324,6 +329,7 @@ def print_11(ind_list, prehistory):
 
 
 def print_12(strat_1, strat_2, id_1, id_2): 
+    create_results_dir()
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_12\n'
         temp += 'P1_start\n{}\nP2_strat\n{}\nstrat_id_1 = {}\nstrat_id_2 = {}\n\n'.format(strat_1, strat_2, id_1, id_2)
@@ -337,6 +343,7 @@ def print_12(strat_1, strat_2, id_1, id_2):
 
 
 def print_13(c_opponents, gener_history_freq):
+    create_results_dir()
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_13\n'
         temp += 'c_opponents\n{}\ngener_history_freq\n{}\n\n'.format(c_opponents, gener_history_freq)
@@ -348,6 +355,7 @@ def print_13(c_opponents, gener_history_freq):
 
 
 def print_14(k, curr_action_P1, curr_action_P2, payoff_P1, payoff_P2, SUM_with_opponents, prehistory, P1_preh, P2_preh, strat_id_1, strat_id_2, gener_history_freq):
+    create_results_dir()
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_14\n'
         temp += "Tournament - 2 players\n"
@@ -373,6 +381,7 @@ def print_14(k, curr_action_P1, curr_action_P2, payoff_P1, payoff_P2, SUM_with_o
 
 
 def print_21(ind_list, prehistory):
+    create_results_dir()
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_21\n'
         temp += 'Strategies_N\n'
@@ -390,6 +399,7 @@ def print_21(ind_list, prehistory):
 
 
 def print_22(id_N_players, c_of_opponents, N_players_strategies, N_players_strat_id, gener_history_freq):
+    create_results_dir()
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_22\n'
         # print("id_N_players")
@@ -407,6 +417,7 @@ def print_22(id_N_players, c_of_opponents, N_players_strategies, N_players_strat
 
 
 def print_23(k, curr_action_N_players, num_of_C_N_players, payoff_N_players, SUM_with_opponents, Prehistory_N, N_players_preh, N_players_strat_id, gener_history_freq):
+    create_results_dir()
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_23\n'
         temp += "Tournament - N players\n"
@@ -432,6 +443,7 @@ def print_23(k, curr_action_N_players, num_of_C_N_players, payoff_N_players, SUM
 
 
 def print_31(temp_Strategies, parent_Strategies, child_Strategies, Strategies):
+    create_results_dir()
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_31\n'
         temp += "After GA operators\n"

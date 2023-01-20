@@ -274,7 +274,7 @@ class PdTournament:
                 self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
                 last_play.append(int(cur_ind.my_choice))
 
-            self.update_history(last_play)
+            
 
             print_temp = []
 
@@ -324,6 +324,8 @@ class PdTournament:
                         temp_scores.append(2 * temp_history[0][1])
 
                 print_23(k, last_play, last_play.count(1), temp_scores, temp_sum_scores, self.history, last_play, temp_N_players_strat_id, self.history_count)
+
+            self.update_history(last_play)
 
 
         for cur_ind in currently_used_inds:

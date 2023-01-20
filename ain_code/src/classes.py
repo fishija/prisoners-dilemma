@@ -10,6 +10,8 @@ from PyQt5.QtCore import pyqtSignal, QObject
 
 global_num_of_C_N = []
 chosen_randoms = []
+cross_bits = []
+mutation_bits = []
 debug = False
 
 
@@ -118,10 +120,11 @@ class Individual:
     def mutation (self, mutation_prob: float):
         print_temp = []
         temp_binary_id = ''
-        for current_id_bit in to_binary_length(self.id, self.ind_len):
+        for index, current_id_bit in enumerate(to_binary_length(self.id, self.ind_len)):
             x = random.random()
             chosen_randoms.append(x)
             if x <= mutation_prob:
+                mutation_bits.append(index)
                 print_temp.append(len(temp_binary_id)+1)
                 #change current ids bit to opposite
                 if current_id_bit == '1':
@@ -418,6 +421,7 @@ class Generation:
 
         chosen_num = random.randint(1, ind_len-1)
         chosen_randoms.append(chosen_num)
+        cross_bits.append(chosen_num)
 
         # print("Before cross (chosen_num = {})[\nind_uno = {},\nind_dos = {}\n]".format(chosen_num, to_binary_length(temp_ind_uno.id, temp_ind_uno.ind_len), to_binary_length(temp_ind_dos.id, temp_ind_uno.ind_len)))
 
@@ -572,6 +576,12 @@ class GameWorker(QObject):
         history_count_per_gen = pd.DataFrame()
         whole_history_count = []
         best_individual_ids = []
+        global chosen_randoms
+        chosen_randoms = []
+        global cross_bits
+        cross_bits = []
+        global mutation_bits
+        mutation_bits = []
         global global_num_of_C_N
         global_num_of_C_N = []
 
@@ -658,6 +668,7 @@ class GameWorker(QObject):
             # save_plot_in_results(self.canvas_uno.fig, "Average_data_run_num_{}.jpg".format(temp_num))
             # save_plot_in_results(self.canvas_dos.fig, "Frequencies_run_num_{}.jpg".format(temp_num))
 
-
-        print(global_num_of_C_N)
+        # print("Random table: ", chosen_randoms)
+        # print("Crossover bit: ", cross_bits)
+        # print("Mutation bits: ", mutation_bits)
         self.finished.emit(avg_data_per_generation, whole_history_count, best_individual_ids, global_num_of_C_N)

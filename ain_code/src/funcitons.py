@@ -178,10 +178,11 @@ def create_m_result_1_multiple_run(PDWindow, filename, list_of_dfs):
     with open(os.path.join("RESULTS", filename), 'w') as out_f:
         to_write = ''
         to_write += write_window_data(PDWindow)
+        to_write += '#\n'
 
         for index, df in enumerate(list_of_dfs):
 
-            to_write += '#\n# Exper {}\n'.format(index + 1)
+            to_write += '# Exper {}\n'.format(index + 1)
 
             to_write += '# 1 2 3\n'
 
@@ -189,6 +190,8 @@ def create_m_result_1_multiple_run(PDWindow, filename, list_of_dfs):
 
             for index, row in df.iterrows():
                 to_write += "{} {} {}\n".format(index-1, round(row['best_fit'], 2), round(row['avg_fit'], 2))
+
+            to_write += '\n'
 
         out_f.write(to_write)
 
@@ -198,7 +201,6 @@ def create_std_result_1_multiple_run(PDWindow, filename, list_of_dfs):
     create_results_dir()
 
     for index, df in enumerate(list_of_dfs):
-        print("aaa = ", df.head())
         df.drop('avg_fit', axis=1, inplace=True)
         df.rename(columns = {'best_fit':'{}'.format(index)}, inplace=True)
         list_of_dfs[index] = df.T
@@ -227,8 +229,6 @@ def create_std_result_1_multiple_run(PDWindow, filename, list_of_dfs):
 def create_result_1N_single_run(PDWindow, filename, df, num_of_C_N, n_players):
     filename = filename + '.txt'
     create_results_dir()
-
-    print(num_of_C_N, n_players)
 
     df.rename(columns = {'Avg per Best': 'best_fit', 'Avg per Gen': 'avg_fit'}, inplace = True)
 

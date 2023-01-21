@@ -329,7 +329,9 @@ class PDWindow(Ui_MainWindow, QMainWindow):
             self.run()
         else:
             # Unlock app
-            self.manage_created_output_files(avg_data_per_generation, whole_history_count, best_individual_ids)
+            if not (self.debug and self.two_pd and len(self.strategies)==2):
+                self.manage_created_output_files(avg_data_per_generation, whole_history_count, best_individual_ids)
+
             self.run_button.setEnabled(True)
             self.num_of_runs_spinBox.setEnabled(True)
             self.strategies = []

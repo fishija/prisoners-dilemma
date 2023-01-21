@@ -203,12 +203,6 @@ class PdTournament:
 
                 self.history.append(temp)
 
-        if not last_play and self.N == 2 and debug:
-            print_11(self.list_of_ind, self.history)
-
-        elif not last_play and debug:
-            print_21(self.list_of_ind, self.history)
-
         # print('History = {}'.format(self.history))
 
     def prep_history_for_individual(self, individual_id: int):
@@ -245,7 +239,10 @@ class PdTournament:
 
                 if self.N == 2 and debug:
                     print_12(currently_used_inds[0].to_binary_for_this_old_fuck(), currently_used_inds[1].to_binary_for_this_old_fuck(), index, self.list_of_ind.index(currently_used_inds[1]))
-                    print_13(num_of_opponents - ind.oponentes_jodidos, self.history_count)
+                    temp_list_bo_tak = []
+                    for cur_ind in currently_used_inds:
+                        temp_list_bo_tak.append(cur_ind.oponentes_jodidos)
+                    print_13(temp_list_bo_tak, self.history_count)
                 elif debug:
                     N_players_strat_id = []
                     for cur in currently_used_inds:
@@ -259,6 +256,9 @@ class PdTournament:
 
                 self.run_one_tournament(currently_used_inds)
 
+                if debug and self.N==2 and len(self.list_of_ind)==2:
+                    break
+
     def run_one_tournament(self, currently_used_inds):
         self.update_history()
 
@@ -271,10 +271,10 @@ class PdTournament:
             last_play = []
 
             for index, cur_ind in enumerate(currently_used_inds):
-                self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
+                self.history_count[cur_ind.choose(self.prep_history_for_individual(index)) - 1] += 1
                 last_play.append(int(cur_ind.my_choice))
 
-            
+            self.update_history(last_play)
 
             print_temp = []
 
@@ -308,6 +308,7 @@ class PdTournament:
                     temp_score_dos += self.two_pd_payoff_func['cc_uno']
 
                 print_14(k, last_play[0], last_play[1], temp_score_uno, temp_score_dos, [currently_used_inds[0].score, currently_used_inds[1].score], self.history, self.prep_history_for_individual(0), self.prep_history_for_individual(1), self.list_of_ind.index(currently_used_inds[0]),  self.list_of_ind.index(currently_used_inds[1]), self.history_count)
+                
             elif debug:
                 temp_scores = []
                 temp_sum_scores = []
@@ -324,9 +325,6 @@ class PdTournament:
                         temp_scores.append(2 * temp_history[0][1])
 
                 print_23(k, last_play, last_play.count(1), temp_scores, temp_sum_scores, self.history, last_play, temp_N_players_strat_id, self.history_count)
-
-            self.update_history(last_play)
-
 
         for cur_ind in currently_used_inds:
             cur_ind.oponentes_jodidos += 1
@@ -601,6 +599,13 @@ class GameWorker(QObject):
                 else:
                     curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob, self.two_pd_payoff_func, list_of_ind, input_strategies = self.input_strategies, input_prehistory = self.input_prehistory)
             
+                if not list_of_ind:
+                    if self.N == 2 and debug:
+                        print_11(curr_generation.list_of_ind, self.input_prehistory)
+
+                    elif debug:
+                        print_21(curr_generation.list_of_ind, self.input_prehistory)
+
             else:
                 if not self.is_2_PD and not list_of_ind:
                     curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob)
@@ -615,6 +620,9 @@ class GameWorker(QObject):
             #     print('ind = {}'.format(to_binary_length(ind.id, ind.ind_len)))
 
             curr_generation.fight_for_death_u_knobs(self.num_of_opponents)
+
+            if debug and self.N==2 and len(curr_generation.list_of_ind)==2:
+                break
 
             sum_of_avg_score_for_gen = 0
             # Count avg scores and all collective oponentes_jodidos

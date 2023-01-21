@@ -329,7 +329,7 @@ class PDWindow(Ui_MainWindow, QMainWindow):
             self.run()
         else:
             # Unlock app
-            if not (self.debug and self.two_pd and len(self.strategies)==2):
+            if not (self.debug and self.two_pd and ((self.strategies and len(self.strategies)==2) or self.pop_size)):
                 self.manage_created_output_files(avg_data_per_generation, whole_history_count, best_individual_ids)
 
             self.run_button.setEnabled(True)

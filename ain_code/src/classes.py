@@ -76,6 +76,8 @@ class Individual:
             coop_players_count (list): History/Prehistory for current individual. Like [[1,3], [1,0], [0,5]] which means - prehistory_l = 3, [[a,b],[a,b]] a = individuals choice, b = how many other individuals cooperated :)
         """
         # [[1,3], [1,0]] -> [[1,011], [1,000]] -> 10111000 -> 184
+        # [[1,1], [1,1], [1,1]] -> 111111
+        # 0 1 1 0 0 0 = 24
 
         decimal_history = ''
 
@@ -87,7 +89,9 @@ class Individual:
 
         binary_id = to_binary_length(self.id, self.ind_len)
 
-        self.my_choice = int(binary_id[decimal_history-1])
+        self.my_choice = int(binary_id[decimal_history])
+
+        # print(decimal_history, binary_id, self.my_choice)
 
         return decimal_history
 
@@ -271,7 +275,7 @@ class PdTournament:
             last_play = []
 
             for index, cur_ind in enumerate(currently_used_inds):
-                self.history_count[cur_ind.choose(self.prep_history_for_individual(index)) - 1] += 1
+                self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
                 last_play.append(int(cur_ind.my_choice))
 
             self.update_history(last_play)

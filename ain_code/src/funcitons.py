@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import copy
 import os
 
 
@@ -345,11 +346,19 @@ def print_12(strat_1, strat_2, id_1, id_2):
         f.write(temp)
 
 
-def print_13(c_opponents, gener_history_freq):
+def print_13(c_opponents, gener_history_freq, strat_id_1 = None, strat_id_2 = None):
     create_results_dir()
+
+    temp_gener_history_freq = copy.deepcopy(gener_history_freq)
+
+    if strat_id_1:
+        temp_gener_history_freq = copy.deepcopy(gener_history_freq)
+        temp_gener_history_freq[strat_id_1] += 1
+        temp_gener_history_freq[strat_id_2] += 1
+
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_13\n'
-        temp += 'c_opponents\n{}\ngener_history_freq\n{}\n\n'.format(c_opponents, gener_history_freq)
+        temp += 'c_opponents\n{}\ngener_history_freq\n{}\n\n'.format(c_opponents, temp_gener_history_freq)
         # print("c_opponents")
         # print(c_opponents)
         # print("gener_history_freq")
@@ -359,6 +368,12 @@ def print_13(c_opponents, gener_history_freq):
 
 def print_14(k, curr_action_P1, curr_action_P2, payoff_P1, payoff_P2, SUM_with_opponents, prehistory, P1_preh, P2_preh, strat_id_1, strat_id_2, gener_history_freq):
     create_results_dir()
+
+    temp_gener_history_freq = copy.deepcopy(gener_history_freq)
+    temp_gener_history_freq[strat_id_1] += 1
+    temp_gener_history_freq[strat_id_2] += 1
+
+
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_14\n'
         temp += "Tournament - 2 players\n"
@@ -378,7 +393,7 @@ def print_14(k, curr_action_P1, curr_action_P2, payoff_P1, payoff_P2, SUM_with_o
         temp += f"strat_id_1 = {strat_id_1}\n"
         temp += f"strat_id_2 = {strat_id_2}\n"
         temp += "gener_history_freq\n"
-        temp += f"{gener_history_freq}\n"
+        temp += f"{temp_gener_history_freq}\n"
         temp += '\n\n'
         f.write(temp)
 

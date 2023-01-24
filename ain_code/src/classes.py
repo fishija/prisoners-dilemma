@@ -174,7 +174,7 @@ class PdTournament:
     history_count = []
     input_prehistory = ''
 
-    def __init__(self, list_of_ind, N, L, num_of_tournaments, two_pd_payoff_func: dict = None, input_prehistory: str = None):
+    def __init__(self, list_of_ind, N, L, num_of_tournaments, two_pd_payoff_func: dict = None, input_prehistory: str = None, a: bool = None):
         self.list_of_ind = list_of_ind
         self.N = N
         self.L = L
@@ -278,8 +278,9 @@ class PdTournament:
 
             self.run_one_tournament(currently_used_inds)
 
-            self.update_history(a=True)
-
+            if not min(self.c_opponents) == num_of_opponents:
+                self.update_history(a=True)
+                
             if debug and self.N==2 and len(self.list_of_ind)==3:
                 print_12(currently_used_inds[0].to_binary_for_this_old_fuck(), currently_used_inds[1].to_binary_for_this_old_fuck(), currently_used_inds[0].return_decimal_history(self.prep_history_for_individual(0)), currently_used_inds[1].return_decimal_history(self.prep_history_for_individual(1)))
                 print_13(self.c_opponents, self.history_count, currently_used_inds[0].return_decimal_history(self.prep_history_for_individual(0)), currently_used_inds[1].return_decimal_history(self.prep_history_for_individual(1)))
@@ -416,11 +417,11 @@ class Generation:
 
         self.history_count = [0] * self.list_of_ind[0].ind_len
 
-    def fight_for_death_u_knobs(self, num_of_opponents):
+    def fight_for_death_u_knobs(self, num_of_opponents, a = None):
         if self.two_pd_payoff_func:
-            self.temp_tournament = PdTournament(self.list_of_ind, self.N, self.L, self.num_of_tournaments, self.two_pd_payoff_func, self.input_prehistory)
+            self.temp_tournament = PdTournament(self.list_of_ind, self.N, self.L, self.num_of_tournaments, self.two_pd_payoff_func, self.input_prehistory, a)
         else:
-            self.temp_tournament = PdTournament(self.list_of_ind, self.N, self.L, self.num_of_tournaments, self.input_prehistory)
+            self.temp_tournament = PdTournament(self.list_of_ind, self.N, self.L, self.num_of_tournaments, self.input_prehistory, a)
 
         self.temp_tournament.start_whole_tournament(num_of_opponents)
 
@@ -479,14 +480,19 @@ class Generation:
 
         self.temp_strategies =  copy.deepcopy(self.list_of_ind)
         
+        self.parent_strategies = []
+
         for ind in self.list_of_ind:
             x = random.random()
             chosen_randoms.append(x)
             if x > self.crossover_prob:
                 # print("crossover x = {}, ind_id = {}".format(x, ind.id))
                 self.list_of_ind.remove(ind)
+                self.parent_strategies.append(0)
+            else:
+                self.parent_strategies.append(1)
 
-        self.parent_strategies = copy.deepcopy(self.list_of_ind)
+        # self.parent_strategies = copy.deepcopy(self.list_of_ind)
         
         for i in range(0, len(self.list_of_ind), 2):
             ind_uno, ind_dos = None, None
@@ -521,9 +527,6 @@ class Generation:
 
         for index, ind in enumerate(self.temp_strategies):
             self.temp_strategies[index] = ind.to_binary_for_this_old_fuck()
-
-        for index, ind in enumerate(self.parent_strategies):
-            self.parent_strategies[index] = ind.to_binary_for_this_old_fuck()
 
         for index, ind in enumerate(self.child_strategies):
             self.child_strategies[index] = ind.to_binary_for_this_old_fuck()
@@ -634,7 +637,17 @@ class GameWorker(QObject):
                 elif not self.is_2_PD and list_of_ind:
                     curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob, list_of_ind=list_of_ind, input_strategies = self.input_strategies, input_prehistory = self.input_prehistory)
                 else:
-                    curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob, self.two_pd_payoff_func, list_of_ind, input_strategies = self.input_strategies, input_prehistory = self.input_prehistory)
+
+                    a = ''
+                    for _ in range(0, self.prehistory_L*self.N):
+                        
+                        x = random.random()
+                        if x < 0.5:
+                            a +='0'
+                        else:
+                            a +='1'
+
+                    curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob, self.two_pd_payoff_func, list_of_ind, input_strategies = self.input_strategies, input_prehistory = a)
             
                 if not list_of_ind:
                     if self.N == 2 and debug:

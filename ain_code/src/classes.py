@@ -275,26 +275,27 @@ class PdTournament:
                     temp_list_of_ind.append(ind.to_binary_for_this_old_fuck())
 
                 print_22(None, num_of_opponents - ind.oponentes_jodidos, temp_list_of_ind, N_players_strat_id, self.history_count)
+            
+            for cur_ind in currently_used_inds:
+                cur_ind.oponentes_jodidos += 1
+
+            self.c_opponents.clear()
+            for ind in self.list_of_ind:
+                self.c_opponents.append(ind.oponentes_jodidos)
+
+            if debug and self.N==2 and len(self.list_of_ind)==3:
+                    print_12(currently_used_inds[0].to_binary_for_this_old_fuck(), currently_used_inds[1].to_binary_for_this_old_fuck(), currently_used_inds[0].return_decimal_history(self.prep_history_for_individual(0)), currently_used_inds[1].return_decimal_history(self.prep_history_for_individual(1)))
+                    print_13(self.c_opponents, self.history_count, currently_used_inds[0].return_decimal_history(self.prep_history_for_individual(0)), currently_used_inds[1].return_decimal_history(self.prep_history_for_individual(1)))
 
             self.run_one_tournament(currently_used_inds)
 
             if not min(self.c_opponents) == num_of_opponents:
                 self.update_history(a=True)
                 
-            if debug and self.N==2 and len(self.list_of_ind)==3:
-                print_12(currently_used_inds[0].to_binary_for_this_old_fuck(), currently_used_inds[1].to_binary_for_this_old_fuck(), currently_used_inds[0].return_decimal_history(self.prep_history_for_individual(0)), currently_used_inds[1].return_decimal_history(self.prep_history_for_individual(1)))
-                print_13(self.c_opponents, self.history_count, currently_used_inds[0].return_decimal_history(self.prep_history_for_individual(0)), currently_used_inds[1].return_decimal_history(self.prep_history_for_individual(1)))
-
+ 
     def run_one_tournament(self, currently_used_inds):
         if not self.input_prehistory:
             self.update_history()
-
-        for cur_ind in currently_used_inds:
-            cur_ind.oponentes_jodidos += 1
-
-        self.c_opponents.clear()
-        for ind in self.list_of_ind:
-            self.c_opponents.append(ind.oponentes_jodidos)
 
         for k in range(self.num_of_tournaments):
             last_play = []
@@ -303,12 +304,12 @@ class PdTournament:
                 self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
                 last_play.append(int(cur_ind.my_choice))
 
-            if self.a and self.N == 2 and debug and self.input_prehistory and not len(self.list_of_ind)==3: # only for exper 1
+            if self.a and self.N == 2 and debug and self.input_prehistory and len(self.list_of_ind) == 2: # for exper 1
                 print_12(currently_used_inds[0].to_binary_for_this_old_fuck(), currently_used_inds[1].to_binary_for_this_old_fuck(), currently_used_inds[0].return_decimal_history(self.prep_history_for_individual(0)), currently_used_inds[1].return_decimal_history(self.prep_history_for_individual(1)))
 
             self.update_history(last_play)
 
-            if self.a and self.N == 2 and debug and self.input_prehistory and not len(self.list_of_ind)==3: # only for exper 1
+            if self.a and self.N == 2 and debug and self.input_prehistory and len(self.list_of_ind) == 2: # for exper 1
                 print_13(self.c_opponents, self.history_count)
 
             self.a = False

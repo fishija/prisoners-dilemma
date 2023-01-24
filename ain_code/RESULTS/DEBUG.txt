@@ -7,6 +7,23 @@ Strategies
 Prehistory
 001001
 
+
+print_12
+P1_start
+0101010101010101010101010101010101010101010101010101010101010101
+P2_strat
+0000011111000001111100000111110000011111000001111100000111110000
+strat_id_1 = 9
+strat_id_2 = 6
+
+
+print_13
+c_opponents
+1 1 0
+gener_history_freq
+0 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
 print_14
 Tournament - 2 players
 Gra = 1
@@ -17,15 +34,17 @@ payoff_P2 = 30
 SUM_with_opponents
 30 30 0
 Prehistory
-110010
+1 1 0 0 1 0
 P1_preh
-110010
+1 1 0 0 1 0
 P2_preh
-110001
+1 1 0 0 0 1
 strat_id_1 = 50
 strat_id_2 = 49
 gener_history_freq
 0 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
 
 print_14
 Tournament - 2 players
@@ -37,15 +56,17 @@ payoff_P2 = 0
 SUM_with_opponents
 80 30 0
 Prehistory
-011100
+0 1 1 1 0 0
 P1_preh
-011100
+0 1 1 1 0 0
 P2_preh
-101100
+1 0 1 1 0 0
 strat_id_1 = 28
 strat_id_2 = 44
 gener_history_freq
 0 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
 
 print_14
 Tournament - 2 players
@@ -57,15 +78,17 @@ payoff_P2 = 10
 SUM_with_opponents
 90 40 0
 Prehistory
-000111
+0 0 0 1 1 1
 P1_preh
-000111
+0 0 0 1 1 1
 P2_preh
-001011
+0 0 1 0 1 1
 strat_id_1 = 7
 strat_id_2 = 11
 gener_history_freq
 0 0 0 0 0 0 1 1 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
 
 print_14
 Tournament - 2 players
@@ -77,15 +100,17 @@ payoff_P2 = 50
 SUM_with_opponents
 90 90 0
 Prehistory
-100001
+1 0 0 0 0 1
 P1_preh
-100001
+1 0 0 0 0 1
 P2_preh
-010010
+0 1 0 0 1 0
 strat_id_1 = 33
 strat_id_2 = 18
 gener_history_freq
 0 0 0 0 0 0 1 1 0 1 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
 
 print_14
 Tournament - 2 players
@@ -97,268 +122,420 @@ payoff_P2 = 30
 SUM_with_opponents
 120 120 0
 Prehistory
-111000
+1 1 1 0 0 0
 P1_preh
-111000
+1 1 1 0 0 0
 P2_preh
-110100
+1 1 0 1 0 0
 strat_id_1 = 56
 strat_id_2 = 52
 gener_history_freq
 0 0 0 0 0 0 1 1 0 1 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 1 0 1 0 0 0 1 0 0 0 0 0 0 0
 
+
+
+print_12
+P1_start
+0000000000000000000000000000000011111111111111111111111111111111
+P2_strat
+0000011111000001111100000111110000011111000001111100000111110000
+strat_id_1 = 24
+strat_id_2 = 36
+
+
+print_13
+c_opponents
+1 2 1
+gener_history_freq
+0 0 0 0 0 0 1 1 0 1 0 1 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
+print_14
+Tournament - 2 players
+Gra = 1
+curr_action_P1 = 0
+curr_action_P2 = 1
+payoff_P1 = 50
+payoff_P2 = 0
+SUM_with_opponents
+120 120 50
+Prehistory
+0 1 0 1 1 0
+P1_preh
+0 1 0 1 1 0
+P2_preh
+1 0 1 0 0 1
+strat_id_1 = 22
+strat_id_2 = 41
+gener_history_freq
+0 0 0 0 0 0 1 1 0 1 0 1 0 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 2
+curr_action_P1 = 0
+curr_action_P2 = 0
+payoff_P1 = 10
+payoff_P2 = 10
+SUM_with_opponents
+120 130 60
+Prehistory
+0 0 0 1 0 1
+P1_preh
+0 0 0 1 0 1
+P2_preh
+0 0 1 0 1 0
+strat_id_1 = 5
+strat_id_2 = 10
+gener_history_freq
+0 0 0 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 3
+curr_action_P1 = 0
+curr_action_P2 = 0
+payoff_P1 = 10
+payoff_P2 = 10
+SUM_with_opponents
+120 140 70
+Prehistory
+0 0 0 0 0 1
+P1_preh
+0 0 0 0 0 1
+P2_preh
+0 0 0 0 1 0
+strat_id_1 = 1
+strat_id_2 = 2
+gener_history_freq
+0 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 4
+curr_action_P1 = 0
+curr_action_P2 = 0
+payoff_P1 = 10
+payoff_P2 = 10
+SUM_with_opponents
+120 150 80
+Prehistory
+0 0 0 0 0 0
+P1_preh
+0 0 0 0 0 0
+P2_preh
+0 0 0 0 0 0
+strat_id_1 = 0
+strat_id_2 = 0
+gener_history_freq
+2 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 5
+curr_action_P1 = 0
+curr_action_P2 = 0
+payoff_P1 = 10
+payoff_P2 = 10
+SUM_with_opponents
+120 160 90
+Prehistory
+0 0 0 0 0 0
+P1_preh
+0 0 0 0 0 0
+P2_preh
+0 0 0 0 0 0
+strat_id_1 = 0
+strat_id_2 = 0
+gener_history_freq
+4 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
+
 print_12
 P1_start
 0101010101010101010101010101010101010101010101010101010101010101
 P2_strat
 0000011111000001111100000111110000011111000001111100000111110000
+strat_id_1 = 37
+strat_id_2 = 26
+
+
+print_13
+c_opponents
+2 3 1
+gener_history_freq
+2 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 0 1 0 1 0 1 0 0 0 0 1 0 0 1 1 0 0 0 1 0 0 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
+print_14
+Tournament - 2 players
+Gra = 1
+curr_action_P1 = 1
+curr_action_P2 = 1
+payoff_P1 = 30
+payoff_P2 = 30
+SUM_with_opponents
+150 190 90
+Prehistory
+1 1 1 0 0 1
+P1_preh
+1 1 1 0 0 1
+P2_preh
+1 1 0 1 1 0
+strat_id_1 = 57
+strat_id_2 = 54
+gener_history_freq
+2 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 0 1 0 1 0 1 0 0 0 0 1 0 0 1 1 0 0 0 1 0 0 1 0 0 0 0 1 1 0 0 0 1 0 0 1 0 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 2
+curr_action_P1 = 1
+curr_action_P2 = 0
+payoff_P1 = 0
+payoff_P2 = 50
+SUM_with_opponents
+150 240 90
+Prehistory
+1 0 1 1 1 0
+P1_preh
+1 0 1 1 1 0
+P2_preh
+0 1 1 1 0 1
+strat_id_1 = 46
+strat_id_2 = 29
+gener_history_freq
+2 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 0 1 0 1 0 1 1 0 0 0 1 0 0 1 1 0 0 0 1 0 0 1 0 1 0 0 1 1 0 0 0 1 0 0 1 0 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 3
+curr_action_P1 = 0
+curr_action_P2 = 1
+payoff_P1 = 50
+payoff_P2 = 0
+SUM_with_opponents
+200 240 90
+Prehistory
+0 1 1 0 1 1
+P1_preh
+0 1 1 0 1 1
+P2_preh
+1 0 0 1 1 1
+strat_id_1 = 27
+strat_id_2 = 39
+gener_history_freq
+2 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 0 1 0 1 1 1 1 0 0 0 1 0 0 1 1 0 1 0 1 0 0 1 0 1 0 0 1 1 0 0 0 1 0 0 1 0 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 4
+curr_action_P1 = 1
+curr_action_P2 = 1
+payoff_P1 = 30
+payoff_P2 = 30
+SUM_with_opponents
+230 270 90
+Prehistory
+1 1 0 1 1 0
+P1_preh
+1 1 0 1 1 0
+P2_preh
+1 1 1 0 0 1
+strat_id_1 = 54
+strat_id_2 = 57
+gener_history_freq
+2 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 0 1 0 1 1 1 1 0 0 0 1 0 0 1 1 0 1 0 1 0 0 1 0 1 0 0 1 1 0 0 0 2 0 0 2 0 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 5
+curr_action_P1 = 0
+curr_action_P2 = 1
+payoff_P1 = 50
+payoff_P2 = 0
+SUM_with_opponents
+280 270 90
+Prehistory
+0 1 1 1 0 1
+P1_preh
+0 1 1 1 0 1
+P2_preh
+1 0 1 1 1 0
+strat_id_1 = 29
+strat_id_2 = 46
+gener_history_freq
+2 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 0 1 0 1 1 1 2 0 0 0 1 0 0 1 1 0 1 0 1 0 0 1 0 2 0 0 1 1 0 0 0 2 0 0 2 0 0 0 0 0 0
+
+
+
+print_12
+P1_start
+0000000000000000000000000000000011111111111111111111111111111111
+P2_strat
+0101010101010101010101010101010101010101010101010101010101010101
+strat_id_1 = 44
+strat_id_2 = 28
+
+
+print_13
+c_opponents
+3 3 2
+gener_history_freq
+2 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 0 1 0 1 1 2 1 0 0 0 1 0 0 1 1 0 1 0 1 0 0 2 0 1 0 0 1 1 0 0 0 2 0 0 2 0 0 0 0 0 0
+
+
+print_14
+Tournament - 2 players
+Gra = 1
+curr_action_P1 = 1
+curr_action_P2 = 0
+payoff_P1 = 0
+payoff_P2 = 50
+SUM_with_opponents
+330 270 90
+Prehistory
+1 0 1 0 1 1
+P1_preh
+1 0 1 0 1 1
+P2_preh
+0 1 0 1 1 1
 strat_id_1 = 43
 strat_id_2 = 23
+gener_history_freq
+2 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 1 1 0 1 1 2 1 0 0 0 1 0 0 1 1 0 1 0 1 0 1 2 0 1 0 0 1 1 0 0 0 2 0 0 2 0 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 2
+curr_action_P1 = 1
+curr_action_P2 = 1
+payoff_P1 = 30
+payoff_P2 = 30
+SUM_with_opponents
+360 270 120
+Prehistory
+1 1 1 0 1 0
+P1_preh
+1 1 1 0 1 0
+P2_preh
+1 1 0 1 0 1
+strat_id_1 = 58
+strat_id_2 = 53
+gener_history_freq
+2 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 1 1 0 1 1 2 1 0 0 0 1 0 0 1 1 0 1 0 1 0 1 2 0 1 0 0 1 1 0 0 1 2 0 0 2 1 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 3
+curr_action_P1 = 1
+curr_action_P2 = 1
+payoff_P1 = 30
+payoff_P2 = 30
+SUM_with_opponents
+390 270 150
+Prehistory
+1 1 1 1 1 0
+P1_preh
+1 1 1 1 1 0
+P2_preh
+1 1 1 1 0 1
+strat_id_1 = 62
+strat_id_2 = 61
+gener_history_freq
+2 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 1 1 0 1 1 2 1 0 0 0 1 0 0 1 1 0 1 0 1 0 1 2 0 1 0 0 1 1 0 0 1 2 0 0 2 1 0 0 1 1 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 4
+curr_action_P1 = 1
+curr_action_P2 = 1
+payoff_P1 = 30
+payoff_P2 = 30
+SUM_with_opponents
+420 270 180
+Prehistory
+1 1 1 1 1 1
+P1_preh
+1 1 1 1 1 1
+P2_preh
+1 1 1 1 1 1
+strat_id_1 = 63
+strat_id_2 = 63
+gener_history_freq
+2 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 1 1 0 1 1 2 1 0 0 0 1 0 0 1 1 0 1 0 1 0 1 2 0 1 0 0 1 1 0 0 1 2 0 0 2 1 0 0 1 1 2
+
+
+
+print_14
+Tournament - 2 players
+Gra = 5
+curr_action_P1 = 1
+curr_action_P2 = 1
+payoff_P1 = 30
+payoff_P2 = 30
+SUM_with_opponents
+450 270 210
+Prehistory
+1 1 1 1 1 1
+P1_preh
+1 1 1 1 1 1
+P2_preh
+1 1 1 1 1 1
+strat_id_1 = 63
+strat_id_2 = 63
+gener_history_freq
+2 1 1 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 1 1 0 1 1 2 1 0 0 0 1 0 0 1 1 0 1 0 1 0 1 2 0 1 0 0 1 1 0 0 1 2 0 0 2 1 0 0 1 1 4
+
+print_31
+After GA operators
+temp_Strategies
+'0101010101010101010101010101010101010101010101010101010101010101' '0101010101010101010101010101010101010101010101010101010101010101' '0000000000000000000000000000000011111111111111111111111111111111'
+parent_Strategies
+1 1 1
+child_Strategies
+'0101010101010101010101010101010101010101010101010101010101010101' '0101010101010101010101010101010101010101010101010101010101010101' '0000000000000000000000000000000011111111111111111101010101010101'
+Strategies
+'0101010101010101010101010101010101010101010101010101010101010101' '0101010101010101010101010101010101010101010101010101010101010101' '0000000000000000000000000000000011111111111111111101010101010101'
+
+print_12
+P1_start
+0101010101010101010101010101010101010101010101010101010101010101
+P2_strat
+0101010101010101010101010101010101010101010101010101010101010101
+strat_id_1 = 11
+strat_id_2 = 7
+
 
 print_13
 c_opponents
 1 1 0
 gener_history_freq
-0 0 0 0 0 0 1 1 0 1 0 1 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
-print_14
-Tournament - 2 players
-Gra = 1
-curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
-SUM_with_opponents
-150 120 30
-Prehistory
-111010
-P1_preh
-111010
-P2_preh
-110101
-strat_id_1 = 58
-strat_id_2 = 53
-gener_history_freq
-0 0 0 0 0 0 1 1 0 1 0 1 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 0 1 0 0 0 0 0
-
-print_14
-Tournament - 2 players
-Gra = 2
-curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
-SUM_with_opponents
-180 120 60
-Prehistory
-111110
-P1_preh
-111110
-P2_preh
-111101
-strat_id_1 = 62
-strat_id_2 = 61
-gener_history_freq
-0 0 0 0 0 0 1 1 0 1 0 1 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 0 1 0 0 1 1 0
-
-print_14
-Tournament - 2 players
-Gra = 3
-curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
-SUM_with_opponents
-210 120 90
-Prehistory
-111111
-P1_preh
-111111
-P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
-gener_history_freq
-0 0 0 0 0 0 1 1 0 1 0 1 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 0 1 0 0 1 1 2
-
-print_14
-Tournament - 2 players
-Gra = 4
-curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
-SUM_with_opponents
-240 120 120
-Prehistory
-111111
-P1_preh
-111111
-P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
-gener_history_freq
-0 0 0 0 0 0 1 1 0 1 0 1 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 0 1 0 0 1 1 4
-
-print_14
-Tournament - 2 players
-Gra = 5
-curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
-SUM_with_opponents
-270 120 150
-Prehistory
-111111
-P1_preh
-111111
-P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
-gener_history_freq
-0 0 0 0 0 0 1 1 0 1 0 1 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 0 1 0 0 1 1 6
-
-print_12
-P1_start
-0000000000000000000000000000000011111111111111111111111111111111
-P2_strat
-0101010101010101010101010101010101010101010101010101010101010101
-strat_id_1 = 6
-strat_id_2 = 9
-
-print_13
-c_opponents
-2 1 1
-gener_history_freq
-0 0 0 0 0 0 2 1 0 2 0 1 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 0 1 0 0 1 1 4
-
-print_14
-Tournament - 2 players
-Gra = 1
-curr_action_P1 = 1
-curr_action_P2 = 0
-payoff_P1 = 0
-payoff_P2 = 50
-SUM_with_opponents
-270 120 200
-Prehistory
-100001
-P1_preh
-100001
-P2_preh
-010010
-strat_id_1 = 33
-strat_id_2 = 18
-gener_history_freq
-0 0 0 0 0 0 2 1 0 2 0 1 0 0 0 0 0 0 2 0 0 0 0 1 0 0 0 0 1 0 0 0 0 2 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 0 1 0 0 1 1 4
-
-print_14
-Tournament - 2 players
-Gra = 2
-curr_action_P1 = 0
-curr_action_P2 = 0
-payoff_P1 = 10
-payoff_P2 = 10
-SUM_with_opponents
-270 130 210
-Prehistory
-001000
-P1_preh
-001000
-P2_preh
-000100
-strat_id_1 = 8
-strat_id_2 = 4
-gener_history_freq
-0 0 0 0 1 0 2 1 1 2 0 1 0 0 0 0 0 0 2 0 0 0 0 1 0 0 0 0 1 0 0 0 0 2 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 0 1 0 0 1 1 4
-
-print_14
-Tournament - 2 players
-Gra = 3
-curr_action_P1 = 1
-curr_action_P2 = 0
-payoff_P1 = 0
-payoff_P2 = 50
-SUM_with_opponents
-270 130 260
-Prehistory
-100010
-P1_preh
-100010
-P2_preh
-010001
-strat_id_1 = 34
-strat_id_2 = 17
-gener_history_freq
-0 0 0 0 1 0 2 1 1 2 0 1 0 0 0 0 0 1 2 0 0 0 0 1 0 0 0 0 1 0 0 0 0 2 1 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 0 1 0 0 1 1 4
-
-print_14
-Tournament - 2 players
-Gra = 4
-curr_action_P1 = 0
-curr_action_P2 = 0
-payoff_P1 = 10
-payoff_P2 = 10
-SUM_with_opponents
-270 140 270
-Prehistory
-001000
-P1_preh
-001000
-P2_preh
-000100
-strat_id_1 = 8
-strat_id_2 = 4
-gener_history_freq
-0 0 0 0 2 0 2 1 2 2 0 1 0 0 0 0 0 1 2 0 0 0 0 1 0 0 0 0 1 0 0 0 0 2 1 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 0 1 0 0 1 1 4
-
-print_14
-Tournament - 2 players
-Gra = 5
-curr_action_P1 = 1
-curr_action_P2 = 0
-payoff_P1 = 0
-payoff_P2 = 50
-SUM_with_opponents
-270 140 320
-Prehistory
-100010
-P1_preh
-100010
-P2_preh
-010001
-strat_id_1 = 34
-strat_id_2 = 17
-gener_history_freq
-0 0 0 0 2 0 2 1 2 2 0 1 0 0 0 0 0 2 2 0 0 0 0 1 0 0 0 0 1 0 0 0 0 2 2 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 0 1 0 0 1 1 4
-
-print_12
-P1_start
-0000011111000001111100000111110000011111000001111100000111110000
-P2_strat
-0000000000000000000000000000000011111111111111111111111111111111
-strat_id_1 = 34
-strat_id_2 = 17
-
-print_13
-c_opponents
-2 2 2
-gener_history_freq
-0 0 0 0 2 0 2 1 2 2 0 1 0 0 0 0 0 2 2 0 0 0 0 1 0 0 0 0 1 0 0 0 0 2 2 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 0 1 0 0 1 1 4
-
-print_31
-After GA operators
-temp_Strategies
-'0000000000000000000000000000000011111111111111111111111111111111' '0000000000000000000000000000000011111111111111111111111111111111' '0101010101010101010101010101010101010101010101010101010101010101'
-parent_Strategies
-1 1 1
-child_Strategies
-'0000000000000000000000000000000011111111111111111111111111111111' '0000000000000000000000000000000011111111111111111111111111111111' '0101010101010101010101010101010101010101010101010101010111111111'
-Strategies
-'0000000000000000000000000000000011111111111111111111111111111111' '0000000000000010000000000000000011111111111111111111111111111111' '0101010101010101010101010101010101010101010101010101010111111111'
 
 print_14
 Tournament - 2 players
@@ -370,55 +547,61 @@ payoff_P2 = 30
 SUM_with_opponents
 30 30 0
 Prehistory
-111100
+1 1 0 0 1 0
 P1_preh
-111100
+1 1 0 0 1 0
 P2_preh
-111100
-strat_id_1 = 60
-strat_id_2 = 60
+1 1 0 0 0 1
+strat_id_1 = 50
+strat_id_2 = 49
 gener_history_freq
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 2 0 0 0
+0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
 
 print_14
 Tournament - 2 players
 Gra = 2
-curr_action_P1 = 1
+curr_action_P1 = 0
 curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
+payoff_P1 = 50
+payoff_P2 = 0
 SUM_with_opponents
-60 60 0
+80 30 0
 Prehistory
-111111
+0 1 1 1 0 0
 P1_preh
-111111
+0 1 1 1 0 0
 P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
+1 0 1 1 0 0
+strat_id_1 = 28
+strat_id_2 = 44
 gener_history_freq
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 2 0 0 2
+0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
 
 print_14
 Tournament - 2 players
 Gra = 3
-curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
+curr_action_P1 = 0
+curr_action_P2 = 0
+payoff_P1 = 10
+payoff_P2 = 10
 SUM_with_opponents
-90 90 0
+90 40 0
 Prehistory
-111111
+0 0 0 1 1 1
 P1_preh
-111111
+0 0 0 1 1 1
 P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
+0 0 1 0 1 1
+strat_id_1 = 7
+strat_id_2 = 11
 gener_history_freq
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 2 0 0 4
+0 0 0 0 0 0 0 2 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
 
 print_14
 Tournament - 2 players
@@ -427,52 +610,58 @@ curr_action_P1 = 1
 curr_action_P2 = 1
 payoff_P1 = 30
 payoff_P2 = 30
+SUM_with_opponents
+120 70 0
+Prehistory
+1 1 0 0 0 1
+P1_preh
+1 1 0 0 0 1
+P2_preh
+1 1 0 0 1 0
+strat_id_1 = 49
+strat_id_2 = 50
+gener_history_freq
+0 0 0 0 0 0 0 2 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 5
+curr_action_P1 = 1
+curr_action_P2 = 0
+payoff_P1 = 0
+payoff_P2 = 50
 SUM_with_opponents
 120 120 0
 Prehistory
-111111
+1 0 1 1 0 0
 P1_preh
-111111
+1 0 1 1 0 0
 P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
+0 1 1 1 0 0
+strat_id_1 = 44
+strat_id_2 = 28
 gener_history_freq
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 2 0 0 6
+0 0 0 0 0 0 0 2 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0
 
-print_14
-Tournament - 2 players
-Gra = 5
-curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
-SUM_with_opponents
-150 150 0
-Prehistory
-111111
-P1_preh
-111111
-P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
-gener_history_freq
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 2 0 0 8
+
 
 print_12
 P1_start
-0000000000000000000000000000000011111111111111111111111111111111
+0000000000000000000000000000000011111111111111111101010101010101
 P2_strat
-0000000000000010000000000000000011111111111111111111111111111111
-strat_id_1 = 60
-strat_id_2 = 60
+0101010101010101010101010101010101010101010101010101010101010101
+strat_id_1 = 35
+strat_id_2 = 19
+
 
 print_13
 c_opponents
-1 1 0
+1 2 1
 gener_history_freq
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 4 0 0 6
+0 0 0 0 0 0 0 2 0 0 0 2 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0
+
 
 print_14
 Tournament - 2 players
@@ -482,131 +671,19 @@ curr_action_P2 = 1
 payoff_P1 = 30
 payoff_P2 = 30
 SUM_with_opponents
-180 150 30
+120 150 30
 Prehistory
-111111
+1 1 1 0 0 0
 P1_preh
-111111
+1 1 1 0 0 0
 P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
+1 1 0 1 0 0
+strat_id_1 = 56
+strat_id_2 = 52
 gener_history_freq
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 4 0 0 8
+0 0 0 0 0 0 0 2 0 0 0 2 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 2 2 0 1 0 0 0 1 0 0 0 0 0 0 0
 
-print_14
-Tournament - 2 players
-Gra = 2
-curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
-SUM_with_opponents
-210 150 60
-Prehistory
-111111
-P1_preh
-111111
-P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
-gener_history_freq
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 4 0 0 10
 
-print_14
-Tournament - 2 players
-Gra = 3
-curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
-SUM_with_opponents
-240 150 90
-Prehistory
-111111
-P1_preh
-111111
-P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
-gener_history_freq
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 4 0 0 12
-
-print_14
-Tournament - 2 players
-Gra = 4
-curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
-SUM_with_opponents
-270 150 120
-Prehistory
-111111
-P1_preh
-111111
-P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
-gener_history_freq
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 4 0 0 14
-
-print_14
-Tournament - 2 players
-Gra = 5
-curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
-SUM_with_opponents
-300 150 150
-Prehistory
-111111
-P1_preh
-111111
-P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
-gener_history_freq
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 4 0 0 16
-
-print_12
-P1_start
-0101010101010101010101010101010101010101010101010101010111111111
-P2_strat
-0000000000000000000000000000000011111111111111111111111111111111
-strat_id_1 = 11
-strat_id_2 = 7
-
-print_13
-c_opponents
-2 1 1
-gener_history_freq
-0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 4 0 0 14
-
-print_14
-Tournament - 2 players
-Gra = 1
-curr_action_P1 = 0
-curr_action_P2 = 0
-payoff_P1 = 10
-payoff_P2 = 10
-SUM_with_opponents
-310 160 150
-Prehistory
-000010
-P1_preh
-000010
-P2_preh
-000001
-strat_id_1 = 2
-strat_id_2 = 1
-gener_history_freq
-0 1 1 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 4 0 0 14
 
 print_14
 Tournament - 2 players
@@ -616,57 +693,63 @@ curr_action_P2 = 0
 payoff_P1 = 10
 payoff_P2 = 10
 SUM_with_opponents
-320 170 150
+120 160 40
 Prehistory
-000000
+0 0 1 1 1 0
 P1_preh
-000000
+0 0 1 1 1 0
 P2_preh
-000000
-strat_id_1 = 0
-strat_id_2 = 0
+0 0 1 1 0 1
+strat_id_1 = 14
+strat_id_2 = 13
 gener_history_freq
-2 1 1 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 4 0 0 14
+0 0 0 0 0 0 0 2 0 0 0 2 0 1 1 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 2 2 0 1 0 0 0 1 0 0 0 0 0 0 0
+
+
 
 print_14
 Tournament - 2 players
 Gra = 3
 curr_action_P1 = 0
-curr_action_P2 = 0
-payoff_P1 = 10
-payoff_P2 = 10
+curr_action_P2 = 1
+payoff_P1 = 50
+payoff_P2 = 0
 SUM_with_opponents
-330 180 150
+120 160 90
 Prehistory
-000000
+0 1 0 0 1 1
 P1_preh
-000000
+0 1 0 0 1 1
 P2_preh
-000000
-strat_id_1 = 0
-strat_id_2 = 0
+1 0 0 0 1 1
+strat_id_1 = 19
+strat_id_2 = 35
 gener_history_freq
-4 1 1 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 4 0 0 14
+0 0 0 0 0 0 0 2 0 0 0 2 0 1 1 0 0 0 0 2 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 1 0 0 0 0 2 2 0 1 0 0 0 1 0 0 0 0 0 0 0
+
+
 
 print_14
 Tournament - 2 players
 Gra = 4
 curr_action_P1 = 0
-curr_action_P2 = 0
-payoff_P1 = 10
-payoff_P2 = 10
+curr_action_P2 = 1
+payoff_P1 = 50
+payoff_P2 = 0
 SUM_with_opponents
-340 190 150
+120 160 140
 Prehistory
-000000
+0 1 0 1 0 0
 P1_preh
-000000
+0 1 0 1 0 0
 P2_preh
-000000
-strat_id_1 = 0
-strat_id_2 = 0
+1 0 1 0 0 0
+strat_id_1 = 20
+strat_id_2 = 40
 gener_history_freq
-6 1 1 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 4 0 0 14
+0 0 0 0 0 0 0 2 0 0 0 2 0 1 1 0 0 0 0 2 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 2 0 0 0 0 1 0 0 0 1 0 0 0 0 2 2 0 1 0 0 0 1 0 0 0 0 0 0 0
+
+
 
 print_14
 Tournament - 2 players
@@ -676,153 +759,280 @@ curr_action_P2 = 0
 payoff_P1 = 10
 payoff_P2 = 10
 SUM_with_opponents
-350 200 150
+120 170 150
 Prehistory
-000000
+0 0 0 1 0 1
 P1_preh
-000000
+0 0 0 1 0 1
 P2_preh
-000000
-strat_id_1 = 0
-strat_id_2 = 0
+0 0 1 0 1 0
+strat_id_1 = 5
+strat_id_2 = 10
 gener_history_freq
-8 1 1 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 4 0 0 14
+0 0 0 0 0 1 0 2 0 0 1 2 0 1 1 0 0 0 0 2 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 2 0 0 0 0 1 0 0 0 1 0 0 0 0 2 2 0 1 0 0 0 1 0 0 0 0 0 0 0
+
+
 
 print_12
 P1_start
-0000000000000010000000000000000011111111111111111111111111111111
+0101010101010101010101010101010101010101010101010101010101010101
 P2_strat
-0000000000000000000000000000000011111111111111111111111111111111
-strat_id_1 = 59
-strat_id_2 = 55
+0101010101010101010101010101010101010101010101010101010101010101
+strat_id_1 = 17
+strat_id_2 = 34
+
 
 print_13
 c_opponents
-3 2 1
+2 3 1
 gener_history_freq
-6 1 1 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 1 0 0 0 1 4 0 0 14
+0 0 0 0 0 0 0 2 0 0 0 2 0 1 1 0 0 1 0 2 1 0 0 0 0 0 0 0 1 0 0 0 0 0 1 2 0 0 0 0 1 0 0 0 1 0 0 0 0 2 2 0 1 0 0 0 1 0 0 0 0 0 0 0
+
 
 print_14
 Tournament - 2 players
 Gra = 1
 curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
+curr_action_P2 = 0
+payoff_P1 = 0
+payoff_P2 = 50
 SUM_with_opponents
-350 230 180
+120 220 150
 Prehistory
-111110
+1 0 0 1 0 0
 P1_preh
-111110
+1 0 0 1 0 0
 P2_preh
-111101
-strat_id_1 = 62
-strat_id_2 = 61
+0 1 1 0 0 0
+strat_id_1 = 36
+strat_id_2 = 24
 gener_history_freq
-6 1 1 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 1 0 0 0 1 4 1 1 14
+0 0 0 0 0 0 0 2 0 0 0 2 0 1 1 0 0 1 0 2 1 0 0 0 1 0 0 0 1 0 0 0 0 0 1 2 1 0 0 0 1 0 0 0 1 0 0 0 0 2 2 0 1 0 0 0 1 0 0 0 0 0 0 0
+
+
 
 print_14
 Tournament - 2 players
 Gra = 2
-curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
+curr_action_P1 = 0
+curr_action_P2 = 0
+payoff_P1 = 10
+payoff_P2 = 10
 SUM_with_opponents
-350 260 210
+130 230 150
 Prehistory
-111111
+0 0 1 0 0 1
 P1_preh
-111111
+0 0 1 0 0 1
 P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
+0 0 0 1 1 0
+strat_id_1 = 9
+strat_id_2 = 6
 gener_history_freq
-6 1 1 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 1 0 0 0 1 4 1 1 16
+0 0 0 0 0 0 1 2 0 1 0 2 0 1 1 0 0 1 0 2 1 0 0 0 1 0 0 0 1 0 0 0 0 0 1 2 1 0 0 0 1 0 0 0 1 0 0 0 0 2 2 0 1 0 0 0 1 0 0 0 0 0 0 0
+
+
 
 print_14
 Tournament - 2 players
 Gra = 3
 curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
+curr_action_P2 = 0
+payoff_P1 = 0
+payoff_P2 = 50
 SUM_with_opponents
-350 290 240
+130 280 150
 Prehistory
-111111
+1 0 0 0 1 0
 P1_preh
-111111
+1 0 0 0 1 0
 P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
+0 1 0 0 0 1
+strat_id_1 = 34
+strat_id_2 = 17
 gener_history_freq
-6 1 1 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 1 0 0 0 1 4 1 1 18
+0 0 0 0 0 0 1 2 0 1 0 2 0 1 1 0 0 2 0 2 1 0 0 0 1 0 0 0 1 0 0 0 0 0 2 2 1 0 0 0 1 0 0 0 1 0 0 0 0 2 2 0 1 0 0 0 1 0 0 0 0 0 0 0
+
+
 
 print_14
 Tournament - 2 players
 Gra = 4
-curr_action_P1 = 1
+curr_action_P1 = 0
 curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
+payoff_P1 = 50
+payoff_P2 = 0
 SUM_with_opponents
-350 320 270
+180 280 150
 Prehistory
-111111
+0 1 1 0 0 0
 P1_preh
-111111
+0 1 1 0 0 0
 P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
+1 0 0 1 0 0
+strat_id_1 = 24
+strat_id_2 = 36
 gener_history_freq
-6 1 1 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 1 0 0 0 1 4 1 1 20
+0 0 0 0 0 0 1 2 0 1 0 2 0 1 1 0 0 2 0 2 1 0 0 0 2 0 0 0 1 0 0 0 0 0 2 2 2 0 0 0 1 0 0 0 1 0 0 0 0 2 2 0 1 0 0 0 1 0 0 0 0 0 0 0
+
+
 
 print_14
 Tournament - 2 players
 Gra = 5
-curr_action_P1 = 1
-curr_action_P2 = 1
-payoff_P1 = 30
-payoff_P2 = 30
+curr_action_P1 = 0
+curr_action_P2 = 0
+payoff_P1 = 10
+payoff_P2 = 10
 SUM_with_opponents
-350 350 300
+190 290 150
 Prehistory
-111111
+0 0 0 1 1 0
 P1_preh
-111111
+0 0 0 1 1 0
 P2_preh
-111111
-strat_id_1 = 63
-strat_id_2 = 63
+0 0 1 0 0 1
+strat_id_1 = 6
+strat_id_2 = 9
 gener_history_freq
-6 1 1 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 1 0 0 0 1 4 1 1 22
+0 0 0 0 0 0 2 2 0 2 0 2 0 1 1 0 0 2 0 2 1 0 0 0 2 0 0 0 1 0 0 0 0 0 2 2 2 0 0 0 1 0 0 0 1 0 0 0 0 2 2 0 1 0 0 0 1 0 0 0 0 0 0 0
+
+
 
 print_12
 P1_start
-0101010101010101010101010101010101010101010101010101010111111111
+0000000000000000000000000000000011111111111111111101010101010101
 P2_strat
-0000000000000010000000000000000011111111111111111111111111111111
-strat_id_1 = 63
-strat_id_2 = 63
+0101010101010101010101010101010101010101010101010101010101010101
+strat_id_1 = 45
+strat_id_2 = 30
+
 
 print_13
 c_opponents
 3 3 2
 gener_history_freq
-6 1 1 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 1 0 0 0 1 4 1 1 22
+0 0 0 0 0 0 1 2 0 1 0 2 0 1 1 0 0 2 0 2 1 0 0 0 2 0 0 0 1 0 1 0 0 0 2 2 2 0 0 0 1 0 0 0 1 1 0 0 0 2 2 0 1 0 0 0 1 0 0 0 0 0 0 0
+
+
+print_14
+Tournament - 2 players
+Gra = 1
+curr_action_P1 = 1
+curr_action_P2 = 0
+payoff_P1 = 0
+payoff_P2 = 50
+SUM_with_opponents
+240 290 150
+Prehistory
+1 0 1 0 1 1
+P1_preh
+1 0 1 0 1 1
+P2_preh
+0 1 0 1 1 1
+strat_id_1 = 43
+strat_id_2 = 23
+gener_history_freq
+0 0 0 0 0 0 1 2 0 1 0 2 0 1 1 0 0 2 0 2 1 0 0 1 2 0 0 0 1 0 1 0 0 0 2 2 2 0 0 0 1 0 0 1 1 1 0 0 0 2 2 0 1 0 0 0 1 0 0 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 2
+curr_action_P1 = 1
+curr_action_P2 = 1
+payoff_P1 = 30
+payoff_P2 = 30
+SUM_with_opponents
+270 290 180
+Prehistory
+1 1 1 0 1 0
+P1_preh
+1 1 1 0 1 0
+P2_preh
+1 1 0 1 0 1
+strat_id_1 = 58
+strat_id_2 = 53
+gener_history_freq
+0 0 0 0 0 0 1 2 0 1 0 2 0 1 1 0 0 2 0 2 1 0 0 1 2 0 0 0 1 0 1 0 0 0 2 2 2 0 0 0 1 0 0 1 1 1 0 0 0 2 2 0 1 1 0 0 1 0 1 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 3
+curr_action_P1 = 0
+curr_action_P2 = 1
+payoff_P1 = 50
+payoff_P2 = 0
+SUM_with_opponents
+270 290 230
+Prehistory
+0 1 1 1 1 0
+P1_preh
+0 1 1 1 1 0
+P2_preh
+1 0 1 1 0 1
+strat_id_1 = 30
+strat_id_2 = 45
+gener_history_freq
+0 0 0 0 0 0 1 2 0 1 0 2 0 1 1 0 0 2 0 2 1 0 0 1 2 0 0 0 1 0 2 0 0 0 2 2 2 0 0 0 1 0 0 1 1 2 0 0 0 2 2 0 1 1 0 0 1 0 1 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 4
+curr_action_P1 = 0
+curr_action_P2 = 1
+payoff_P1 = 50
+payoff_P2 = 0
+SUM_with_opponents
+270 290 280
+Prehistory
+0 1 0 1 1 1
+P1_preh
+0 1 0 1 1 1
+P2_preh
+1 0 1 0 1 1
+strat_id_1 = 23
+strat_id_2 = 43
+gener_history_freq
+0 0 0 0 0 0 1 2 0 1 0 2 0 1 1 0 0 2 0 2 1 0 0 2 2 0 0 0 1 0 2 0 0 0 2 2 2 0 0 0 1 0 0 2 1 2 0 0 0 2 2 0 1 1 0 0 1 0 1 0 0 0 0 0
+
+
+
+print_14
+Tournament - 2 players
+Gra = 5
+curr_action_P1 = 0
+curr_action_P2 = 1
+payoff_P1 = 50
+payoff_P2 = 0
+SUM_with_opponents
+270 290 330
+Prehistory
+0 1 0 1 0 1
+P1_preh
+0 1 0 1 0 1
+P2_preh
+1 0 1 0 1 0
+strat_id_1 = 21
+strat_id_2 = 42
+gener_history_freq
+0 0 0 0 0 0 1 2 0 1 0 2 0 1 1 0 0 2 0 2 1 1 0 2 2 0 0 0 1 0 2 0 0 0 2 2 2 0 0 0 1 0 1 2 1 2 0 0 0 2 2 0 1 1 0 0 1 0 1 0 0 0 0 0
+
+
 
 print_31
 After GA operators
 temp_Strategies
-'0000000000000000000000000000000011111111111111111111111111111111' '0101010101010101010101010101010101010101010101010101010111111111' '0000000000000010000000000000000011111111111111111111111111111111'
+'0000000000000000000000000000000011111111111111111101010101010101' '0000000000000000000000000000000011111111111111111101010101010101' '0000000000000000000000000000000011111111111111111101010101010101'
 parent_Strategies
 1 1 1
 child_Strategies
-'0000000000000000000000000000000011111111010101010101010111111111' '0101010101010101010101010101010101010101111111111111111111111111' '0000000000000010000000000000000011111111111111111111111111111111'
+'0000000000000000000000000000000011111111111111111101010101010101' '0000000000000000000000000000000011111111111111111101010101010101' '0000000000000000000000000000000011111111111111111101010101010101'
 Strategies
-'0000000000000000000000000000000011111111010101010101010111111111' '0101010101010101010101010101010101010101111111111111111111111111' '0000000000000010000000000000000011111111111111111111111111111111'
+'0000000000000000000000000000000011111111111111111101010101010101' '0000000000000000000000000000000011111111111111111101010101010101' '0000000000000000000000000000000011111111111111111101010101010101'
+

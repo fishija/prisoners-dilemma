@@ -2,7 +2,8 @@ import random
 import copy
 import pandas as pd
 from src.funcitons import to_binary, to_binary_length, save_plot_in_results, create_results_dir, \
-                        print_11, print_12, print_13, print_14, print_21, print_22, print_23, print_31
+                        print_11, print_12, print_13, print_14, print_21, print_22, print_23, print_31,\
+                        print_24
 
 from PyQt5.QtCore import pyqtSignal, QObject
 
@@ -263,19 +264,6 @@ class PdTournament:
                 for random_selected_ind in random.sample(list(self.list_of_ind[:temp_index] + self.list_of_ind[(temp_index+1):]), k=(self.N-1)):
                     currently_used_inds.append(random_selected_ind)
 
-            if self.N == 2 and debug and self.input_prehistory:
-                    pass
-            elif debug and self.input_prehistory:
-                N_players_strat_id = []
-                for cur in currently_used_inds:
-                    N_players_strat_id.append(self.list_of_ind.index(cur))
-
-                temp_list_of_ind = []
-                for ind in currently_used_inds:
-                    temp_list_of_ind.append(ind.to_binary_for_this_old_fuck())
-
-                print_22(None, num_of_opponents - ind.oponentes_jodidos, temp_list_of_ind, N_players_strat_id, self.history_count)
-            
             for cur_ind in currently_used_inds:
                 cur_ind.oponentes_jodidos += 1
 
@@ -286,12 +274,29 @@ class PdTournament:
             if debug and self.N==2 and len(self.list_of_ind)==3:
                     print_12(currently_used_inds[0].to_binary_for_this_old_fuck(), currently_used_inds[1].to_binary_for_this_old_fuck(), currently_used_inds[0].return_decimal_history(self.prep_history_for_individual(0)), currently_used_inds[1].return_decimal_history(self.prep_history_for_individual(1)))
                     print_13(self.c_opponents, self.history_count, currently_used_inds[0].return_decimal_history(self.prep_history_for_individual(0)), currently_used_inds[1].return_decimal_history(self.prep_history_for_individual(1)))
+            elif debug and self.N==3 and len(self.list_of_ind)==3:
+                temp_list_of_ind = []
+                for ind in currently_used_inds:
+                    temp_list_of_ind.append(ind.to_binary_for_this_old_fuck())
 
+                temp_N_players_strat_id = []
+
+                for i in range(0, self.N):
+                    temp_N_players_strat_id.append(self.list_of_ind[i].return_decimal_history(self.prep_history_for_individual(i)))
+
+                print_22(self.list_of_ind, self.c_opponents, temp_list_of_ind, temp_N_players_strat_id, self.history_count)
+            
             self.run_one_tournament(currently_used_inds)
 
             if not min(self.c_opponents) == num_of_opponents:
                 self.update_history(a=True)
-                
+
+            if debug and self.N == 3 and len(self.list_of_ind) == 3:
+                temp_history_custom = []
+                for i in range(0,3):
+                    temp_history_custom.append(self.prep_history_for_individual(i))
+
+                print_24(self.list_of_ind, self.history, self.history_count, temp_history_custom)
  
     def run_one_tournament(self, currently_used_inds):
         if not self.input_prehistory:
@@ -325,7 +330,7 @@ class PdTournament:
                 print_temp.append(cur_ind.score)
 
             # print("Scores = {}".format(print_temp))
-            if self.N==2 and debug and len(self.list_of_ind)<10:
+            if self.N==2 and debug and len(self.list_of_ind)==2:
                 temp_score_uno = 0
                 temp_score_dos = 0
 
@@ -350,22 +355,26 @@ class PdTournament:
 
                 print_14(k+1, last_play[0], last_play[1], temp_score_uno, temp_score_dos, self.sum_with_opponents, self.history, self.prep_history_for_individual(0), self.prep_history_for_individual(1), currently_used_inds[0].return_decimal_history(self.prep_history_for_individual(0)), currently_used_inds[1].return_decimal_history(self.prep_history_for_individual(1)), self.history_count)
                 
-            elif debug and self.N != 2:
+            elif debug and self.N != 2 and len(self.list_of_ind) == 3:
                 temp_scores = []
                 temp_sum_scores = []
-                temp_N_players_strat_id = []
+                temp_history_custom = []
+                temp_num_of_C_N_players = []
 
-                for i in range(0, self.N-1):
-                    temp_sum_scores.append(currently_used_inds[i].score)
+                for i in range(0, len(self.list_of_ind)):
+                    temp_sum_scores.append(self.list_of_ind[i].score)
                     temp_history = self.prep_history_for_individual(i)
-                    temp_N_players_strat_id.append(self.list_of_ind.index(currently_used_inds[i]))
 
                     if temp_history[0][0] == 0:
                         temp_scores.append(2 * temp_history[0][1] + 1)
                     else:
                         temp_scores.append(2 * temp_history[0][1])
 
-                print_23(k, last_play, last_play.count(1), temp_scores, temp_sum_scores, self.history, last_play, temp_N_players_strat_id, self.history_count)
+                    temp_num_of_C_N_players.append(temp_history[0][1])
+                    temp_history_custom.append(self.prep_history_for_individual(i))
+                    
+
+                print_23(k, last_play, temp_num_of_C_N_players, temp_scores, temp_sum_scores, self.history, last_play, self.history_count, temp_history_custom, self.list_of_ind)
 
         
 
@@ -422,7 +431,7 @@ class Generation:
         if self.two_pd_payoff_func:
             self.temp_tournament = PdTournament(self.list_of_ind, self.N, self.L, self.num_of_tournaments, self.two_pd_payoff_func, self.input_prehistory, a)
         else:
-            self.temp_tournament = PdTournament(self.list_of_ind, self.N, self.L, self.num_of_tournaments, self.input_prehistory, a)
+            self.temp_tournament = PdTournament(self.list_of_ind, self.N, self.L, self.num_of_tournaments, input_prehistory = self.input_prehistory, a = a)
 
         self.temp_tournament.start_whole_tournament(num_of_opponents)
 
@@ -651,10 +660,10 @@ class GameWorker(QObject):
                     curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob, self.two_pd_payoff_func, list_of_ind, input_strategies = self.input_strategies, input_prehistory = a)
             
                 if not list_of_ind:
-                    if self.N == 2 and debug:
+                    if self.N == 2 and debug and self.pop_size<4:
                         print_11(curr_generation.list_of_ind, self.input_prehistory)
 
-                    elif debug:
+                    elif self.N>2 and debug and self.pop_size<5:
                         print_21(curr_generation.list_of_ind, self.input_prehistory)
 
             else:

@@ -337,12 +337,6 @@ def print_12(strat_1, strat_2, id_1, id_2):
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_12\n'
         temp += 'P1_start\n{}\nP2_strat\n{}\nstrat_id_1 = {}\nstrat_id_2 = {}\n\n'.format(strat_1, strat_2, id_1, id_2)
-        # print("P1_strat")
-        # print(strat_1)
-        # print("P2_strat")
-        # print(strat_2)
-        # print("strat_id_1 = ", id_1)
-        # print("strat_id_2 = ", id_2)
         f.write(temp)
 
 
@@ -352,7 +346,6 @@ def print_13(c_opponents, gener_history_freq, strat_id_1 = None, strat_id_2 = No
     temp_gener_history_freq = copy.deepcopy(gener_history_freq)
 
     if strat_id_1:
-        temp_gener_history_freq = copy.deepcopy(gener_history_freq)
         temp_gener_history_freq[strat_id_1] += 1
         temp_gener_history_freq[strat_id_2] += 1
 
@@ -416,12 +409,22 @@ def print_21(ind_list, prehistory):
         f.write(temp)
 
 
-def print_22(id_N_players, c_of_opponents, N_players_strategies, N_players_strat_id, gener_history_freq):
+def print_22(list_of_ind, c_of_opponents, N_players_strategies, N_players_strat_id, gener_history_freq):
     create_results_dir()
+
+    id_N_players = []
+    for ind in list_of_ind:
+        id_N_players.append(ind.id)
+
+    temp_gener_history_freq = copy.deepcopy(gener_history_freq)
+
+    for strat_id in N_players_strat_id:
+        temp_gener_history_freq[strat_id] += 1
+
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_22\n'
-        # print("id_N_players")
-        # print(id_N_players)
+        temp += "id_N_players\n"
+        temp += f"{id_N_players}\n"
         temp += "c_of_opponents\n"
         temp += f"{c_of_opponents}\n"
         temp += "N_players_strategies\n"
@@ -429,24 +432,43 @@ def print_22(id_N_players, c_of_opponents, N_players_strategies, N_players_strat
         temp += "N_players_strat_id\n"
         temp += f"{N_players_strat_id}\n"
         temp += "gener_history_freq\n"
-        temp += f"{gener_history_freq}\n"
+        temp += f"{temp_gener_history_freq}\n"
         temp += '\n'
         f.write(temp)
 
 
-def print_23(k, curr_action_N_players, num_of_C_N_players, payoff_N_players, SUM_with_opponents, Prehistory_N, N_players_preh, N_players_strat_id, gener_history_freq):
+def print_23(k, curr_action_N_players, num_of_C_N_players, payoff_N_players, SUM_with_opponents, Prehistory_N, N_players_preh, gener_history_freq, history_custom, list_of_ind):
     create_results_dir()
+
+    N_players_preh = []
+    N_players_strat_id = []
+    opponents_binary_len = len(to_binary(list_of_ind[0].N-1))
+
+    for hist in history_custom:
+        a = ''
+
+        for something in hist:
+            a += f'{something[0]}{to_binary_length(something[1], opponents_binary_len)}'
+
+        N_players_preh.append(a)
+        N_players_strat_id.append(int(a, 2))
+
+    temp_gener_history_freq = copy.deepcopy(gener_history_freq)
+
+    for strat_id in N_players_strat_id:
+        temp_gener_history_freq[strat_id] += 1
+
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_23\n'
         temp += "Tournament - N players\n"
-        temp += f"K = {k}\n"
+        temp += f"K = {k+1}\n"
         temp += "curr_action_N_players\n"
         temp += f"{curr_action_N_players}\n"
         temp += "num_of_C_N_players\n"
         temp += f"{num_of_C_N_players}\n"
         temp += "payoff_N_players\n"
         temp += f"{payoff_N_players}\n"
-        temp += "SUM_with_oppoents\n"
+        temp += "SUM_with_opponents\n"
         temp += f"{SUM_with_opponents}\n"
         temp += "Prehistory_N\n"
         temp += f"{Prehistory_N}\n"
@@ -455,7 +477,59 @@ def print_23(k, curr_action_N_players, num_of_C_N_players, payoff_N_players, SUM
         temp += "N_players_strat_id\n"
         temp += f"{N_players_strat_id}\n"
         temp += "gener_history_freq\n"
-        temp += f"{gener_history_freq}\n"
+        temp += f"{temp_gener_history_freq}\n"
+        temp += '\n'
+        f.write(temp)
+
+    
+def print_24(list_of_ind, history, history_count, history_custom):
+
+    # history_custom
+    # [[[0, 1], [0, 0]], 
+    #  [[1, 0], [0, 0]], 
+    #  [[0, 1], [0, 0]]]
+
+    # history
+    # [[0, 1, 0], 
+    #  [0, 0, 0]]
+    id_N_players = []
+    N_players_strategies = []
+    Prehistory_N = history
+    N_players_preh = []
+    N_players_strat_id = []
+    gener_history_freq = history_count
+
+    opponents_binary_len = len(to_binary(list_of_ind[0].N-1))
+
+    for hist in history_custom:
+        a = ''
+
+        for something in hist:
+            a += f'{something[0]}{to_binary_length(something[1], opponents_binary_len)}'
+
+        N_players_preh.append(a)
+        N_players_strat_id.append(int(a, 2))
+
+    for ind in list_of_ind:
+        id_N_players.append(ind.id)
+        N_players_strategies.append(to_binary_length(ind.id, ind.ind_len))
+
+    create_results_dir()
+    with open('RESULTS/DEBUG.txt', 'a') as f:
+        temp = '\nprint_24\n'
+        temp += 'DUEL-NpPD zakonczony\nNowy zbiór graczy - strategii\n'
+        temp += 'id_N_players\n'
+        temp += f'{id_N_players}\n'
+        temp += 'N_players_strategies\n'
+        temp += f'{N_players_strategies}\n'
+        temp += 'Prehistory_N\n'
+        temp += f'{Prehistory_N}\n'
+        temp += 'N_players_preh\n'
+        temp += f'{N_players_preh}\n'
+        temp += 'N_players_strat_id\n'
+        temp += f'{N_players_strat_id}\n'
+        temp += 'gener_history_freq\n'
+        temp += f'{gener_history_freq}\n'
         temp += '\n'
         f.write(temp)
 

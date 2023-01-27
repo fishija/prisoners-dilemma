@@ -514,6 +514,9 @@ def print_24(list_of_ind, history, history_count, history_custom):
         id_N_players.append(ind.id)
         N_players_strategies.append(to_binary_length(ind.id, ind.ind_len))
 
+    for strat_id in N_players_strat_id:
+        gener_history_freq[strat_id] += 1
+
     create_results_dir()
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_24\n'

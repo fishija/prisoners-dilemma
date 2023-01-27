@@ -129,7 +129,7 @@ gener_history_freq
 
 print_24
 DUEL-NpPD zakonczony
-Nowy zbiór graczy - strategii
+Nowy zbiï¿½r graczy - strategii
 id_N_players
 [3678529610006596812, 558992244657865200, 4294967295]
 N_players_strategies

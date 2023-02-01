@@ -107,30 +107,38 @@ class Individual:
 
         return decimal_history
 
-    def count_score(self, coop_players_count, two_pd_payoff_func = None):
+    def count_score(self, players_choices_list, two_pd_payoff_func = None):
         # if 2pPD
+        coop_players_count = 0
+
+        for p in players_choices_list:
+            if p == 1:
+                coop_players_count += 1
+
+        coop_players_count -= self.my_choice
+
         if two_pd_payoff_func:
-            if self.my_choice == 0 and coop_players_count[0][1] == 0:
+            if self.my_choice == 0 and coop_players_count == 0:
                 self.score += two_pd_payoff_func['dd_uno']
 
-            elif self.my_choice == 0 and coop_players_count[0][1] == 1:
+            elif self.my_choice == 0 and coop_players_count == 1:
                 self.score += two_pd_payoff_func['dc_uno']
 
-            elif self.my_choice == 1 and coop_players_count[0][1] == 0:
+            elif self.my_choice == 1 and coop_players_count == 0:
                 self.score += two_pd_payoff_func['cd_uno']
 
-            elif self.my_choice == 1 and coop_players_count[0][1] == 1:
+            elif self.my_choice == 1 and coop_players_count == 1:
                 self.score += two_pd_payoff_func['cc_uno']
 
         else:
             if self.my_choice == 0:
-                self.score += 2 * coop_players_count[0][1] + 1
-                global_num_of_C_N[-1][0] += coop_players_count[0][1]
+                self.score += 2 * coop_players_count + 1
+                global_num_of_C_N[-1][0] += coop_players_count
                 global_num_of_C_N[-1][1] += 1
 
             elif self.my_choice == 1:
-                self.score += (2 * coop_players_count[0][1])
-                global_num_of_C_N[-1][0] += coop_players_count[0][1] + 1
+                self.score += (2 * coop_players_count)
+                global_num_of_C_N[-1][0] += coop_players_count + 1
                 global_num_of_C_N[-1][1] += 1
 
     def mutation (self, mutation_prob: float):
@@ -244,93 +252,165 @@ class PdTournament:
         return to_ret
 
     def start_whole_tournament(self, num_of_opponents):
-        self.c_opponents = []
-        self.sum_with_opponents = [0]*len(self.list_of_ind)
-        if self.input_prehistory:
-            self.update_history()
 
         for ind in self.list_of_ind:
             ind.score = 0
             ind.oponentes_jodidos = 0
 
-        while not self.c_opponents or not min(self.c_opponents) == num_of_opponents:
-            if not self.c_opponents:
-                currently_used_inds = [self.list_of_ind[0]]
-                for i in range(1, self.N):
-                    currently_used_inds.append(self.list_of_ind[i])
-            else:
-                temp_index = self.c_opponents.index(min(self.c_opponents))
-                currently_used_inds = [self.list_of_ind[temp_index]]
+        self.update_history()
+
+        N_players_strategies = []
+        self.c_of_opponents = []
+        self.N_players_strat_id = [0] * self.N
+
+        for i in range(self.N):
+            N_players_strategies.append(self.list_of_ind[i])
+            self.list_of_ind[i].oponentes_jodidos += 1
+            self.N_players_strat_id[i] = self.list_of_ind[i].return_decimal_history(self.prep_history_for_individual(i))
+
+        for i in self.list_of_ind:
+            self.c_of_opponents.append(i.oponentes_jodidos)
+
+        for index, cur_ind in enumerate(N_players_strategies):
+            self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
+
+        sum_with_opponents = []
+        for ind in self.list_of_ind:
+            sum_with_opponents.append(ind.score)
+
+        if debug and self.N==2:
+            print_12(N_players_strategies[0].to_binary_for_this_old_fuck(), N_players_strategies[1].to_binary_for_this_old_fuck(), N_players_strategies[0].return_decimal_history(self.prep_history_for_individual(0)), N_players_strategies[1].return_decimal_history(self.prep_history_for_individual(1)))
+            print_13(self.c_of_opponents, self.history_count, N_players_strategies[0].return_decimal_history(self.prep_history_for_individual(0)), N_players_strategies[1].return_decimal_history(self.prep_history_for_individual(1)))
+        
+        elif debug and self.N>=3:
+            temp_list_of_ind = []
+            for ind in N_players_strategies:
+                temp_list_of_ind.append(ind.to_binary_for_this_old_fuck())
+            
+            print_22(self.list_of_ind, self.c_of_opponents, temp_list_of_ind, self.N_players_strat_id, self.history_count)
+
+        if self.N == 2 and len(self.list_of_ind) == 2:
+            self.tournament(N_players_strategies)
+        elif self.N == 2:
+            self.duel(N_players_strategies, num_of_opponents)
+        else:
+            self.duel_N(N_players_strategies, num_of_opponents)
+
+    def duel(self, N_players_strategies, num_of_opponents):
+
+        duel_fulf = False
+    
+        while not duel_fulf:
+            self.tournament(N_players_strategies)
+
+            duel_fulf = (min(self.c_of_opponents) >= num_of_opponents)
+
+            if not duel_fulf:
+                temp_index = self.c_of_opponents.index(min(self.c_of_opponents))
+                N_players_strategies = [self.list_of_ind[temp_index]]
+
                 for random_selected_ind in random.sample(list(self.list_of_ind[:temp_index] + self.list_of_ind[(temp_index+1):]), k=(self.N-1)):
-                    currently_used_inds.append(random_selected_ind)
+                    N_players_strategies.append(random_selected_ind)
 
-            for cur_ind in currently_used_inds:
+                print(len(N_players_strategies))
+
+                self.update_history(a=True)
+
+                for i in range(self.N):
+                    self.N_players_strat_id[i] = self.list_of_ind[i].return_decimal_history(self.prep_history_for_individual(i))
+
+                for index, cur_ind in enumerate(N_players_strategies):
+                    cur_ind.oponentes_jodidos += 1
+                    self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
+
+                for index, ind in enumerate(self.list_of_ind):
+                    self.c_of_opponents[index] = ind.oponentes_jodidos
+
+                sum_with_opponents = []
+                for ind in self.list_of_ind:
+                    sum_with_opponents.append(ind.score)
+
+            if debug:
+                if self.N==2:
+                    print_12(N_players_strategies[0].to_binary_for_this_old_fuck(), N_players_strategies[1].to_binary_for_this_old_fuck(), N_players_strategies[0].return_decimal_history(self.prep_history_for_individual(0)), N_players_strategies[1].return_decimal_history(self.prep_history_for_individual(1)))
+                    print_13(self.c_of_opponents, self.history_count, N_players_strategies[0].return_decimal_history(self.prep_history_for_individual(0)), N_players_strategies[1].return_decimal_history(self.prep_history_for_individual(1)))
+               
+                elif self.N>=3:
+                    temp_history_custom = []
+                    for i in range(self.N):
+                        temp_history_custom.append(self.prep_history_for_individual(i))
+
+                    print_24(self.list_of_ind, self.history, self.history_count, temp_history_custom)
+
+    def duel_N(self, N_players_strategies, num_of_opponents):
+
+        duel_fulf = False
+    
+        while not duel_fulf:
+            self.tournament(N_players_strategies)
+
+            duel_fulf = (min(self.c_of_opponents) == num_of_opponents)
+
+            temp_index = self.c_of_opponents.index(min(self.c_of_opponents))
+            N_players_strategies = [self.list_of_ind[temp_index]]
+
+            for random_selected_ind in random.sample(list(self.list_of_ind[:temp_index] + self.list_of_ind[(temp_index+1):]), k=(self.N-1)):
+                N_players_strategies.append(random_selected_ind)
+
+            self.update_history(a=True)
+
+            for i in range(self.N):
+                self.N_players_strat_id[i] = self.list_of_ind[i].return_decimal_history(self.prep_history_for_individual(i))
+
+            for index, cur_ind in enumerate(N_players_strategies):
                 cur_ind.oponentes_jodidos += 1
+                self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
 
-            self.c_opponents.clear()
+            for index, ind in enumerate(self.list_of_ind):
+                self.c_of_opponents[index] = ind.oponentes_jodidos
+
+            sum_with_opponents = []
             for ind in self.list_of_ind:
-                self.c_opponents.append(ind.oponentes_jodidos)
+                sum_with_opponents.append(ind.score)
 
-            if debug and self.N==2:
-                    print_12(currently_used_inds[0].to_binary_for_this_old_fuck(), currently_used_inds[1].to_binary_for_this_old_fuck(), currently_used_inds[0].return_decimal_history(self.prep_history_for_individual(0)), currently_used_inds[1].return_decimal_history(self.prep_history_for_individual(1)))
-                    print_13(self.c_opponents, self.history_count, currently_used_inds[0].return_decimal_history(self.prep_history_for_individual(0)), currently_used_inds[1].return_decimal_history(self.prep_history_for_individual(1)))
+        if debug:
+            if self.N==2:
+                print_12(N_players_strategies[0].to_binary_for_this_old_fuck(), N_players_strategies[1].to_binary_for_this_old_fuck(), N_players_strategies[0].return_decimal_history(self.prep_history_for_individual(0)), N_players_strategies[1].return_decimal_history(self.prep_history_for_individual(1)))
+                print_13(self.c_of_opponents, self.history_count, N_players_strategies[0].return_decimal_history(self.prep_history_for_individual(0)), N_players_strategies[1].return_decimal_history(self.prep_history_for_individual(1)))
             
-            elif debug and self.N>=3:
-                temp_list_of_ind = []
-                for ind in currently_used_inds:
-                    temp_list_of_ind.append(ind.to_binary_for_this_old_fuck())
-
-                temp_N_players_strat_id = []
-
-                for i in range(0, self.N):
-                    temp_N_players_strat_id.append(self.list_of_ind[i].return_decimal_history(self.prep_history_for_individual(i)))
-
-                print_22(self.list_of_ind, self.c_opponents, temp_list_of_ind, temp_N_players_strat_id, self.history_count)
-            
-            self.run_one_tournament(currently_used_inds)
-
-            if not min(self.c_opponents) == num_of_opponents:
-                self.update_history(a=True)
-
-            if debug and self.N == 3:
-                self.update_history(a=True)
-
+            elif self.N>=3:
                 temp_history_custom = []
-                for i in range(0,3):
+                for i in range(self.N):
                     temp_history_custom.append(self.prep_history_for_individual(i))
 
-                temp_history_cleared = [0] * len(self.history_count)
+                print_24(self.list_of_ind, self.history, self.history_count, temp_history_custom)
 
-                print_24(self.list_of_ind, self.history, temp_history_cleared, temp_history_custom)
- 
-    def run_one_tournament(self, currently_used_inds):
-        if not self.input_prehistory:
-            self.update_history()
-
-        for k in range(self.num_of_tournaments):
+    def tournament(self, N_players_strategies):
+        for k in range(self.num_of_tournaments):            
             last_play = []
+            for index, cur_ind in enumerate(N_players_strategies):
+                teeeemp = []
+                for c in N_players_strategies:
+                    teeeemp.append(c.my_choice)
 
-            for index, cur_ind in enumerate(currently_used_inds):
-                self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
-                last_play.append(int(cur_ind.my_choice))
-
-            if not k == self.num_of_tournaments - 1:
-                self.update_history(last_play)
-
-            self.a = False
-
-            print_temp = []
-
-            for index, cur_ind in enumerate(currently_used_inds):
                 if self.N > 2:
-                    cur_ind.count_score(self.prep_history_for_individual(index))
+                    cur_ind.count_score(teeeemp)
                 else:
-                    cur_ind.count_score(self.prep_history_for_individual(index), self.two_pd_payoff_func)
+                    cur_ind.count_score(teeeemp, self.two_pd_payoff_func)
+                
+                last_play.append(cur_ind.my_choice)
 
-                print_temp.append(cur_ind.score)
+            sum_with_opponents = []
+            for ind in self.list_of_ind:
+                sum_with_opponents.append(ind.score)
 
-            # print("Scores = {}".format(print_temp))
-            if self.N==2 and debug:
+            self.update_history(last_play)
+
+            for index, cur_ind in enumerate(N_players_strategies):
+                self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
+
+            if debug and self.N == 2:
+
                 temp_score_uno = 0
                 temp_score_dos = 0
 
@@ -350,12 +430,9 @@ class PdTournament:
                     temp_score_uno += self.two_pd_payoff_func['cc_uno']
                     temp_score_dos += self.two_pd_payoff_func['cc_uno']
 
-                self.sum_with_opponents[self.list_of_ind.index(currently_used_inds[0])] += temp_score_uno
-                self.sum_with_opponents[self.list_of_ind.index(currently_used_inds[1])] += temp_score_dos
+                print_14(k+1, last_play[0], last_play[1], temp_score_uno, temp_score_dos, sum_with_opponents, self.history, self.prep_history_for_individual(0), self.prep_history_for_individual(1), N_players_strategies[0].return_decimal_history(self.prep_history_for_individual(0)), N_players_strategies[1].return_decimal_history(self.prep_history_for_individual(1)), self.history_count)
 
-                print_14(k+1, last_play[0], last_play[1], temp_score_uno, temp_score_dos, self.sum_with_opponents, self.history, self.prep_history_for_individual(0), self.prep_history_for_individual(1), currently_used_inds[0].return_decimal_history(self.prep_history_for_individual(0)), currently_used_inds[1].return_decimal_history(self.prep_history_for_individual(1)), self.history_count)
-                
-            elif debug and self.N == 3:
+            elif debug and self.N >=3:
                 temp_scores = []
                 temp_sum_scores = []
                 temp_history_custom = []
@@ -364,7 +441,7 @@ class PdTournament:
                 for i in self.list_of_ind:
                     temp_sum_scores.append(i.score)
 
-                for index, i in enumerate(currently_used_inds):
+                for index, i in enumerate(N_players_strategies):
                     temp_history = self.prep_history_for_individual(index)
 
                     if temp_history[0][0] == 0:
@@ -376,7 +453,6 @@ class PdTournament:
                     temp_history_custom.append(self.prep_history_for_individual(index))
                     
                 print_23(k, last_play, temp_num_of_C_N_players, temp_scores, temp_sum_scores, self.history, last_play, self.history_count, temp_history_custom, self.list_of_ind)
-
 
 class Generation:
     """
@@ -645,9 +721,18 @@ class GameWorker(QObject):
                 elif self.is_2_PD and not list_of_ind:
                     curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob, self.two_pd_payoff_func, input_strategies = self.input_strategies, input_prehistory = self.input_prehistory)
                 elif not self.is_2_PD and list_of_ind:
-                    curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob, list_of_ind=list_of_ind, input_strategies = self.input_strategies, input_prehistory = self.input_prehistory)
-                else:
+                    a = ''
+                    for _ in range(0, self.prehistory_L*self.N):
+                        
+                        x = random.random()
+                        if x < 0.5:
+                            a +='0'
+                        else:
+                            a +='1'
 
+                    curr_generation = Generation(self.pop_size, self.num_of_tournaments, self.tournament_size, self.crossover_prob, self.prob_of_init_C, self.N, self.prehistory_L, self.mutation_prob, list_of_ind=list_of_ind, input_strategies = self.input_strategies, input_prehistory = a)
+                
+                else:
                     a = ''
                     for _ in range(0, self.prehistory_L*self.N):
                         

@@ -343,15 +343,9 @@ def print_12(strat_1, strat_2, id_1, id_2):
 def print_13(c_opponents, gener_history_freq, strat_id_1 = None, strat_id_2 = None):
     create_results_dir()
 
-    temp_gener_history_freq = copy.deepcopy(gener_history_freq)
-
-    if strat_id_1:
-        temp_gener_history_freq[strat_id_1] += 1
-        temp_gener_history_freq[strat_id_2] += 1
-
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_13\n'
-        temp += 'c_opponents\n{}\ngener_history_freq\n{}\n\n'.format(c_opponents, temp_gener_history_freq)
+        temp += 'c_opponents\n{}\ngener_history_freq\n{}\n\n'.format(c_opponents, gener_history_freq)
         # print("c_opponents")
         # print(c_opponents)
         # print("gener_history_freq")
@@ -361,11 +355,6 @@ def print_13(c_opponents, gener_history_freq, strat_id_1 = None, strat_id_2 = No
 
 def print_14(k, curr_action_P1, curr_action_P2, payoff_P1, payoff_P2, SUM_with_opponents, prehistory, P1_preh, P2_preh, strat_id_1, strat_id_2, gener_history_freq):
     create_results_dir()
-
-    temp_gener_history_freq = copy.deepcopy(gener_history_freq)
-    temp_gener_history_freq[strat_id_1] += 1
-    temp_gener_history_freq[strat_id_2] += 1
-
 
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_14\n'
@@ -386,7 +375,7 @@ def print_14(k, curr_action_P1, curr_action_P2, payoff_P1, payoff_P2, SUM_with_o
         temp += f"strat_id_1 = {strat_id_1}\n"
         temp += f"strat_id_2 = {strat_id_2}\n"
         temp += "gener_history_freq\n"
-        temp += f"{temp_gener_history_freq}\n"
+        temp += f"{gener_history_freq}\n"
         temp += '\n\n'
         f.write(temp)
 
@@ -416,11 +405,6 @@ def print_22(list_of_ind, c_of_opponents, N_players_strategies, N_players_strat_
     for ind in list_of_ind:
         id_N_players.append(ind.id)
 
-    temp_gener_history_freq = copy.deepcopy(gener_history_freq)
-
-    for strat_id in N_players_strat_id:
-        temp_gener_history_freq[strat_id] += 1
-
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_22\n'
         temp += "id_N_players\n"
@@ -432,7 +416,7 @@ def print_22(list_of_ind, c_of_opponents, N_players_strategies, N_players_strat_
         temp += "N_players_strat_id\n"
         temp += f"{N_players_strat_id}\n"
         temp += "gener_history_freq\n"
-        temp += f"{temp_gener_history_freq}\n"
+        temp += f"{gener_history_freq}\n"
         temp += '\n'
         f.write(temp)
 
@@ -453,11 +437,6 @@ def print_23(k, curr_action_N_players, num_of_C_N_players, payoff_N_players, SUM
         N_players_preh.append(a)
         N_players_strat_id.append(int(a, 2))
 
-    temp_gener_history_freq = copy.deepcopy(gener_history_freq)
-
-    for strat_id in N_players_strat_id:
-        temp_gener_history_freq[strat_id] += 1
-
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_23\n'
         temp += "Tournament - N players\n"
@@ -477,7 +456,7 @@ def print_23(k, curr_action_N_players, num_of_C_N_players, payoff_N_players, SUM
         temp += "N_players_strat_id\n"
         temp += f"{N_players_strat_id}\n"
         temp += "gener_history_freq\n"
-        temp += f"{temp_gener_history_freq}\n"
+        temp += f"{gener_history_freq}\n"
         temp += '\n'
         f.write(temp)
 
@@ -513,9 +492,6 @@ def print_24(list_of_ind, history, history_count, history_custom):
     for ind in list_of_ind:
         id_N_players.append(ind.id)
         N_players_strategies.append(to_binary_length(ind.id, ind.ind_len))
-
-    for strat_id in N_players_strat_id:
-        gener_history_freq[strat_id] += 1
 
     create_results_dir()
     with open('RESULTS/DEBUG.txt', 'a') as f:

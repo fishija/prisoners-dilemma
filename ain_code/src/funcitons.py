@@ -398,12 +398,25 @@ def print_21(ind_list, prehistory):
         f.write(temp)
 
 
-def print_22(list_of_ind, c_of_opponents, N_players_strategies, N_players_strat_id, gener_history_freq):
+def print_22(list_of_ind, c_of_opponents, N_players_strategies, N_players_strat_id, gener_history_freq, history_custom):
     create_results_dir()
 
+
+    N_players_preh = []
+    opponents_binary_len = len(to_binary(list_of_ind[0].N-1))
+
+    for hist in history_custom:
+        a = ''
+
+        for something in hist:
+            a += f'{something[0]}{to_binary_length(something[1], opponents_binary_len)}'
+
+        N_players_preh.append(a)
+
+        
     id_N_players = []
     for ind in list_of_ind:
-        id_N_players.append(ind.id)
+        id_N_players.append(list_of_ind.index(ind))
 
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_22\n'
@@ -413,6 +426,8 @@ def print_22(list_of_ind, c_of_opponents, N_players_strategies, N_players_strat_
         temp += f"{c_of_opponents}\n"
         temp += "N_players_strategies\n"
         temp += f"{N_players_strategies}\n"
+        temp += "N_players_preh\n"
+        temp += f"{N_players_preh}\n"
         temp += "N_players_strat_id\n"
         temp += f"{N_players_strat_id}\n"
         temp += "gener_history_freq\n"
@@ -496,7 +511,7 @@ def print_24(list_of_ind, history, history_count, history_custom):
     create_results_dir()
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_24\n'
-        temp += 'DUEL-NpPD zakonczony\nNowy zbiór graczy - strategii\n'
+        temp += 'DUEL-NpPD zakonczony\nNowy zbior graczy - strategii\n'
         temp += 'id_N_players\n'
         temp += f'{id_N_players}\n'
         temp += 'N_players_strategies\n'

@@ -52,7 +52,7 @@
               <string>2_PD</string>
              </property>
              <property name="checked">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -62,7 +62,7 @@
               <string>N_PD</string>
              </property>
              <property name="checked">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -112,7 +112,7 @@
               <number>20</number>
              </property>
              <property name="value">
-              <number>3</number>
+              <number>4</number>
              </property>
             </widget>
            </item>
@@ -283,7 +283,7 @@
               <number>1000</number>
              </property>
              <property name="value">
-              <number>5</number>
+              <number>151</number>
              </property>
             </widget>
            </item>
@@ -333,7 +333,7 @@
               <number>1000</number>
              </property>
              <property name="value">
-              <number>1</number>
+              <number>10</number>
              </property>
             </widget>
            </item>
@@ -353,7 +353,7 @@
               <number>6</number>
              </property>
              <property name="value">
-              <number>2</number>
+              <number>3</number>
              </property>
             </widget>
            </item>
@@ -408,7 +408,7 @@
               <number>999999999</number>
              </property>
              <property name="value">
-              <number>3</number>
+              <number>100</number>
              </property>
             </widget>
            </item>
@@ -441,7 +441,7 @@
               <number>999999999</number>
              </property>
              <property name="value">
-              <number>1</number>
+              <number>200</number>
              </property>
             </widget>
            </item>
@@ -457,7 +457,7 @@
               <double>0.010000000000000</double>
              </property>
              <property name="value">
-              <double>1.000000000000000</double>
+              <double>0.900000000000000</double>
              </property>
             </widget>
            </item>
@@ -491,7 +491,7 @@
               <number>999999999</number>
              </property>
              <property name="value">
-              <number>2</number>
+              <number>3</number>
              </property>
             </widget>
            </item>
@@ -566,7 +566,7 @@
                  <string/>
                 </property>
                 <property name="text">
-                 <string>1</string>
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -617,7 +617,7 @@
                  <number>1000</number>
                 </property>
                 <property name="value">
-                 <number>1</number>
+                 <number>30</number>
                 </property>
                </widget>
               </item>
@@ -656,7 +656,7 @@
                  <number>200</number>
                 </property>
                 <property name="value">
-                 <number>1</number>
+                 <number>10</number>
                 </property>
                </widget>
               </item>
@@ -686,7 +686,7 @@
               <string>debug</string>
              </property>
              <property name="checked">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -696,7 +696,7 @@
               <string>LOAD DATA</string>
              </property>
              <property name="checked">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
             </widget>
            </item>

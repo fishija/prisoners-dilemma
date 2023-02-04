@@ -286,8 +286,13 @@ class PdTournament:
             temp_list_of_ind = []
             for ind in N_players_strategies:
                 temp_list_of_ind.append(ind.to_binary_for_this_old_fuck())
+
+            temp_history_custom = []
+
+            for index, i in enumerate(N_players_strategies):
+                temp_history_custom.append(self.prep_history_for_individual(index))
             
-            print_22(self.list_of_ind, self.c_of_opponents, temp_list_of_ind, self.N_players_strat_id, self.history_count)
+            print_22(self.list_of_ind, self.c_of_opponents, temp_list_of_ind, self.N_players_strat_id, self.history_count, temp_history_custom)
 
         if self.N == 2 and len(self.list_of_ind) == 2:
             self.tournament(N_players_strategies)
@@ -312,7 +317,7 @@ class PdTournament:
                 for random_selected_ind in random.sample(list(self.list_of_ind[:temp_index] + self.list_of_ind[(temp_index+1):]), k=(self.N-1)):
                     N_players_strategies.append(random_selected_ind)
 
-                print(len(N_players_strategies))
+                # print(len(N_players_strategies))
 
                 self.update_history(a=True)
 

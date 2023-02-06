@@ -418,6 +418,11 @@ def print_22(list_of_ind, c_of_opponents, N_players_strategies, N_players_strat_
     for ind in list_of_ind:
         id_N_players.append(list_of_ind.index(ind))
 
+    temp_gener_history_freq = ''
+    for index, h in enumerate(gener_history_freq):
+        if h != 0:
+            temp_gener_history_freq += f'{index}: {h}\n'
+
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_22\n'
         temp += "id_N_players\n"
@@ -431,7 +436,7 @@ def print_22(list_of_ind, c_of_opponents, N_players_strategies, N_players_strat_
         temp += "N_players_strat_id\n"
         temp += f"{N_players_strat_id}\n"
         temp += "gener_history_freq\n"
-        temp += f"{gener_history_freq}\n"
+        temp += f"{temp_gener_history_freq}\n"
         temp += '\n'
         f.write(temp)
 
@@ -452,6 +457,11 @@ def print_23(k, curr_action_N_players, num_of_C_N_players, payoff_N_players, SUM
         N_players_preh.append(a)
         N_players_strat_id.append(int(a, 2))
 
+    temp_gener_history_freq = ''
+    for index, h in enumerate(gener_history_freq):
+        if h != 0:
+            temp_gener_history_freq += f'{index}: {h}\n'
+
     with open('RESULTS/DEBUG.txt', 'a') as f:
         temp = '\nprint_23\n'
         temp += "Tournament - N players\n"
@@ -471,7 +481,7 @@ def print_23(k, curr_action_N_players, num_of_C_N_players, payoff_N_players, SUM
         temp += "N_players_strat_id\n"
         temp += f"{N_players_strat_id}\n"
         temp += "gener_history_freq\n"
-        temp += f"{gener_history_freq}\n"
+        temp += f"{temp_gener_history_freq}\n"
         temp += '\n'
         f.write(temp)
 
@@ -505,8 +515,13 @@ def print_24(list_of_ind, history, history_count, history_custom):
         N_players_strat_id.append(int(a, 2))
 
     for ind in list_of_ind:
-        id_N_players.append(ind.id)
+        id_N_players.append(list_of_ind.index(ind))
         N_players_strategies.append(to_binary_length(ind.id, ind.ind_len))
+
+    temp_gener_history_freq = ''
+    for index, h in enumerate(gener_history_freq):
+        if h != 0:
+            temp_gener_history_freq += f'{index}: {h}\n'
 
     create_results_dir()
     with open('RESULTS/DEBUG.txt', 'a') as f:
@@ -523,7 +538,7 @@ def print_24(list_of_ind, history, history_count, history_custom):
         temp += 'N_players_strat_id\n'
         temp += f'{N_players_strat_id}\n'
         temp += 'gener_history_freq\n'
-        temp += f'{gener_history_freq}\n'
+        temp += f'{temp_gener_history_freq}\n'
         temp += '\n'
         f.write(temp)
 

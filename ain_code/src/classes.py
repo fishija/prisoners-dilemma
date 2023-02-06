@@ -364,19 +364,23 @@ class PdTournament:
 
             self.update_history(a=True)
 
-            for i in range(self.N):
-                self.N_players_strat_id[i] = self.list_of_ind[i].return_decimal_history(self.prep_history_for_individual(i))
+            if not duel_fulf:
+                for i in range(self.N):
+                    self.N_players_strat_id[i] = self.list_of_ind[i].return_decimal_history(self.prep_history_for_individual(i))
 
-            for index, cur_ind in enumerate(N_players_strategies):
-                cur_ind.oponentes_jodidos += 1
-                self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
+                for index, cur_ind in enumerate(N_players_strategies):
+                    cur_ind.oponentes_jodidos += 1
+                    self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
 
-            for index, ind in enumerate(self.list_of_ind):
-                self.c_of_opponents[index] = ind.oponentes_jodidos
+                for index, ind in enumerate(self.list_of_ind):
+                    self.c_of_opponents[index] = ind.oponentes_jodidos
 
-            sum_with_opponents = []
-            for ind in self.list_of_ind:
-                sum_with_opponents.append(ind.score)
+                sum_with_opponents = []
+                for ind in self.list_of_ind:
+                    sum_with_opponents.append(ind.score)
+            # else:
+            #     for index, cur_ind in enumerate(N_players_strategies):
+            #         self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
 
         if debug:
             if self.N==2:
@@ -391,7 +395,7 @@ class PdTournament:
                 print_24(self.list_of_ind, self.history, self.history_count, temp_history_custom)
 
     def tournament(self, N_players_strategies):
-        for k in range(self.num_of_tournaments):            
+        for k in range(self.num_of_tournaments):    
             last_play = []
             for index, cur_ind in enumerate(N_players_strategies):
                 teeeemp = []
@@ -402,7 +406,7 @@ class PdTournament:
                     cur_ind.count_score(teeeemp)
                 else:
                     cur_ind.count_score(teeeemp, self.two_pd_payoff_func)
-                
+
                 last_play.append(cur_ind.my_choice)
 
             sum_with_opponents = []
@@ -777,7 +781,8 @@ class GameWorker(QObject):
             sum_of_avg_score_for_gen = 0
             # Count avg scores and all collective oponentes_jodidos
             for ind in curr_generation.list_of_ind:
-                ind.score = ind.score/(ind.oponentes_jodidos * self.num_of_tournaments)
+                temp = ind.score/(ind.oponentes_jodidos * self.num_of_tournaments)
+                ind.score = temp
                 sum_of_avg_score_for_gen += ind.score
 
             curr_generation.hard_tournament()
@@ -791,7 +796,6 @@ class GameWorker(QObject):
             curr_generation.crossover()
 
             best_individual_ids.append(curr_generation.best_individual)
-
 
             # UPDATE UPPER PLOT :)
             avg_data_per_generation.loc[len(avg_data_per_generation) + 1] = [(sum_of_avg_score_for_gen/self.pop_size), (curr_generation.best_individual.score)]

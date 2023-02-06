@@ -2,7 +2,7 @@
 # n = 3
 # prob_of_init_c = 0.5
 # num_of_tournaments = 5
-# num_of_opponents = 1
+# num_of_opponents = 2
 # prehistory_l = 2
 # pop_size = 3
 # num_of_gener = 1
@@ -10,7 +10,7 @@
 # crossover_prob = 1.0
 # mutation_prob = 0.003
 # elitist_strategy = False
-# seed = 1.0
+# seed = 11.0
 # num_of_runs = 0
 # freq_gen_start = 1
 # delta_freq = 1
@@ -19,13 +19,13 @@
 #
 # 1 2
 # history_id freq
-2 0.1
-5 0.19
-8 0.1
-9 0.14
-12 0.05
-13 0.1
-17 0.05
-32 0.05
-33 0.05
+5 0.05
+8 0.05
+9 0.13
+13 0.13
+14 0.05
+17 0.08
 34 0.05
+36 0.05
+41 0.08
+44 0.08

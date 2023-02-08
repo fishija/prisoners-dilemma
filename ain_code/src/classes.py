@@ -292,7 +292,7 @@ class PdTournament:
             for index, i in enumerate(N_players_strategies):
                 temp_history_custom.append(self.prep_history_for_individual(index))
             
-            print_22(self.list_of_ind, self.c_of_opponents, temp_list_of_ind, self.N_players_strat_id, self.history_count, temp_history_custom)
+            print_22(self.list_of_ind, self.c_of_opponents, temp_list_of_ind, self.N_players_strat_id, self.history_count, temp_history_custom, N_players_strategies)
 
         if self.N == 2 and len(self.list_of_ind) == 2:
             self.tournament(N_players_strategies)
@@ -355,7 +355,12 @@ class PdTournament:
             self.tournament(N_players_strategies)
 
             duel_fulf = (min(self.c_of_opponents) == num_of_opponents)
+            N_players_strategies = []
 
+            # if debug and len(self.list_of_ind) == self.N:
+            #     for i in range(self.N):
+            #         N_players_strategies.append(self.list_of_ind[i])
+            # else:
             temp_index = self.c_of_opponents.index(min(self.c_of_opponents))
             N_players_strategies = [self.list_of_ind[temp_index]]
 
@@ -378,21 +383,21 @@ class PdTournament:
                 sum_with_opponents = []
                 for ind in self.list_of_ind:
                     sum_with_opponents.append(ind.score)
-            # else:
-            #     for index, cur_ind in enumerate(N_players_strategies):
-            #         self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
+            else:
+                for index, cur_ind in enumerate(N_players_strategies):
+                    self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
 
-        if debug:
-            if self.N==2:
-                print_12(N_players_strategies[0].to_binary_for_this_old_fuck(), N_players_strategies[1].to_binary_for_this_old_fuck(), N_players_strategies[0].return_decimal_history(self.prep_history_for_individual(0)), N_players_strategies[1].return_decimal_history(self.prep_history_for_individual(1)))
-                print_13(self.c_of_opponents, self.history_count, N_players_strategies[0].return_decimal_history(self.prep_history_for_individual(0)), N_players_strategies[1].return_decimal_history(self.prep_history_for_individual(1)))
-            
-            elif self.N>=3:
-                temp_history_custom = []
-                for i in range(self.N):
-                    temp_history_custom.append(self.prep_history_for_individual(i))
+            if debug:
+                if self.N==2:
+                    print_12(N_players_strategies[0].to_binary_for_this_old_fuck(), N_players_strategies[1].to_binary_for_this_old_fuck(), N_players_strategies[0].return_decimal_history(self.prep_history_for_individual(0)), N_players_strategies[1].return_decimal_history(self.prep_history_for_individual(1)))
+                    print_13(self.c_of_opponents, self.history_count, N_players_strategies[0].return_decimal_history(self.prep_history_for_individual(0)), N_players_strategies[1].return_decimal_history(self.prep_history_for_individual(1)))
+                
+                elif self.N>=3:
+                    temp_history_custom = []
+                    for i in range(self.N):
+                        temp_history_custom.append(self.prep_history_for_individual(i))
 
-                print_24(self.list_of_ind, self.history, self.history_count, temp_history_custom)
+                    print_24(self.list_of_ind, self.history, self.history_count, temp_history_custom, self.c_of_opponents, N_players_strategies)
 
     def tournament(self, N_players_strategies):
         for k in range(self.num_of_tournaments):    
@@ -415,8 +420,11 @@ class PdTournament:
 
             self.update_history(last_play)
 
-            for index, cur_ind in enumerate(N_players_strategies):
-                self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
+            if debug and self.N>=3 and k == self.num_of_tournaments-1:
+                cur_ind.choose(self.prep_history_for_individual(index))
+            else:
+                for index, cur_ind in enumerate(N_players_strategies):
+                    self.history_count[cur_ind.choose(self.prep_history_for_individual(index))] += 1
 
             if debug and self.N == 2:
 

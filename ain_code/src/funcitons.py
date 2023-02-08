@@ -398,7 +398,7 @@ def print_21(ind_list, prehistory):
         f.write(temp)
 
 
-def print_22(list_of_ind, c_of_opponents, N_players_strategies, N_players_strat_id, gener_history_freq, history_custom):
+def print_22(list_of_ind, c_of_opponents, N_players_strategies, N_players_strat_id, gener_history_freq, history_custom, N_players_strategies_TTT):
     create_results_dir()
 
 
@@ -415,7 +415,7 @@ def print_22(list_of_ind, c_of_opponents, N_players_strategies, N_players_strat_
 
         
     id_N_players = []
-    for ind in list_of_ind:
+    for ind in N_players_strategies_TTT:
         id_N_players.append(list_of_ind.index(ind))
 
     temp_gener_history_freq = ''
@@ -486,7 +486,7 @@ def print_23(k, curr_action_N_players, num_of_C_N_players, payoff_N_players, SUM
         f.write(temp)
 
     
-def print_24(list_of_ind, history, history_count, history_custom):
+def print_24(list_of_ind, history, history_count, history_custom, c_of_opponents, N_players_strategies):
 
     # history_custom
     # [[[0, 1], [0, 0]], 
@@ -497,7 +497,7 @@ def print_24(list_of_ind, history, history_count, history_custom):
     # [[0, 1, 0], 
     #  [0, 0, 0]]
     id_N_players = []
-    N_players_strategies = []
+    temp_N_players_strategies = []
     Prehistory_N = history
     N_players_preh = []
     N_players_strat_id = []
@@ -514,9 +514,9 @@ def print_24(list_of_ind, history, history_count, history_custom):
         N_players_preh.append(a)
         N_players_strat_id.append(int(a, 2))
 
-    for ind in list_of_ind:
+    for ind in N_players_strategies:
         id_N_players.append(list_of_ind.index(ind))
-        N_players_strategies.append(to_binary_length(ind.id, ind.ind_len))
+        temp_N_players_strategies.append(to_binary_length(ind.id, ind.ind_len))
 
     temp_gener_history_freq = ''
     for index, h in enumerate(gener_history_freq):
@@ -529,8 +529,10 @@ def print_24(list_of_ind, history, history_count, history_custom):
         temp += 'DUEL-NpPD zakonczony\nNowy zbior graczy - strategii\n'
         temp += 'id_N_players\n'
         temp += f'{id_N_players}\n'
+        temp += "c_of_opponents\n"
+        temp += f"{c_of_opponents}\n"
         temp += 'N_players_strategies\n'
-        temp += f'{N_players_strategies}\n'
+        temp += f'{temp_N_players_strategies}\n'
         temp += 'Prehistory_N\n'
         temp += f'{Prehistory_N}\n'
         temp += 'N_players_preh\n'

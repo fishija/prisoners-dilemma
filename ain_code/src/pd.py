@@ -134,8 +134,8 @@ class LoadDialog(Ui_LoadDialog, QDialog):
             elif len(self.strategies) != pop_size:
                 QMessageBox.warning(self, 'ERROR', 'Una población demasiado pequeña')
 
-            elif len(self.strategies) < num_of_opponents:
-                QMessageBox.warning(self, 'ERROR', 'Demasiados "num_of_opponents"')
+            # elif len(self.strategies) < num_of_opponents:
+            #     QMessageBox.warning(self, 'ERROR', 'Demasiados "num_of_opponents"')
 
             else:
                 self.accept()
@@ -281,9 +281,9 @@ class PDWindow(Ui_MainWindow, QMainWindow):
                 QMessageBox.warning(self, 'Input ERROR', 'Data in 2p PD payoff function has to look like:\n\nCD_left/DC_right < DD_left/DD_right < CC_left/CC_right < DC_left/CD_left')
                 return False
 
-        if self.num_of_opponents >= self.pop_size:
-            QMessageBox.warning(self, 'Input ERROR', 'Number of opponents cannot be greater nor equal to size of population')
-            return False
+        # if self.num_of_opponents >= self.pop_size:
+        #     QMessageBox.warning(self, 'Input ERROR', 'Number of opponents cannot be greater nor equal to size of population')
+        #     return False
 
         if self.num_of_gener < self.freq_gen_start:
             QMessageBox.warning(self, 'Input ERROR', 'Number of generations must be greater or equal to frequency gen start')
